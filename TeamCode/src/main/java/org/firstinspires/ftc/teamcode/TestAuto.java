@@ -17,13 +17,6 @@ public class TestAuto extends AutonomousMethods {
         int propLocation;
 
 
-        TrajectoryVelocityConstraint splineVelConstraint = new MinVelocityConstraint(Arrays.asList(
-                new TranslationalVelocityConstraint(Constants.slowerSplineVel),
-                new AngularVelocityConstraint(16)
-        ));
-
-        PoseConstants.blueRight startPose = new PoseConstants.blueRight();
-        robot.setPoseEstimate(PoseConstants.blueRight.start);
 
 
         // Wait for start button to be pressed
@@ -35,17 +28,16 @@ public class TestAuto extends AutonomousMethods {
 
         /* -------------------------------------------- START -------------------------------------------- */
 
+
         propLocation = robot.getPropLocation();
         telemetry.addLine("Location: " + propLocation);
         telemetry.update();
 
-        dropPixel(propLocation, "blueRight");
+        robot.setPoseEstimate(PoseConstants.blueRight.start);
 
-//        Trajectory backdropTraj = robot.trajectoryBuilder(robot.getPoseEstimate())
-//                .splineTo(startPose.backdrop, Math.toRadians(0))
-//                .build();
+        dropPixel_toBackdrop(propLocation, "blueRight");
+
 //
-//        robot.followTrajectory(backdropTraj);
 
     }
 }
