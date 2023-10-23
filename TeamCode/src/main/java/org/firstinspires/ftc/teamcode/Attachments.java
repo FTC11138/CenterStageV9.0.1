@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
+import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.hardwareMap;
+
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
@@ -11,6 +13,7 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.vision.VisionPortal;
+import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
 
 public class Attachments extends SampleMecanumDrive {
 
@@ -23,6 +26,7 @@ public class Attachments extends SampleMecanumDrive {
     public WebcamName webcam;
     public VisionProcessor visionProcessor;
     public VisionPortal visionPortal;
+    public AprilTagProcessor aprilTagProcessor;
 
     public void initialize(HardwareMap hardwareMap, Telemetry telemetry_, boolean auto) {
 
@@ -36,6 +40,22 @@ public class Attachments extends SampleMecanumDrive {
 
         telemetry.addLine("Roadrunner Initialized");
         telemetry.update();
+
+        // Camera
+        webcam = hardwareMap.get(WebcamName.class, names.webcam);
+
+
+        if (auto) {
+            visionProcessor = new VisionProcessor();
+            // visionPortal = VisionPortal.easyCreateWithDefaults(webcam, visionProcessor);
+            aprilTagProcessor = new AprilTagProcessor.Builder().build();
+            aprilTagProcessor.setDecimation(2);
+            visionPortal = new VisionPortal.Builder()
+                    .setCamera(hardwareMap.get(WebcamName.class, "Webcam 1"))
+                    .addProcessor(aprilTagProcessor)
+                    .addProcessor(visionProcessor)
+                    .build();
+        }
 
         // Motors
         liftMotor = hardwareMap.get(DcMotorEx.class, names.liftMotor);
@@ -74,7 +94,6 @@ public class Attachments extends SampleMecanumDrive {
             visionProcessor = new VisionProcessor();
             visionPortal = VisionPortal.easyCreateWithDefaults(webcam, visionProcessor);
         }
-
     }
 
     // Run Motors
@@ -141,6 +160,4 @@ public class Attachments extends SampleMecanumDrive {
             return 3;
         }
     }
-
-
 }

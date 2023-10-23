@@ -77,7 +77,7 @@ public class Constants {
     public static double hangMinPow = 0.1;
 
 
-    /* -------------------------------------------- VISION CONSTANTS -------------------------------------------- */
+    /* -------------------------------------------- VISION RECTANGLE CONSTANTS -------------------------------------------- */
 
     public static int rLx = 5;
     public static int rLy = 320;
@@ -93,5 +93,14 @@ public class Constants {
     public static int rMy = 300;
     public static int rMw = 300;
     public static int rMh = 50;
+
+    /* --------------------------------------------  APRILTAG CONSTANTS ------------------------------------------ */
+    public static double DESIRED_DISTANCE = 6.0;
+    public static double SPEED_GAIN  =  0.02;
+    public static double STRAFE_GAIN =  0.015;
+    public static double TURN_GAIN   =  0.01;
+    public static double MAX_AUTO_SPEED = 0.5;
+    public static double MAX_AUTO_STRAFE = 0.1;
+    public static double MAX_AUTO_TURN  = 0.05;
 
 }

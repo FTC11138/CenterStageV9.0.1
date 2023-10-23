@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.acmerobotics.roadrunner.trajectory.constraints.AngularVelocityConstraint;
 import com.acmerobotics.roadrunner.trajectory.constraints.MinVelocityConstraint;
 import com.acmerobotics.roadrunner.trajectory.constraints.TrajectoryVelocityConstraint;
@@ -21,13 +22,12 @@ public class TestAuto extends AutonomousMethods {
 
         // Wait for start button to be pressed
         while (!isStarted()) {
-            propLocation = robot.getPropLocation();
-            telemetry.addLine("Location: " + propLocation);
-            telemetry.update();
+            //propLocation = robot.getPropLocation();
+            //telemetry.addLine("Location: " + propLocation);
+            //telemetry.update();
         }
 
         /* -------------------------------------------- START -------------------------------------------- */
-
 
         propLocation = robot.getPropLocation();
         telemetry.addLine("Location: " + propLocation);
@@ -35,9 +35,12 @@ public class TestAuto extends AutonomousMethods {
 
         robot.setPoseEstimate(PoseConstants.blueRight.start);
 
-        dropPixel_toBackdrop(propLocation, "blueRight");
+        //dropPixel_toBackdrop(propLocation, "blueRight");
+        //propLocation = robot.getPropLocation();
+        //telemetry.addLine("Location: " + propLocation);
+        //telemetry.update();
 
-//
+        //dropPixel(propLocation, "blueRight");
 
     }
 }

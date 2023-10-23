@@ -83,8 +83,6 @@ public class CenterstageTeleOp extends OpMode {
 
         /* -------------------------------------------- CHANGE -------------------------------------------- */
 
-
-
         if (gamepad2.left_bumper) {
             clawPosition = Constants.clawOpen;
         } else if (gamepad2.right_bumper) {
@@ -197,7 +195,6 @@ public class CenterstageTeleOp extends OpMode {
 
 
         /* -------------------------------------------- ACTION -------------------------------------------- */
-
         robot.setClawServo(clawPosition);
         robot.setClawArmServo(clawArmPosition);
         robot.setPlaneServo(planePosition);

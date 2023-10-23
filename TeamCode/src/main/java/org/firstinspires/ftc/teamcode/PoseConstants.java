@@ -4,10 +4,14 @@ import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
 
+import java.util.Vector;
+
 @Config
 public class PoseConstants {
 
-
+    public static class aprilTag {
+        public static Vector2d detect = new Vector2d(2, 12);
+    }
     public static class redLeft {
 
         public static boolean backdropSide = false;
@@ -104,10 +108,10 @@ public class PoseConstants {
         public static double afterSpikeMarkStartingTangentRight = Math.toRadians(0);
         public static double afterSpikeMarkEndingTangent = Math.toRadians(-90);
 
-        public static Vector2d afterSpikeMark = new Vector2d(-36, 12);;
+        public static Vector2d afterSpikeMark = new Vector2d(-36, 10);;
         public static double afterSpikeMarkAngle = Math.toRadians(90);
 
-        public static Vector2d backdrop = new Vector2d(44, 36);
+        public static Vector2d backdrop = new Vector2d(40, 40);
         public static double backdropTangent = Math.toRadians(90);
         public static Vector2d parkLeft = new Vector2d(60, 60);
         public static Vector2d parkRight = new Vector2d(60, 12);
