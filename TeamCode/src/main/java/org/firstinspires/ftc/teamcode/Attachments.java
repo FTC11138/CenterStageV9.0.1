@@ -22,7 +22,7 @@ public class Attachments extends SampleMecanumDrive {
     private ElapsedTime runtime = new ElapsedTime();
 
     public Servo clawServo, clawArmServo, planeServo, pixelServo;
-    public DcMotorEx liftMotor, hangMotor;
+    public DcMotorEx liftMotor, hangMotor1, hangMotor2;
     public WebcamName webcam;
     public VisionProcessor visionProcessor;
     public VisionPortal visionPortal;
@@ -41,29 +41,16 @@ public class Attachments extends SampleMecanumDrive {
         telemetry.addLine("Roadrunner Initialized");
         telemetry.update();
 
-        // Camera
-        webcam = hardwareMap.get(WebcamName.class, names.webcam);
-
-
-        if (auto) {
-            visionProcessor = new VisionProcessor();
-            // visionPortal = VisionPortal.easyCreateWithDefaults(webcam, visionProcessor);
-            aprilTagProcessor = new AprilTagProcessor.Builder().build();
-            aprilTagProcessor.setDecimation(2);
-            visionPortal = new VisionPortal.Builder()
-                    .setCamera(hardwareMap.get(WebcamName.class, "Webcam 1"))
-                    .addProcessor(aprilTagProcessor)
-                    .addProcessor(visionProcessor)
-                    .build();
-        }
-
         // Motors
         liftMotor = hardwareMap.get(DcMotorEx.class, names.liftMotor);
-        hangMotor = hardwareMap.get(DcMotorEx.class, names.hangMotor);
+        hangMotor1 = hardwareMap.get(DcMotorEx.class, names.hangMotor1);
+        hangMotor2 = hardwareMap.get(DcMotorEx.class, names.hangMotor2);
         liftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         liftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        hangMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        hangMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        hangMotor1.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        hangMotor1.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        hangMotor2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        hangMotor2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         telemetry.addLine("Motors Initialized");
         telemetry.update();
@@ -73,7 +60,7 @@ public class Attachments extends SampleMecanumDrive {
         clawServo = hardwareMap.get(Servo.class, names.clawServo);
         clawArmServo = hardwareMap.get(Servo.class, names.clawArmServo);
         planeServo = hardwareMap.get(Servo.class, names.planeServo);
-        pixelServo = hardwareMap.get(Servo.class, names.pixelServo);
+//        pixelServo = hardwareMap.get(Servo.class, names.pixelServo);
 
         telemetry.addLine("Servos Initialized");
         telemetry.update();
@@ -92,7 +79,14 @@ public class Attachments extends SampleMecanumDrive {
             setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         } else {
             visionProcessor = new VisionProcessor();
-            visionPortal = VisionPortal.easyCreateWithDefaults(webcam, visionProcessor);
+            // visionPortal = VisionPortal.easyCreateWithDefaults(webcam, visionProcessor);
+            aprilTagProcessor = new AprilTagProcessor.Builder().build();
+            aprilTagProcessor.setDecimation(2);
+            visionPortal = new VisionPortal.Builder()
+                    .setCamera(hardwareMap.get(WebcamName.class, "Webcam 1"))
+                    .addProcessor(aprilTagProcessor)
+                    .addProcessor(visionProcessor)
+                    .build();
         }
     }
 
@@ -100,9 +94,15 @@ public class Attachments extends SampleMecanumDrive {
     public void runLiftMotor(double power) {
         liftMotor.setPower(power);
     }
-    public void runHangMotor(double power) {
-        hangMotor.setPower(power);
+    public void runHangMotor1(double power) {
+        hangMotor1.setPower(power);
     }
+
+    public void runHangMotor2(double power) {
+        hangMotor2.setPower(power);
+    }
+
+
 
     // Set Motors
     public void setLiftMotor(double power, int position) {
@@ -112,9 +112,12 @@ public class Attachments extends SampleMecanumDrive {
     }
 
     public void setHangMotor(double power, int position) {
-        hangMotor.setPower(power);
-        hangMotor.setTargetPosition(position);
-        hangMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        hangMotor1.setPower(power);
+        hangMotor2.setPower(power);
+        hangMotor1.setTargetPosition(position);
+        hangMotor2.setTargetPosition(position);
+        hangMotor1.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        hangMotor2.setMode(DcMotor.RunMode.RUN_TO_POSITION);
     }
 
 
@@ -129,8 +132,12 @@ public class Attachments extends SampleMecanumDrive {
     public int getLiftMotorPosition() {
         return liftMotor.getCurrentPosition();
     }
-    public int getHangMotorPosition() {
-        return hangMotor.getCurrentPosition();
+    public int getHangMotorPosition1() {
+        return hangMotor1.getCurrentPosition();
+    }
+
+    public int getHangMotorPosition2() {
+        return hangMotor2.getCurrentPosition();
     }
 
     // Get Servo Positions

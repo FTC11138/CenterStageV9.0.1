@@ -23,6 +23,7 @@ import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
 import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
 public abstract class AutonomousMethods extends LinearOpMode {
@@ -41,8 +42,11 @@ public abstract class AutonomousMethods extends LinearOpMode {
     public void initializeRobot(HardwareMap hardwareMap, Telemetry telemetry) {
 
         robot.initialize(hardwareMap, telemetry, true);
-        //robot.setPixelServo(Constants.pixelHold);
+//        robot.setPixelServo(Constants.pixelHold);
+
     }
+
+
 
     public void dropPixel_toBackdrop(int propLocation, String startPosition) {
         Trajectory spikeMarkTraj = null;
@@ -60,44 +64,45 @@ public abstract class AutonomousMethods extends LinearOpMode {
         double backdropTangent = 0;
         boolean backdropSide = false;
 
-        if (startPosition == "redLeft") {
+
+        if ( Objects.equals(startPosition, "redLeft") ) {
             startPose = PoseConstants.redLeft.start;
             pixelVector = (propLocation == 1) ? PoseConstants.redLeft.left : ((propLocation == 2) ? PoseConstants.redLeft.center : PoseConstants.redLeft.right);
-            pixelAngle = (propLocation == 1) ? PoseConstants.redLeft.spikeMarkAngleLeft : ((propLocation == 2) ? PoseConstants.redLeft.spikeMarkAngleCenter : PoseConstants.redLeft.spikeMarkAngleRight);
-            afterPixelStartingTangent = (propLocation == 1) ? PoseConstants.redLeft.afterSpikeMarkStartingTangentLeft : ((propLocation == 2) ? PoseConstants.redLeft.afterSpikeMarkStartingTangentCenter : PoseConstants.redLeft.afterSpikeMarkStartingTangentRight);
+            pixelAngle = (propLocation == 1) ? PoseConstants.redLeft.spikeMarkAngleLeft : ( (propLocation == 2) ? PoseConstants.redLeft.spikeMarkAngleCenter : PoseConstants.redLeft.spikeMarkAngleRight);
+            afterPixelStartingTangent = (propLocation == 1) ? PoseConstants.redLeft.afterSpikeMarkStartingTangentLeft : ( (propLocation == 2) ? PoseConstants.redLeft.afterSpikeMarkStartingTangentCenter : PoseConstants.redLeft.afterSpikeMarkStartingTangentRight);
             afterPixelEndingTangent = PoseConstants.redLeft.afterSpikeMarkEndingTangent;
             afterPixel = PoseConstants.redLeft.afterSpikeMark;
             afterPixelAngle = PoseConstants.redLeft.afterSpikeMarkAngle;
             backdrop = PoseConstants.redLeft.backdrop;
             backdropTangent = PoseConstants.redLeft.backdropTangent;
             backdropSide = PoseConstants.redLeft.backdropSide;
-        } else if (startPosition == "redRight") {
+        } else if ( Objects.equals(startPosition, "redRight") ) {
             startPose = PoseConstants.redRight.start;
-            pixelVector = (propLocation == 1) ? PoseConstants.redRight.left : ((propLocation == 2) ? PoseConstants.redRight.center : PoseConstants.redRight.right);
-            pixelAngle = (propLocation == 1) ? PoseConstants.redRight.spikeMarkAngleLeft : ((propLocation == 2) ? PoseConstants.redRight.spikeMarkAngleCenter : PoseConstants.redRight.spikeMarkAngleRight);
-            afterPixelStartingTangent = (propLocation == 1) ? PoseConstants.redRight.afterSpikeMarkStartingTangentLeft : ((propLocation == 2) ? PoseConstants.redRight.afterSpikeMarkStartingTangentCenter : PoseConstants.redRight.afterSpikeMarkStartingTangentRight);
+            pixelVector = (propLocation == 1) ? PoseConstants.redRight.left : ( (propLocation == 2) ? PoseConstants.redRight.center : PoseConstants.redRight.right);
+            pixelAngle = (propLocation == 1) ? PoseConstants.redRight.spikeMarkAngleLeft : ( (propLocation == 2) ? PoseConstants.redRight.spikeMarkAngleCenter : PoseConstants.redRight.spikeMarkAngleRight);
+            afterPixelStartingTangent = (propLocation == 1) ? PoseConstants.redRight.afterSpikeMarkStartingTangentLeft : ( (propLocation == 2) ? PoseConstants.redRight.afterSpikeMarkStartingTangentCenter : PoseConstants.redRight.afterSpikeMarkStartingTangentRight);
             afterPixelEndingTangent = PoseConstants.redRight.afterSpikeMarkEndingTangent;
             afterPixel = PoseConstants.redRight.afterSpikeMark;
             afterPixelAngle = PoseConstants.redRight.afterSpikeMarkAngle;
             backdrop = PoseConstants.redRight.backdrop;
             backdropTangent = PoseConstants.redRight.backdropTangent;
             backdropSide = PoseConstants.redRight.backdropSide;
-        } else if (startPosition == "blueLeft") {
+        } else if ( Objects.equals(startPosition, "blueLeft") ) {
             startPose = PoseConstants.blueLeft.start;
-            pixelVector = (propLocation == 1) ? PoseConstants.blueLeft.left : ((propLocation == 2) ? PoseConstants.blueLeft.center : PoseConstants.blueLeft.right);
-            pixelAngle = (propLocation == 1) ? PoseConstants.blueLeft.spikeMarkAngleLeft : ((propLocation == 2) ? PoseConstants.blueLeft.spikeMarkAngleCenter : PoseConstants.blueLeft.spikeMarkAngleRight);
-            afterPixelStartingTangent = (propLocation == 1) ? PoseConstants.blueLeft.afterSpikeMarkStartingTangentLeft : ((propLocation == 2) ? PoseConstants.blueLeft.afterSpikeMarkStartingTangentCenter : PoseConstants.blueLeft.afterSpikeMarkStartingTangentRight);
+            pixelVector = (propLocation == 1) ? PoseConstants.blueLeft.left : ( (propLocation == 2) ? PoseConstants.blueLeft.center : PoseConstants.blueLeft.right);
+            pixelAngle = (propLocation == 1) ? PoseConstants.blueLeft.spikeMarkAngleLeft : ( (propLocation == 2) ? PoseConstants.blueLeft.spikeMarkAngleCenter : PoseConstants.blueLeft.spikeMarkAngleRight);
+            afterPixelStartingTangent = (propLocation == 1) ? PoseConstants.blueLeft.afterSpikeMarkStartingTangentLeft : ( (propLocation == 2) ? PoseConstants.blueLeft.afterSpikeMarkStartingTangentCenter : PoseConstants.blueLeft.afterSpikeMarkStartingTangentRight);
             afterPixelEndingTangent = PoseConstants.blueLeft.afterSpikeMarkEndingTangent;
             afterPixel = PoseConstants.blueLeft.afterSpikeMark;
             afterPixelAngle = PoseConstants.blueLeft.afterSpikeMarkAngle;
             backdrop = PoseConstants.blueLeft.backdrop;
             backdropTangent = PoseConstants.blueLeft.backdropTangent;
             backdropSide = PoseConstants.blueLeft.backdropSide;
-        } else if (startPosition == "blueRight") {
+        } else if ( Objects.equals(startPosition, "blueRight") ) {
             startPose = PoseConstants.blueRight.start;
-            pixelVector = (propLocation == 1) ? PoseConstants.blueRight.left : ((propLocation == 2) ? PoseConstants.blueRight.center : PoseConstants.blueRight.right);
-            pixelAngle = (propLocation == 1) ? PoseConstants.blueRight.spikeMarkAngleLeft : ((propLocation == 2) ? PoseConstants.blueRight.spikeMarkAngleCenter : PoseConstants.blueRight.spikeMarkAngleRight);
-            afterPixelStartingTangent = (propLocation == 1) ? PoseConstants.blueRight.afterSpikeMarkStartingTangentLeft : ((propLocation == 2) ? PoseConstants.blueRight.afterSpikeMarkStartingTangentCenter : PoseConstants.blueRight.afterSpikeMarkStartingTangentRight);
+            pixelVector = (propLocation == 1) ? PoseConstants.blueRight.left : ( (propLocation == 2) ? PoseConstants.blueRight.center : PoseConstants.blueRight.right);
+            pixelAngle = (propLocation == 1) ? PoseConstants.blueRight.spikeMarkAngleLeft : ( (propLocation == 2) ? PoseConstants.blueRight.spikeMarkAngleCenter : PoseConstants.blueRight.spikeMarkAngleRight);
+            afterPixelStartingTangent = (propLocation == 1) ? PoseConstants.blueRight.afterSpikeMarkStartingTangentLeft : ( (propLocation == 2) ? PoseConstants.blueRight.afterSpikeMarkStartingTangentCenter : PoseConstants.blueRight.afterSpikeMarkStartingTangentRight);
             afterPixelEndingTangent = PoseConstants.blueRight.afterSpikeMarkEndingTangent;
             afterPixel = PoseConstants.blueRight.afterSpikeMark;
             afterPixelAngle = PoseConstants.blueRight.afterSpikeMarkAngle;
@@ -119,7 +124,7 @@ public abstract class AutonomousMethods extends LinearOpMode {
 
             robot.followTrajectory(spikeMarkTraj);
 
-            //robot.setPixelServo(Constants.pixelDrop);
+//            robot.setPixelServo(Constants.pixelDrop);
             sleep(500);
 
             robot.followTrajectory(toBackBoardTraj);
@@ -135,18 +140,19 @@ public abstract class AutonomousMethods extends LinearOpMode {
                     .build();
 
             toBackBoardTraj = robot.trajectoryBuilder(new Pose2d(afterPixel, afterPixelAngle), Math.toRadians(0))
-                    .splineToSplineHeading(new Pose2d(backdrop, Math.toRadians(0)), backdropTangent)
+                    .splineToSplineHeading(new Pose2d(backdrop, Math.toRadians(180)), backdropTangent)
                     .build();
 
             robot.followTrajectory(spikeMarkTraj);
 
-            //robot.setPixelServo(Constants.pixelDrop);
+//            robot.setPixelServo(Constants.pixelDrop);
             sleep(500);
 
             robot.followTrajectory(afterSpikeMarkTraj);
             robot.followTrajectory(toBackBoardTraj);
 
         }
+
     }
 
     public void goToAprilTag(int propLocation, String startPosition, VisionPortal visionPortal, AprilTagProcessor aprilTagProcessor) {
@@ -184,6 +190,9 @@ public abstract class AutonomousMethods extends LinearOpMode {
         leftBackDrive.setDirection(DcMotor.Direction.REVERSE);
         rightFrontDrive.setDirection(DcMotor.Direction.FORWARD);
         rightBackDrive.setDirection(DcMotor.Direction.FORWARD);
+
+
+        /* -------------------------------------------- APRIL TAG DETECTION -------------------------------------------- */
 
         if (USE_WEBCAM) {
             setManualExposure(6, 250, visionPortal);
@@ -228,6 +237,11 @@ public abstract class AutonomousMethods extends LinearOpMode {
             telemetry.addData("targetFound ", targetFound);
             telemetry.update();
             sleep(500);
+
+
+            /* -------------------------------------------- MOVEMENT -------------------------------------------- */
+            targetFound = false;
+
             if (targetFound) { //should add timer
                 telemetry.addData("found ", "continuing");
                 telemetry.update();
@@ -242,21 +256,21 @@ public abstract class AutonomousMethods extends LinearOpMode {
                 telemetry.addData("rangeError ", rangeError);
                 telemetry.update();
                 sleep(500);
+
+
                 moveRobotAprilTag(drive, strafe, turn, leftFrontDrive, rightFrontDrive, leftBackDrive, rightBackDrive);
                 sleep(10);
             } else { //does not detect
                 telemetry.addData("not found", "continuing");
                 telemetry.update();
+
                 if (startPosition == "blueRight" || startPosition == "blueLeft") {
                     telemetry.addData("into blueRight ", "driving");
                     telemetry.update();
-                    PoseConstants.blueRight startPose = new PoseConstants.blueRight();
-                    Vector2d afterPixel = PoseConstants.blueRight.afterSpikeMark;
-                    double afterPixelAngle = PoseConstants.blueRight.afterSpikeMarkAngle;
-                    Vector2d backdrop = PoseConstants.blueRight.backdrop;
-                    double backdropTangent = PoseConstants.blueRight.backdropTangent;
-                    Trajectory backdropTraj = robot.trajectoryBuilder(new Pose2d(40, 36, Math.toRadians(0)), Math.toRadians(0))
-                            .splineTo(new Vector2d(45, 36), Math.toRadians(0))
+
+                    Pose2d currentPose = robot.getPoseEstimate();
+                    Trajectory backdropTraj = robot.trajectoryBuilder(currentPose, Math.toRadians(0))
+                            .splineTo(new Vector2d(45, 36), Math.toRadians(180))
                             .build();
                     robot.followTrajectory(backdropTraj);
                     sleep(500);

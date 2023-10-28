@@ -22,14 +22,16 @@ public class CenterstageTeleOp extends OpMode {
     private boolean liftModeUpdate = false;
     private boolean liftUseEnc = true;
     private int targetLiftPosition = Constants.liftLow;
-    private int currentLiftPosition = robot.getLiftMotorPosition();
+    private int currentLiftPosition = 0;
 
-    private double hangPower = 0;
+    private double hangPower1 = 0;
+    private double hangPower2 = 0;
     private boolean useHangPower = true;
     private boolean hangModeUpdate = false;
     private boolean hangUseEnc = true;
     private int targetHangPosition = Constants.hangLow;
-    private int currentHangPosition = robot.getHangMotorPosition();
+    private int currentHangPosition1 = 0;
+    private int currentHangPosition2 = 0;
 
     private boolean limits = true;
 
@@ -83,6 +85,8 @@ public class CenterstageTeleOp extends OpMode {
 
         /* -------------------------------------------- CHANGE -------------------------------------------- */
 
+
+
         if (gamepad2.left_bumper) {
             clawPosition = Constants.clawOpen;
         } else if (gamepad2.right_bumper) {
@@ -95,34 +99,51 @@ public class CenterstageTeleOp extends OpMode {
             clawArmPosition = Constants.clawArmDown;
         }
 
-        if (gamepad2.x || gamepad1.x) {
+        if (gamepad1.x || gamepad2.right_trigger > 0.2) {
             planePosition = Constants.planeRelease;
         }
 
         if (gamepad2.dpad_up) {
+            useLiftPower = false;
             targetLiftPosition = Constants.liftHigh;
+            liftUseEnc = true;
         } else if (gamepad2.dpad_down) {
+            useLiftPower = false;
             targetLiftPosition = Constants.liftLow;
+            liftUseEnc = true;
         }
 
         if (gamepad2.y) {
+            useHangPower = false;
             targetHangPosition = Constants.hangHigh;
+            hangUseEnc = true;
         } else if (gamepad2.x) {
+            useHangPower = false;
             targetHangPosition = Constants.hangLow;
+            hangUseEnc = true;
         }
 
 
-        if (gamepad2.dpad_left) {
+        if (gamepad2.dpad_right) {
+            useLiftPower = false;
             targetLiftPosition = Constants.liftHigh;
+            liftUseEnc = true;
             clawArmPosition = Constants.clawArmUp;
-        } else if (gamepad2.dpad_right) {
+        } else if (gamepad2.dpad_left) {
+            useLiftPower = false;
             targetLiftPosition = Constants.liftLow;
+            liftUseEnc = true;
             clawArmPosition = Constants.clawArmDown;
         }
 
 
-        double liftJoystick = gamepad2.left_stick_y;
-        if (liftJoystick < -0.12) {
+        if (gamepad1.right_bumper) {
+            limits = !limits;
+        }
+
+
+        double liftJoystick = -gamepad2.left_stick_y;
+        if (liftJoystick > 0.12) {
             liftUseEnc = true;
             // user trying to lift up
             if (currentLiftPosition < Constants.liftMax || !limits) {
@@ -131,7 +152,7 @@ public class CenterstageTeleOp extends OpMode {
             } else {
                 liftPower = 0;
             }
-        } else if (liftJoystick > 0.12) {
+        } else if (liftJoystick < -0.12) {
             liftUseEnc = true;
             // user trying to lift down
             if (currentLiftPosition > Constants.liftMin || !limits) {
@@ -148,34 +169,50 @@ public class CenterstageTeleOp extends OpMode {
         }
 
 
-        double hangJoystick = gamepad2.right_stick_y;
-        if (hangJoystick < -0.12) {
+
+        double hangJoystick = -gamepad2.right_stick_y;
+        if (hangJoystick > 0.12) {
             hangUseEnc = true;
             // user trying to lift up
-            if (currentHangPosition < Constants.hangMax || !limits) {
+            if (currentHangPosition1 > Constants.hangMax || !limits) {
                 useHangPower = true;
-                hangPower = hangJoystick * Constants.hangUpRatio;
+                hangPower1 = hangJoystick * Constants.hangUpRatio;
             } else {
-                hangPower = 0;
+                hangPower1 = 0;
             }
-        } else if (hangJoystick > 0.12) {
+
+            if (currentHangPosition2 > Constants.hangMax || !limits) {
+                useHangPower = true;
+                hangPower2 = hangJoystick * Constants.hangUpRatio;
+            } else {
+                hangPower2 = 0;
+            }
+
+        } else if (hangJoystick < -0.12) {
             hangUseEnc = true;
             // user trying to lift down
-            if (currentHangPosition > Constants.hangMin || !limits) {
+            if (currentHangPosition1 < Constants.hangMin || !limits) {
                 useHangPower = true;
-                hangPower = hangJoystick * Constants.hangDownRatio;
-                if (currentHangPosition > Constants.hangSlow) {
-                    hangPower *= Constants.hangSlowRatio;
-                }
+                hangPower1 = hangJoystick * Constants.hangDownRatio;
             } else {
-                hangPower = 0;
+                hangPower1 = 0;
             }
+
+            if (currentHangPosition2 < Constants.hangMin || !limits) {
+                useHangPower = true;
+                hangPower2 = hangJoystick * Constants.hangDownRatio;
+            } else {
+                hangPower2 = 0;
+            }
+
         } else if (useHangPower) {
-            hangPower = 0;
+            hangPower1 = 0;
+            hangPower2 = 0;
         }
 
 
-        double clawArmJoystick = -gamepad2.right_stick_y;
+
+        double clawArmJoystick = gamepad2.right_stick_x;
         if (clawArmJoystick > 0.2) {
             // User trying to push the clawArm up by pushing the joystick up
             if ((clawArmPosition + Constants.clawArmSpeed) < Constants.clawArmUp) { // making sure servo value doesnt go higher than max
@@ -185,8 +222,8 @@ public class CenterstageTeleOp extends OpMode {
             }
         } else if (clawArmJoystick < -0.2) {
             // User trying to pull the clawArm down by pushing the joystick down
-            if ((clawArmPosition - Constants.clawArmSpeed) > Constants.clawArmDown) { // making sure servo value doesnt go into negative
-                clawArmPosition += Constants.clawArmSpeed * clawArmJoystick; // not doing -= because clawArmJoystick is already negative
+            if ((clawArmPosition + Constants.clawArmSpeed) < Constants.clawArmDown) {
+                clawArmPosition += Constants.clawArmSpeed * clawArmJoystick;
             } else {
                 clawArmPosition = Constants.clawArmDown;
             }
@@ -194,7 +231,15 @@ public class CenterstageTeleOp extends OpMode {
 
 
 
+        currentLiftPosition = robot.getLiftMotorPosition();
+        currentHangPosition1 = robot.getHangMotorPosition1();
+        currentHangPosition2 = robot.getHangMotorPosition2();
+//        clawArmPosition = robot.getClawArmPosition();
+
+
+
         /* -------------------------------------------- ACTION -------------------------------------------- */
+
         robot.setClawServo(clawPosition);
         robot.setClawArmServo(clawArmPosition);
         robot.setPlaneServo(planePosition);
@@ -211,59 +256,80 @@ public class CenterstageTeleOp extends OpMode {
         }
 
         if (hangModeUpdate && hangUseEnc) {
-            robot.hangMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            robot.hangMotor1.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            robot.hangMotor2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             hangModeUpdate = false;
         }
 
         if (useHangPower) {
-            robot.runHangMotor(hangPower);
+            robot.runHangMotor1(hangPower1);
+            robot.runHangMotor2(hangPower2);
         } else {
             setHangMotor(targetHangPosition);
         }
 
 
+        /* -------------------------------------------- TELEMETRY -------------------------------------------- */
+
+
+        telemetry.addData("Lift Joy", liftJoystick);
+        telemetry.addData("Hang Joy", hangJoystick);
+        telemetry.addData("Claw Arm Joy", clawArmJoystick);
+        telemetry.addLine();
+        telemetry.addData("Lift Pos", currentLiftPosition);
+        telemetry.addData("Hang Motor 1 Pos", currentHangPosition1);
+        telemetry.addData("Hang Motor 2 Pos", currentHangPosition2);
+        telemetry.addData("Claw Arm Pos", clawArmPosition);
+        telemetry.addData("Plane Pos", planePosition);
+        telemetry.update();
+
+
     }
 
     void setLiftMotor(int position) {
-        //Undefined constants
-        double newPower, powDir;
-        //Initial error
-        double error = -(position - currentLiftPosition) / Constants.liftMax;
-        //Initial Time
-        telemetry.addData("1", "error: " + error);
-        if (Math.abs(error) > (Constants.liftTolerance / -Constants.liftMax)) {
-            //Setting p action
-            newPower = error * Constants.liftkPTele;
-            powDir = Math.signum(error);
-            newPower = Math.min(Math.abs(newPower), 1);
-
-            // Going down
-            if (powDir == 1) {
-                newPower = Math.max(newPower * Constants.liftDownRatio, Constants.liftMinPow);
-                if (currentLiftPosition > Constants.liftSlow) {
-                    newPower *= Constants.liftSlowRatio;
-                }
-            }
-            // Going up
-            else {
-                newPower = Math.min(-newPower, -Constants.liftMinPow - Constants.liftkF * currentLiftPosition / Constants.liftMax);
-            }
-            telemetry.addData("Lift Motor", newPower);
-            robot.runLiftMotor(newPower);
-        } else if (position != 0 && !liftModeUpdate) {
-            robot.setLiftMotor(0.5, position);
-            liftModeUpdate = true;
-            liftUseEnc = false;
-        } else if (!liftModeUpdate){
-            robot.runLiftMotor(0);
-        }
+        robot.setLiftMotor(1, position);
     }
+
+//    void setLiftMotor(int position) {
+//        //Undefined constants
+//        double newPower, powDir;
+//        //Initial error
+//        double error = -(position - currentLiftPosition) / Constants.liftMax;
+//        //Initial Time
+//        telemetry.addData("1", "error: " + error);
+//        if (Math.abs(error) > (Constants.liftTolerance / -Constants.liftMax)) {
+//            //Setting p action
+//            newPower = error * Constants.liftkPTele;
+//            powDir = Math.signum(error);
+//            newPower = Math.min(Math.abs(newPower), 1);
+//
+//            // Going down
+//            if (powDir == 1) {
+//                newPower = Math.max(newPower * Constants.liftDownRatio, Constants.liftMinPow);
+//                if (currentLiftPosition > Constants.liftSlow) {
+//                    newPower *= Constants.liftSlowRatio;
+//                }
+//            }
+//            // Going up
+//            else {
+//                newPower = Math.min(-newPower, -Constants.liftMinPow - Constants.liftkF * currentLiftPosition / Constants.liftMax);
+//            }
+//            telemetry.addData("Lift Motor", newPower);
+//            robot.runLiftMotor(newPower);
+//        } else if (position != 0 && !liftModeUpdate) {
+//            robot.setLiftMotor(0.5, position);
+//            liftModeUpdate = true;
+//            liftUseEnc = false;
+//        } else if (!liftModeUpdate){
+//            robot.runLiftMotor(0);
+//        }
+//    }
 
     void setHangMotor(int position) {
         //Undefined constants
         double newPower, powDir;
         //Initial error
-        double error = -(position - currentHangPosition) / Constants.hangMax;
+        double error = -(position - currentHangPosition1) / Constants.hangMax;
         //Initial Time
         telemetry.addData("1", "error: " + error);
         if (Math.abs(error) > (Constants.hangTolerance / -Constants.hangMax)) {
@@ -281,16 +347,18 @@ public class CenterstageTeleOp extends OpMode {
             }
             // Going up
             else {
-                newPower = Math.min(-newPower, -Constants.hangMinPow - Constants.hangkF * currentHangPosition / Constants.hangMax);
+                newPower = Math.min(-newPower, -Constants.hangMinPow - Constants.hangkF * currentHangPosition1 / Constants.hangMax);
             }
             telemetry.addData("Hang Motor", newPower);
-            robot.runHangMotor(newPower);
+            robot.runHangMotor1(newPower);
+            robot.runHangMotor2(newPower);
         } else if (position != 0 && !liftModeUpdate) {
             robot.setHangMotor(0.5, position);
             hangModeUpdate = true;
             hangUseEnc = false;
         } else if (!liftModeUpdate){
-            robot.runHangMotor(0);
+            robot.runHangMotor1(0);
+            robot.runHangMotor2(0);
         }
     }
 

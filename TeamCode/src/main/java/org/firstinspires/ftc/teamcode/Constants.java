@@ -22,12 +22,12 @@ public class Constants {
     public static double pixelHold = 1;
     public static double pixelDrop = 0;
 
-    public static double clawClose = 1;
+    public static double clawClose = 0.2;
     public static double clawOpen = 0;
 
-    public static double clawArmDown = 0;
-    public static double clawArmUp = 1;
-    public static double clawArmSpeed = 0.05;
+    public static double clawArmDown = 0.75;
+    public static double clawArmUp = 0.2;
+    public static double clawArmSpeed = 0.005;
 
     public static double planeHold = 1;
     public static double planeRelease = 0;
@@ -39,11 +39,11 @@ public class Constants {
     public static int liftMin = 0;
     public static int liftLow = 0;
     public static int liftMed = 500;
-    public static int liftHigh = 1000;
-    public static int liftMax = 1000;
+    public static int liftHigh = 600;
+    public static int liftMax = 2000;
 
     public static double liftUpRatio = 1;
-    public static double liftDownRatio = 0.8;
+    public static double liftDownRatio = 0.5;
     public static int liftSlow = 100;
     public static double liftSlowRatio = 0.4;
 
@@ -59,9 +59,9 @@ public class Constants {
 
 
     public static int hangMin = 0;
-    public static int hangLow = 0;
-    public static int hangHigh = 1000;
-    public static int hangMax = 1000;
+    public static int hangLow = -1300;
+    public static int hangHigh = 0;
+    public static int hangMax = -3100;
 
     public static double hangUpRatio = 1;
     public static double hangDownRatio = 0.8;
