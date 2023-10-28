@@ -292,6 +292,9 @@ public class CenterstageTeleOp extends OpMode {
         telemetry.addData("Claw Arm Pos", clawArmPosition);
         telemetry.addData("Plane Pos", planePosition);
         telemetry.addData("Pixel Pos", pixelPosition);
+        telemetry.addLine();
+        telemetry.addLine();
+        telemetry.addData("Limits", limits);
         telemetry.update();
 
 
