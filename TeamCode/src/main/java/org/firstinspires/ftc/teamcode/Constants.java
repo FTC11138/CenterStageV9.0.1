@@ -5,6 +5,12 @@ import com.acmerobotics.dashboard.config.Config;
 @Config
 public class Constants {
 
+
+    /* -------------------------------------------- DRIVE CONSTANTS -------------------------------------------- */
+
+    public static int testPropLoc = 1;
+
+
     /* -------------------------------------------- DRIVE CONSTANTS -------------------------------------------- */
 
     public static double moveSpeed = 1;
@@ -19,8 +25,8 @@ public class Constants {
 
     // TODO: Tune Values
 
-    public static double pixelHold = 1;
-    public static double pixelDrop = 0;
+    public static double pixelHold = 0.5;
+    public static double pixelDrop = 1;
 
     public static double clawClose = 0.2;
     public static double clawOpen = 0;
@@ -29,8 +35,8 @@ public class Constants {
     public static double clawArmUp = 0.2;
     public static double clawArmSpeed = 0.005;
 
-    public static double planeHold = 1;
-    public static double planeRelease = 0;
+    public static double planeHold = 0.8;
+    public static double planeRelease = 0.65;
 
 
     /* -------------------------------------------- MOTOR CONSTANTS -------------------------------------------- */

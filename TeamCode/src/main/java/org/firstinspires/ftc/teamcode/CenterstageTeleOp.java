@@ -16,7 +16,7 @@ public class CenterstageTeleOp extends OpMode {
     private double clawPosition = Constants.clawOpen;
     private double clawArmPosition = Constants.clawArmDown;
     private double planePosition = Constants.planeHold;
-
+    private double pixelPosition = Constants.pixelHold;
     private double liftPower = 0;
     private boolean useLiftPower = true;
     private boolean liftModeUpdate = false;
@@ -99,8 +99,17 @@ public class CenterstageTeleOp extends OpMode {
             clawArmPosition = Constants.clawArmDown;
         }
 
-        if (gamepad1.x || gamepad2.right_trigger > 0.2) {
+        if (gamepad1.right_trigger > 0.2|| gamepad2.right_trigger > 0.2) {
             planePosition = Constants.planeRelease;
+        }
+        else if (gamepad1.left_trigger > 0.2|| gamepad2.left_trigger > 0.2) {
+            planePosition = Constants.planeHold;
+        }
+
+        if (gamepad1.x) {
+            pixelPosition = Constants.pixelHold;
+        } else if (gamepad1.y) {
+            pixelPosition = Constants.pixelDrop;
         }
 
         if (gamepad2.dpad_up) {
@@ -176,14 +185,14 @@ public class CenterstageTeleOp extends OpMode {
             // user trying to lift up
             if (currentHangPosition1 > Constants.hangMax || !limits) {
                 useHangPower = true;
-                hangPower1 = hangJoystick * Constants.hangUpRatio;
+                hangPower1 = hangJoystick * Constants.hangUpRatio * -1;
             } else {
                 hangPower1 = 0;
             }
 
             if (currentHangPosition2 > Constants.hangMax || !limits) {
                 useHangPower = true;
-                hangPower2 = hangJoystick * Constants.hangUpRatio;
+                hangPower2 = hangJoystick * Constants.hangUpRatio * -1;
             } else {
                 hangPower2 = 0;
             }
@@ -193,14 +202,14 @@ public class CenterstageTeleOp extends OpMode {
             // user trying to lift down
             if (currentHangPosition1 < Constants.hangMin || !limits) {
                 useHangPower = true;
-                hangPower1 = hangJoystick * Constants.hangDownRatio;
+                hangPower1 = hangJoystick * Constants.hangDownRatio * -1;
             } else {
                 hangPower1 = 0;
             }
 
             if (currentHangPosition2 < Constants.hangMin || !limits) {
                 useHangPower = true;
-                hangPower2 = hangJoystick * Constants.hangDownRatio;
+                hangPower2 = hangJoystick * Constants.hangDownRatio * -1;
             } else {
                 hangPower2 = 0;
             }
@@ -243,6 +252,7 @@ public class CenterstageTeleOp extends OpMode {
         robot.setClawServo(clawPosition);
         robot.setClawArmServo(clawArmPosition);
         robot.setPlaneServo(planePosition);
+        robot.setPixelServo(pixelPosition);
 
         if (liftModeUpdate && liftUseEnc) {
             robot.liftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -281,6 +291,7 @@ public class CenterstageTeleOp extends OpMode {
         telemetry.addData("Hang Motor 2 Pos", currentHangPosition2);
         telemetry.addData("Claw Arm Pos", clawArmPosition);
         telemetry.addData("Plane Pos", planePosition);
+        telemetry.addData("Pixel Pos", pixelPosition);
         telemetry.update();
 
 

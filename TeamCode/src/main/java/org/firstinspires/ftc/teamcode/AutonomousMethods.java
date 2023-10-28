@@ -57,8 +57,10 @@ public abstract class AutonomousMethods extends LinearOpMode {
         Vector2d pixelVector = null;
         Vector2d afterPixel = null;
         Vector2d backdrop = null;
+        double startTangent = 0;
         double afterPixelAngle = 0;
         double pixelAngle = 0;
+        double pixelApproachingTangent = 0;
         double afterPixelStartingTangent = 0;
         double afterPixelEndingTangent = 0;
         double backdropTangent = 0;
@@ -100,8 +102,10 @@ public abstract class AutonomousMethods extends LinearOpMode {
             backdropSide = PoseConstants.blueLeft.backdropSide;
         } else if ( Objects.equals(startPosition, "blueRight") ) {
             startPose = PoseConstants.blueRight.start;
+            startTangent = PoseConstants.blueRight.startingTangent;
             pixelVector = (propLocation == 1) ? PoseConstants.blueRight.left : ( (propLocation == 2) ? PoseConstants.blueRight.center : PoseConstants.blueRight.right);
             pixelAngle = (propLocation == 1) ? PoseConstants.blueRight.spikeMarkAngleLeft : ( (propLocation == 2) ? PoseConstants.blueRight.spikeMarkAngleCenter : PoseConstants.blueRight.spikeMarkAngleRight);
+            pixelApproachingTangent = (propLocation == 1) ? PoseConstants.blueRight.spikeMarkApproachingTangentLeft : ( (propLocation == 2) ? PoseConstants.blueRight.spikeMarkApproachingTangentCenter : PoseConstants.blueRight.spikeMarkApproachingTangentRight);
             afterPixelStartingTangent = (propLocation == 1) ? PoseConstants.blueRight.afterSpikeMarkStartingTangentLeft : ( (propLocation == 2) ? PoseConstants.blueRight.afterSpikeMarkStartingTangentCenter : PoseConstants.blueRight.afterSpikeMarkStartingTangentRight);
             afterPixelEndingTangent = PoseConstants.blueRight.afterSpikeMarkEndingTangent;
             afterPixel = PoseConstants.blueRight.afterSpikeMark;
@@ -131,8 +135,8 @@ public abstract class AutonomousMethods extends LinearOpMode {
 
         } else {
 
-            spikeMarkTraj = robot.trajectoryBuilder(startPose)
-                    .splineTo(pixelVector, pixelAngle)
+            spikeMarkTraj = robot.trajectoryBuilder(startPose, startTangent)
+                    .splineToSplineHeading(new Pose2d(pixelVector, pixelAngle), pixelApproachingTangent)
                     .build();
 
             afterSpikeMarkTraj = robot.trajectoryBuilder(new Pose2d(pixelVector, pixelAngle), afterPixelStartingTangent)
@@ -268,13 +272,16 @@ public abstract class AutonomousMethods extends LinearOpMode {
                     telemetry.addData("into blueRight ", "driving");
                     telemetry.update();
 
+                    roadrunnerToBackdrop(DESIRED_TAG_ID, startPosition);
+                    /**
                     Pose2d currentPose = robot.getPoseEstimate();
                     Trajectory backdropTraj = robot.trajectoryBuilder(currentPose, Math.toRadians(0))
-                            .splineTo(new Vector2d(45, 36), Math.toRadians(180))
+                            .splineToSplineHeading(new Pose2d(new Vector2d(46, 29), Math.toRadians(180)), Math.toRadians(180))
+                            //.splineToSplineHeading(new Vector2d(45, 30), Math.toRadians(180), )
                             .build();
-                    robot.followTrajectory(backdropTraj);
-                    sleep(500);
-                    //break;
+                    robot.followTrajectory(backdropTraj);**/
+                    sleep(2000);
+                    break;
                 } else {
                     PoseConstants.redRight startPose = new PoseConstants.redRight();
                     Trajectory backdropTraj = robot.trajectoryBuilder(robot.getPoseEstimate())
@@ -385,5 +392,30 @@ public abstract class AutonomousMethods extends LinearOpMode {
         rightFrontDrive.setPower(rightFrontPower);
         leftBackDrive.setPower(leftBackPower);
         rightBackDrive.setPower(rightBackPower);
+    }
+
+    public void roadrunnerToBackdrop(int propLocation, String startPosition) {
+        Vector2d toBackDrop = null;
+        double toBackDropTangent = 0;
+        if (startPosition.equals("blueRight") || startPosition.equals("blueLeft")) {
+            toBackDrop = (propLocation == 1) ? PoseConstants.backDropBlueRight.left : ( (propLocation == 2) ? PoseConstants.backDropBlueRight.center : PoseConstants.backDropBlueRight.right);
+            toBackDropTangent = Math.toRadians(180);
+        }
+        else if (startPosition.equals("redRight") || startPosition.equals("redLeft")) {
+            toBackDrop = (propLocation == 1) ? PoseConstants.backDropRedRight.left : ( (propLocation == 2) ? PoseConstants.backDropRedRight.center : PoseConstants.backDropRedRight.right);
+            toBackDropTangent = Math.toRadians(180);
+        }
+
+        Pose2d currentPose = robot.getPoseEstimate();
+        Trajectory backdropTraj = robot.trajectoryBuilder(currentPose, Math.toRadians(0))
+                .splineToSplineHeading(new Pose2d(toBackDrop, Math.toRadians(180)), toBackDropTangent)
+                //.splineToSplineHeading(new Pose2d(new Vector2d(46, 29), Math.toRadians(180)), Math.toRadians(180))
+                .build();
+        robot.followTrajectory(backdropTraj);
+
+    /**
+        toBackBoardTraj = robot.trajectoryBuilder(new Pose2d(afterPixel, afterPixelAngle), Math.toRadians(0))
+                .splineToSplineHeading(new Pose2d(backdrop, Math.toRadians(180)), backdropTangent)
+                .build();**/
     }
 }

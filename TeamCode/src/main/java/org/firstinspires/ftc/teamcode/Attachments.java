@@ -5,6 +5,7 @@ import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.har
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -45,6 +46,7 @@ public class Attachments extends SampleMecanumDrive {
         liftMotor = hardwareMap.get(DcMotorEx.class, names.liftMotor);
         hangMotor1 = hardwareMap.get(DcMotorEx.class, names.hangMotor1);
         hangMotor2 = hardwareMap.get(DcMotorEx.class, names.hangMotor2);
+        hangMotor1.setDirection(DcMotorEx.Direction.REVERSE);
         liftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         liftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         hangMotor1.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -60,7 +62,7 @@ public class Attachments extends SampleMecanumDrive {
         clawServo = hardwareMap.get(Servo.class, names.clawServo);
         clawArmServo = hardwareMap.get(Servo.class, names.clawArmServo);
         planeServo = hardwareMap.get(Servo.class, names.planeServo);
-//        pixelServo = hardwareMap.get(Servo.class, names.pixelServo);
+        pixelServo = hardwareMap.get(Servo.class, names.pixelServo);
 
         telemetry.addLine("Servos Initialized");
         telemetry.update();

@@ -25,7 +25,7 @@ public class visionTestAuto extends AutonomousMethods {
         robot.initialize(hardwareMap, telemetry, true);
         PoseConstants.blueRight startPose = new PoseConstants.blueRight();
         robot.setPoseEstimate(PoseConstants.blueRight.start);
-        propLocation = 2;
+        propLocation = Constants.testPropLoc;
 
         while (!isStarted()) {;
             //propLocation = robot.getPropLocation();
@@ -34,7 +34,6 @@ public class visionTestAuto extends AutonomousMethods {
         }
 
         //propLocation = robot.getPropLocation();
-        propLocation = 3;
         //telemetry.addLine("Location: " + propLocation);
         //telemetry.update();
 
