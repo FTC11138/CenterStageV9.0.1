@@ -7,6 +7,9 @@ import com.acmerobotics.roadrunner.trajectory.constraints.TrajectoryVelocityCons
 import com.acmerobotics.roadrunner.trajectory.constraints.TranslationalVelocityConstraint;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
+import org.apache.commons.math3.analysis.function.Constant;
+import org.firstinspires.ftc.robotcore.external.Const;
+
 import java.util.Arrays;
 
 @Autonomous(name="visionTestAuto", group="Linear Opmode")
@@ -37,7 +40,11 @@ public class visionTestAuto extends AutonomousMethods {
         //telemetry.addLine("Location: " + propLocation);
         //telemetry.update();
 
-        dropPixel_toBackdrop(propLocation, "blueRight");
+        robot.setClawArmServo(Constants.clawArmDrive);
+        robot.setPixelServo(Constants.pixelHold);
+        robot.setClawServo(Constants.clawClose);
+
+//        dropPixel_toBackdrop(propLocation, "blueRight");
 
 
         //going to detect point
@@ -50,6 +57,37 @@ public class visionTestAuto extends AutonomousMethods {
 
         telemetry.addData("done with dropPixel", "moving on");
         telemetry.update();
-        goToAprilTag(propLocation, "blueRight", robot.visionPortal, robot.aprilTagProcessor);
+
+//        roadrunnerToBackdrop(propLocation, "blueRight");
+
+//        goToAprilTag(propLocation, "blueRight", robot.visionPortal, robot.aprilTagProcessor);
+
+
+        sleep(3000);
+
+        robot.setPixelServo(Constants.pixelDrop);
+        sleep(500);
+        robot.setPixelServo(Constants.pixelHold);
+
+        sleep(3000);
+
+        robot.setLiftMotor(1, Constants.liftDropAuto);
+        robot.setClawArmServo(Constants.clawArmHigh);
+        sleep(2000);
+        robot.setClawArmServo(Constants.clawArmUp);
+        sleep(1000);
+        robot.setClawServo(Constants.clawOpen);
+        sleep(500);
+
+        Trajectory toPark = robot.trajectoryBuilder(robot.getPoseEstimate())
+                .splineTo(PoseConstants.blueRight.parkRight, Math.toRadians(0))
+                .build();
+
+        robot.setLiftMotor(1, Constants.liftLow);
+        robot.setClawArmServo(Constants.clawArmDrive);
+//        robot.followTrajectory(toPark);
+        sleep(5000);
+
+
     }
 }

@@ -33,7 +33,10 @@ public class Constants {
 
     public static double clawArmDown = 0.75;
     public static double clawArmUp = 0.2;
-    public static double clawArmSpeed = 0.005;
+    public static double clawArmHigh = 0.5;
+    public static double clawArmDrive = 0.65;
+    public static double clawArmSpeed = 0.003;
+    public static double clawArmSlowRatio = 0.5;
 
     public static double planeHold = 0.8;
     public static double planeRelease = 0.65;
@@ -44,7 +47,8 @@ public class Constants {
 
     public static int liftMin = 0;
     public static int liftLow = 0;
-    public static int liftMed = 500;
+    public static int liftDropAuto = 400;
+    public static int liftArm = 100;
     public static int liftHigh = 600;
     public static int liftMax = 2000;
 

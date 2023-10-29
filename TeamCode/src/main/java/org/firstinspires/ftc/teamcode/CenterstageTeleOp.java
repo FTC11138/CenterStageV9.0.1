@@ -35,6 +35,9 @@ public class CenterstageTeleOp extends OpMode {
 
     private boolean limits = true;
 
+    private int stage = -1;
+    private int stageCounter = 0;
+
 
     @Override
     public void init() {
@@ -94,9 +97,11 @@ public class CenterstageTeleOp extends OpMode {
         }
 
         if (gamepad2.b) {
-            clawArmPosition = Constants.clawArmUp;
+//            clawArmPosition = Constants.clawArmUp;
+            stage = 2;
         } else if (gamepad2.a) {
-            clawArmPosition = Constants.clawArmDown;
+//            clawArmPosition = Constants.clawArmDown;
+            stage = 1;
         }
 
         if (gamepad1.right_trigger > 0.2|| gamepad2.right_trigger > 0.2) {
@@ -148,6 +153,40 @@ public class CenterstageTeleOp extends OpMode {
 
         if (gamepad1.right_bumper) {
             limits = !limits;
+        }
+
+        if (liftModeUpdate && liftUseEnc) {
+            robot.liftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            liftModeUpdate = false;
+        }
+
+        if (stage > 0) {
+            switch (stage) {
+                case 1:
+                    // Bring Arm Down
+                    if ((clawArmPosition + Constants.clawArmSpeed) < Constants.clawArmDown) {
+                        if (clawArmPosition > Constants.clawArmDrive) {
+                            clawArmPosition += Constants.clawArmSpeed * Constants.clawArmSlowRatio;
+                        } else {
+                            clawArmPosition += Constants.clawArmSpeed;
+                        }
+                    } else {
+                        stage = -1;
+                    }
+                    break;
+                case 2:
+                    // Bring Arm Up
+                    if ((clawArmPosition - Constants.clawArmSpeed) > Constants.clawArmUp) {
+                        clawArmPosition -= Constants.clawArmSpeed;
+                    } else {
+                        stage = -1;
+                    }
+                    break;
+            }
+        }
+
+        if (stageCounter > 0) {
+            stageCounter--;
         }
 
 
@@ -224,15 +263,15 @@ public class CenterstageTeleOp extends OpMode {
         double clawArmJoystick = gamepad2.right_stick_x;
         if (clawArmJoystick > 0.2) {
             // User trying to push the clawArm up by pushing the joystick up
-            if ((clawArmPosition + Constants.clawArmSpeed) < Constants.clawArmUp) { // making sure servo value doesnt go higher than max
-                clawArmPosition += Constants.clawArmSpeed * clawArmJoystick;
+            if ((clawArmPosition - Constants.clawArmSpeed) > Constants.clawArmUp) { // making sure servo value doesnt go higher than max
+                clawArmPosition -= Constants.clawArmSpeed * clawArmJoystick;
             } else {
                 clawArmPosition = Constants.clawArmUp;
             }
         } else if (clawArmJoystick < -0.2) {
             // User trying to pull the clawArm down by pushing the joystick down
             if ((clawArmPosition + Constants.clawArmSpeed) < Constants.clawArmDown) {
-                clawArmPosition += Constants.clawArmSpeed * clawArmJoystick;
+                clawArmPosition -= Constants.clawArmSpeed * clawArmJoystick;
             } else {
                 clawArmPosition = Constants.clawArmDown;
             }
@@ -302,6 +341,8 @@ public class CenterstageTeleOp extends OpMode {
 
     void setLiftMotor(int position) {
         robot.setLiftMotor(1, position);
+        liftUseEnc = false;
+        liftModeUpdate = true;
     }
 
 //    void setLiftMotor(int position) {

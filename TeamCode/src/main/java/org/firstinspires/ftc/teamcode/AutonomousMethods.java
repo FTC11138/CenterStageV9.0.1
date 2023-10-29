@@ -128,6 +128,7 @@ public abstract class AutonomousMethods extends LinearOpMode {
             backdrop = PoseConstants.blueRight.backdrop;
             backdropTangent = PoseConstants.blueRight.backdropTangent;
             backdropSide = PoseConstants.blueRight.backdropSide;
+
         }
 
 
@@ -137,14 +138,15 @@ public abstract class AutonomousMethods extends LinearOpMode {
                     .splineToSplineHeading(new Pose2d(pixel, pixelAngle), pixelApproachingTangent)
                     .build();
 
-            toBackBoardTraj = robot.trajectoryBuilder(new Pose2d(pixel, pixelAngle), pixelLeavingTangent)
+            toBackBoardTraj = robot.trajectoryBuilder(robot.getPoseEstimate(), pixelLeavingTangent)
                     .splineToSplineHeading(new Pose2d(backdrop, Math.toRadians(0)), backdropTangent)
                     .build();
 
             robot.followTrajectory(spikeMarkTraj);
 
             robot.setPixelServo(Constants.pixelDrop);
-            sleep(500);
+            sleep(1000);
+            robot.setPixelServo(Constants.pixelHold);
 
             robot.followTrajectory(toBackBoardTraj);
 
@@ -154,18 +156,19 @@ public abstract class AutonomousMethods extends LinearOpMode {
                     .splineToSplineHeading(new Pose2d(pixel, pixelAngle), pixelApproachingTangent)
                     .build();
 
-            afterSpikeMarkTraj = robot.trajectoryBuilder(new Pose2d(pixel, pixelAngle), pixelLeavingTangent)
+            afterSpikeMarkTraj = robot.trajectoryBuilder(robot.getPoseEstimate(), pixelLeavingTangent)
                     .splineToSplineHeading(new Pose2d(afterPixel, afterPixelAngle), afterPixelApproachingTangent)
                     .build();
 
-            toBackBoardTraj = robot.trajectoryBuilder(new Pose2d(afterPixel, afterPixelAngle), Math.toRadians(0))
+            toBackBoardTraj = robot.trajectoryBuilder(robot.getPoseEstimate(), Math.toRadians(0))
                     .splineToSplineHeading(new Pose2d(backdrop, Math.toRadians(180)), backdropTangent)
                     .build();
 
             robot.followTrajectory(spikeMarkTraj);
 
             robot.setPixelServo(Constants.pixelDrop);
-            sleep(500);
+            sleep(1000);
+            robot.setPixelServo(Constants.pixelHold);
 
             robot.followTrajectory(afterSpikeMarkTraj);
             robot.followTrajectory(toBackBoardTraj);
@@ -222,7 +225,7 @@ public abstract class AutonomousMethods extends LinearOpMode {
         sleep(2000);
         double rangeError = Integer.MAX_VALUE;
         int i = 0;
-        while (rangeError > DESIRED_DISTANCE) {
+//        while (rangeError > DESIRED_DISTANCE) {
             telemetry.addData("running while ", i);
             targetFound = false;
             desiredTag  = null;
@@ -259,7 +262,7 @@ public abstract class AutonomousMethods extends LinearOpMode {
 
 
             /* -------------------------------------------- MOVEMENT -------------------------------------------- */
-            targetFound = false;
+//            targetFound = false;
 
             if (targetFound) { //should add timer
                 telemetry.addData("found ", "continuing");
@@ -269,9 +272,9 @@ public abstract class AutonomousMethods extends LinearOpMode {
                 double yawError = desiredTag.ftcPose.yaw;
 
                 // Use the speed and turn "gains" to calculate how we want the robot to move.
-                drive  = Range.clip(rangeError * SPEED_GAIN, -MAX_AUTO_SPEED, MAX_AUTO_SPEED);
+                drive  = Range.clip(rangeError * SPEED_GAIN, -MAX_AUTO_SPEED, MAX_AUTO_SPEED) * -1;
                 turn   = 0.1 * Range.clip(headingError * TURN_GAIN, -MAX_AUTO_TURN, MAX_AUTO_TURN) ;
-                strafe = Range.clip(-yawError * STRAFE_GAIN, -MAX_AUTO_STRAFE, MAX_AUTO_STRAFE);
+                strafe = Range.clip(-yawError * STRAFE_GAIN, -MAX_AUTO_STRAFE, MAX_AUTO_STRAFE) * -1;
                 telemetry.addData("rangeError ", rangeError);
                 telemetry.update();
                 sleep(500);
@@ -283,7 +286,7 @@ public abstract class AutonomousMethods extends LinearOpMode {
                 telemetry.addData("not found", "continuing");
                 telemetry.update();
 
-                if (startPosition == "blueRight" || startPosition == "blueLeft") {
+                if (startPosition.equals("blueRight") || startPosition.equals("blueLeft")) {
                     telemetry.addData("into blueRight ", "driving");
                     telemetry.update();
 
@@ -296,7 +299,6 @@ public abstract class AutonomousMethods extends LinearOpMode {
                             .build();
                     robot.followTrajectory(backdropTraj);**/
                     sleep(2000);
-                    break;
                 } else {
                     PoseConstants.redRight startPose = new PoseConstants.redRight();
                     Trajectory backdropTraj = robot.trajectoryBuilder(robot.getPoseEstimate())
@@ -308,7 +310,7 @@ public abstract class AutonomousMethods extends LinearOpMode {
             }
             i++;
             telemetry.update();
-        }
+
     }
 
     /**
@@ -411,19 +413,17 @@ public abstract class AutonomousMethods extends LinearOpMode {
 
     public void roadrunnerToBackdrop(int propLocation, String startPosition) {
         Vector2d toBackDrop = null;
-        double toBackDropTangent = 0;
+
         if (startPosition.equals("blueRight") || startPosition.equals("blueLeft")) {
             toBackDrop = (propLocation == 1) ? PoseConstants.backDropBlueRight.left : ( (propLocation == 2) ? PoseConstants.backDropBlueRight.center : PoseConstants.backDropBlueRight.right);
-            toBackDropTangent = Math.toRadians(180);
         }
         else if (startPosition.equals("redRight") || startPosition.equals("redLeft")) {
             toBackDrop = (propLocation == 1) ? PoseConstants.backDropRedRight.left : ( (propLocation == 2) ? PoseConstants.backDropRedRight.center : PoseConstants.backDropRedRight.right);
-            toBackDropTangent = Math.toRadians(180);
         }
 
         Pose2d currentPose = robot.getPoseEstimate();
-        Trajectory backdropTraj = robot.trajectoryBuilder(currentPose, Math.toRadians(0))
-                .splineToSplineHeading(new Pose2d(toBackDrop, Math.toRadians(180)), toBackDropTangent)
+        Trajectory backdropTraj = robot.trajectoryBuilder(currentPose)
+                .lineTo(toBackDrop)
                 //.splineToSplineHeading(new Pose2d(new Vector2d(46, 29), Math.toRadians(180)), Math.toRadians(180))
                 .build();
         robot.followTrajectory(backdropTraj);
