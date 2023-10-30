@@ -47,7 +47,7 @@ public class Constants {
 
     public static int liftMin = 0;
     public static int liftLow = 0;
-    public static int liftDropAuto = 400;
+    public static int liftDropAuto = 600;
     public static int liftArm = 100;
     public static int liftHigh = 600;
     public static int liftMax = 2000;
@@ -92,7 +92,7 @@ public class Constants {
     public static int rLx = 5;
     public static int rLy = 320;
     public static int rLw = 100;
-    public static int rLh = 80;
+    public static int rLh = 60;
 
     public static int rRx = 500;
     public static int rRy = 330;
@@ -100,9 +100,9 @@ public class Constants {
     public static int rRh = 80;
 
     public static int rMx = 140;
-    public static int rMy = 300;
+    public static int rMy = 280;
     public static int rMw = 300;
-    public static int rMh = 50;
+    public static int rMh = 80;
 
     /* --------------------------------------------  APRILTAG CONSTANTS ------------------------------------------ */
     public static double DESIRED_DISTANCE = 6.0;

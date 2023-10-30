@@ -26,25 +26,24 @@ public class visionTestAuto extends AutonomousMethods {
 
         //robot.initialize(hardwareMap, telemetry, true);
         robot.initialize(hardwareMap, telemetry, true);
-        PoseConstants.blueRight startPose = new PoseConstants.blueRight();
-        robot.setPoseEstimate(PoseConstants.blueRight.start);
+        robot.setPoseEstimate(PoseConstants.redLeft.start);
         propLocation = Constants.testPropLoc;
 
         while (!isStarted()) {;
-            //propLocation = robot.getPropLocation();
+            propLocation = robot.getPropLocation();
             telemetry.addLine("Location: " + propLocation);
             telemetry.update();
         }
 
-        //propLocation = robot.getPropLocation();
-        //telemetry.addLine("Location: " + propLocation);
-        //telemetry.update();
+//        propLocation = robot.getPropLocation();
+        telemetry.addLine("Final Location: " + propLocation);
+        telemetry.update();
 
         robot.setClawArmServo(Constants.clawArmDrive);
         robot.setPixelServo(Constants.pixelHold);
         robot.setClawServo(Constants.clawClose);
 
-//        dropPixel_toBackdrop(propLocation, "blueRight");
+        dropPixel_toBackdrop(propLocation, "redLeft");
 
 
         //going to detect point
@@ -58,29 +57,23 @@ public class visionTestAuto extends AutonomousMethods {
         telemetry.addData("done with dropPixel", "moving on");
         telemetry.update();
 
-//        roadrunnerToBackdrop(propLocation, "blueRight");
+        roadrunnerToBackdrop(propLocation, "redLeft");
 
 //        goToAprilTag(propLocation, "blueRight", robot.visionPortal, robot.aprilTagProcessor);
 
 
         sleep(3000);
 
-        robot.setPixelServo(Constants.pixelDrop);
-        sleep(500);
-        robot.setPixelServo(Constants.pixelHold);
-
-        sleep(3000);
-
         robot.setLiftMotor(1, Constants.liftDropAuto);
         robot.setClawArmServo(Constants.clawArmHigh);
-        sleep(2000);
+        sleep(1000);
         robot.setClawArmServo(Constants.clawArmUp);
         sleep(1000);
         robot.setClawServo(Constants.clawOpen);
         sleep(500);
 
         Trajectory toPark = robot.trajectoryBuilder(robot.getPoseEstimate())
-                .splineTo(PoseConstants.blueRight.parkRight, Math.toRadians(0))
+                .splineTo(PoseConstants.redLeft.parkRight, Math.toRadians(0))
                 .build();
 
         robot.setLiftMotor(1, Constants.liftLow);

@@ -10,15 +10,11 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
-import org.apache.commons.math3.analysis.function.Constant;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.robotcore.external.hardware.camera.BuiltinCameraDirection;
-import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.controls.ExposureControl;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.controls.GainControl;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 import org.firstinspires.ftc.vision.VisionPortal;
-import org.firstinspires.ftc.vision.VisionProcessor;
 import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
 import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
 
@@ -61,69 +57,79 @@ public abstract class AutonomousMethods extends LinearOpMode {
         double afterPixelAngle = 0;
         double pixelAngle = 0;
         double pixelApproachingTangent = 0;
-        double pixelLeavingTangent = 0;
-        double afterPixelApproachingTangent = 0;
+        double afterPixelStartingTangent = 0;
+        double afterPixelEndingTangent = 0;
         double backdropTangent = 0;
         boolean backdropSide = false;
 
 
         if ( Objects.equals(startPosition, "redLeft") ) { // Done
+
             startPose = PoseConstants.redLeft.start;
-            startTangent = PoseConstants.redLeft.startingTangent;
+            startTangent = PoseConstants.redLeft.startingTangent[propLocation - 1];
 
-            pixel = (propLocation == 1) ? PoseConstants.redLeft.left : ((propLocation == 2) ? PoseConstants.redLeft.center : PoseConstants.redLeft.right);
-            pixelAngle = (propLocation == 1) ? PoseConstants.redLeft.spikeMarkAngleLeft : ( (propLocation == 2) ? PoseConstants.redLeft.spikeMarkAngleCenter : PoseConstants.redLeft.spikeMarkAngleRight);
+            pixel = PoseConstants.redLeft.pixel[propLocation - 1];
+            pixelAngle = PoseConstants.redLeft.pixelAngle[propLocation - 1];
 
-            pixelApproachingTangent = (propLocation == 1) ? PoseConstants.redLeft.spikeMarkApproachingTangentLeft : ( (propLocation == 2) ? PoseConstants.redLeft.spikeMarkApproachingTangentCenter : PoseConstants.redLeft.spikeMarkApproachingTangentRight);
-            pixelLeavingTangent = (propLocation == 1) ? PoseConstants.redLeft.afterSpikeMarkStartingTangentLeft : ( (propLocation == 2) ? PoseConstants.redLeft.afterSpikeMarkStartingTangentCenter : PoseConstants.redLeft.afterSpikeMarkStartingTangentRight);
-            afterPixelApproachingTangent = PoseConstants.redLeft.afterSpikeMarkEndingTangent;
-            afterPixel = PoseConstants.redLeft.afterSpikeMark;
-            afterPixelAngle = (propLocation == 1) ? PoseConstants.redLeft.afterSpikeMarkAngleLeft : ( (propLocation == 2) ? PoseConstants.redLeft.afterSpikeMarkAngleCenter : PoseConstants.redLeft.afterSpikeMarkAngleRight);
+            pixelApproachingTangent = PoseConstants.redLeft.pixelApproachingTangent[propLocation - 1];
+            afterPixelStartingTangent = PoseConstants.redLeft.afterPixelStartingTangent[propLocation - 1];
+            afterPixelEndingTangent = PoseConstants.redLeft.afterPixelEndingTangent[propLocation - 1];
+            afterPixel = PoseConstants.redLeft.afterPixel;
+            afterPixelAngle = PoseConstants.redLeft.afterPixelAngle[propLocation - 1];
 
             backdrop = PoseConstants.redLeft.backdrop;
             backdropTangent = PoseConstants.redLeft.backdropTangent;
             backdropSide = PoseConstants.redLeft.backdropSide;
 
-        } else if ( Objects.equals(startPosition, "redRight") ) { // Done
+        } else if ( Objects.equals(startPosition, "redRight") ) {
+
             startPose = PoseConstants.redRight.start;
-            startTangent = PoseConstants.redRight.startingTangent;
+            startTangent = PoseConstants.redRight.startingTangent[propLocation - 1];
 
-            pixel = (propLocation == 1) ? PoseConstants.redRight.left : ( (propLocation == 2) ? PoseConstants.redRight.center : PoseConstants.redRight.right);
-            pixelAngle = (propLocation == 1) ? PoseConstants.redRight.spikeMarkAngleLeft : ( (propLocation == 2) ? PoseConstants.redRight.spikeMarkAngleCenter : PoseConstants.redRight.spikeMarkAngleRight);
+            pixel = PoseConstants.redRight.pixel[propLocation - 1];
+            pixelAngle = PoseConstants.redRight.pixelAngle[propLocation - 1];
+            pixelApproachingTangent = PoseConstants.redRight.pixelApproachingTangent[propLocation - 1];
 
-            pixelApproachingTangent = (propLocation == 1) ? PoseConstants.redRight.spikeMarkApproachingTangentLeft : ( (propLocation == 2) ? PoseConstants.redRight.spikeMarkApproachingTangentCenter : PoseConstants.redRight.spikeMarkApproachingTangentRight);
-            pixelLeavingTangent = (propLocation == 1) ? PoseConstants.redRight.afterSpikeMarkStartingTangentLeft : ( (propLocation == 2) ? PoseConstants.redRight.afterSpikeMarkStartingTangentCenter : PoseConstants.redRight.afterSpikeMarkStartingTangentRight);
+            afterPixelStartingTangent = PoseConstants.redRight.afterPixelStartingTangent[propLocation - 1];
+            afterPixelEndingTangent = PoseConstants.redRight.afterPixelEndingTangent[propLocation - 1];
+            afterPixel = PoseConstants.redRight.afterPixel;
+            afterPixelAngle = PoseConstants.redRight.afterPixelAngle[propLocation - 1];
 
             backdrop = PoseConstants.redRight.backdrop;
             backdropTangent = PoseConstants.redRight.backdropTangent;
             backdropSide = PoseConstants.redRight.backdropSide;
 
-        } else if ( Objects.equals(startPosition, "blueLeft") ) { // Done
+        } else if ( Objects.equals(startPosition, "blueLeft") ) {
+
             startPose = PoseConstants.blueLeft.start;
-            startTangent = PoseConstants.blueLeft.startingTangent;
+            startTangent = PoseConstants.blueLeft.startingTangent[propLocation - 1];
 
-            pixel = (propLocation == 1) ? PoseConstants.blueLeft.left : ( (propLocation == 2) ? PoseConstants.blueLeft.center : PoseConstants.blueLeft.right);
-            pixelAngle = (propLocation == 1) ? PoseConstants.blueLeft.spikeMarkAngleLeft : ( (propLocation == 2) ? PoseConstants.blueLeft.spikeMarkAngleCenter : PoseConstants.blueLeft.spikeMarkAngleRight);
+            pixel = PoseConstants.blueLeft.pixel[propLocation - 1];
+            pixelAngle = PoseConstants.blueLeft.pixelAngle[propLocation - 1];
+            pixelApproachingTangent = PoseConstants.blueLeft.pixelApproachingTangent[propLocation - 1];
 
-            pixelApproachingTangent = (propLocation == 1) ? PoseConstants.blueLeft.spikeMarkApproachingTangentLeft : ( (propLocation == 2) ? PoseConstants.blueLeft.spikeMarkApproachingTangentCenter : PoseConstants.blueLeft.spikeMarkApproachingTangentRight);
-            pixelLeavingTangent = (propLocation == 1) ? PoseConstants.blueLeft.afterSpikeMarkStartingTangentLeft : ( (propLocation == 2) ? PoseConstants.blueLeft.afterSpikeMarkStartingTangentCenter : PoseConstants.blueLeft.afterSpikeMarkStartingTangentRight);
+            afterPixelStartingTangent = PoseConstants.blueLeft.afterPixelStartingTangent[propLocation - 1];
+            afterPixelEndingTangent = PoseConstants.blueLeft.afterPixelEndingTangent[propLocation - 1];
+            afterPixel = PoseConstants.blueLeft.afterPixel;
+            afterPixelAngle = PoseConstants.blueLeft.afterPixelAngle[propLocation - 1];
 
             backdrop = PoseConstants.blueLeft.backdrop;
             backdropTangent = PoseConstants.blueLeft.backdropTangent;
             backdropSide = PoseConstants.blueLeft.backdropSide;
 
         } else if ( Objects.equals(startPosition, "blueRight") ) { // Done
+
             startPose = PoseConstants.blueRight.start;
-            startTangent = PoseConstants.blueRight.startingTangent;
+            startTangent = PoseConstants.blueRight.startingTangent[propLocation - 1];
 
-            pixel = (propLocation == 1) ? PoseConstants.blueRight.left : ( (propLocation == 2) ? PoseConstants.blueRight.center : PoseConstants.blueRight.right);
-            pixelAngle = (propLocation == 1) ? PoseConstants.blueRight.spikeMarkAngleLeft : ( (propLocation == 2) ? PoseConstants.blueRight.spikeMarkAngleCenter : PoseConstants.blueRight.spikeMarkAngleRight);
+            pixel = PoseConstants.blueRight.pixel[propLocation - 1];
+            pixelAngle = PoseConstants.blueRight.pixelAngle[propLocation - 1];
+            pixelApproachingTangent = PoseConstants.blueRight.pixelApproachingTangent[propLocation - 1];
 
-            pixelApproachingTangent = (propLocation == 1) ? PoseConstants.blueRight.spikeMarkApproachingTangentLeft : ( (propLocation == 2) ? PoseConstants.blueRight.spikeMarkApproachingTangentCenter : PoseConstants.blueRight.spikeMarkApproachingTangentRight);
-            pixelLeavingTangent = (propLocation == 1) ? PoseConstants.blueRight.afterSpikeMarkStartingTangentLeft : ( (propLocation == 2) ? PoseConstants.blueRight.afterSpikeMarkStartingTangentCenter : PoseConstants.blueRight.afterSpikeMarkStartingTangentRight);
-            afterPixelApproachingTangent = PoseConstants.blueRight.afterSpikeMarkEndingTangent;
-            afterPixel = PoseConstants.blueRight.afterSpikeMark;
-            afterPixelAngle = (propLocation == 1) ? PoseConstants.blueRight.afterSpikeMarkAngleLeft : ( (propLocation == 2) ? PoseConstants.blueRight.afterSpikeMarkAngleCenter : PoseConstants.blueRight.afterSpikeMarkAngleRight);
+            afterPixelStartingTangent = PoseConstants.blueRight.afterPixelStartingTangent[propLocation - 1];
+            afterPixelEndingTangent = PoseConstants.blueRight.afterPixelEndingTangent[propLocation - 1];
+            afterPixel = PoseConstants.blueRight.afterPixel;
+            afterPixelAngle = PoseConstants.blueRight.afterPixelAngle[propLocation - 1];
 
             backdrop = PoseConstants.blueRight.backdrop;
             backdropTangent = PoseConstants.blueRight.backdropTangent;
@@ -131,49 +137,27 @@ public abstract class AutonomousMethods extends LinearOpMode {
 
         }
 
+        spikeMarkTraj = robot.trajectoryBuilder(startPose, startTangent)
+                .splineToSplineHeading(new Pose2d(pixel, pixelAngle), pixelApproachingTangent)
+                .build();
 
-        if (backdropSide) {
+        robot.followTrajectory(spikeMarkTraj);
 
-            spikeMarkTraj = robot.trajectoryBuilder(startPose, startTangent)
-                    .splineToSplineHeading(new Pose2d(pixel, pixelAngle), pixelApproachingTangent)
-                    .build();
+        afterSpikeMarkTraj = robot.trajectoryBuilder(robot.getPoseEstimate(), afterPixelStartingTangent)
+                .splineToSplineHeading(new Pose2d(afterPixel, afterPixelAngle), afterPixelEndingTangent)
+                .build();
 
-            toBackBoardTraj = robot.trajectoryBuilder(robot.getPoseEstimate(), pixelLeavingTangent)
-                    .splineToSplineHeading(new Pose2d(backdrop, Math.toRadians(0)), backdropTangent)
-                    .build();
+        robot.setPixelServo(Constants.pixelDrop);
+        sleep(1000);
+        robot.setPixelServo(Constants.pixelHold);
 
-            robot.followTrajectory(spikeMarkTraj);
+        robot.followTrajectory(afterSpikeMarkTraj);
 
-            robot.setPixelServo(Constants.pixelDrop);
-            sleep(1000);
-            robot.setPixelServo(Constants.pixelHold);
-
-            robot.followTrajectory(toBackBoardTraj);
-
-        } else {
-
-            spikeMarkTraj = robot.trajectoryBuilder(startPose, startTangent)
-                    .splineToSplineHeading(new Pose2d(pixel, pixelAngle), pixelApproachingTangent)
-                    .build();
-
-            afterSpikeMarkTraj = robot.trajectoryBuilder(robot.getPoseEstimate(), pixelLeavingTangent)
-                    .splineToSplineHeading(new Pose2d(afterPixel, afterPixelAngle), afterPixelApproachingTangent)
-                    .build();
-
-            toBackBoardTraj = robot.trajectoryBuilder(robot.getPoseEstimate(), Math.toRadians(0))
+        toBackBoardTraj = robot.trajectoryBuilder(robot.getPoseEstimate(), Math.toRadians(0))
                     .splineToSplineHeading(new Pose2d(backdrop, Math.toRadians(180)), backdropTangent)
                     .build();
 
-            robot.followTrajectory(spikeMarkTraj);
-
-            robot.setPixelServo(Constants.pixelDrop);
-            sleep(1000);
-            robot.setPixelServo(Constants.pixelHold);
-
-            robot.followTrajectory(afterSpikeMarkTraj);
-            robot.followTrajectory(toBackBoardTraj);
-
-        }
+        robot.followTrajectory(toBackBoardTraj);
 
     }
 
@@ -225,17 +209,17 @@ public abstract class AutonomousMethods extends LinearOpMode {
         sleep(2000);
         double rangeError = Integer.MAX_VALUE;
         int i = 0;
-//        while (rangeError > DESIRED_DISTANCE) {
+
+        while (rangeError > 0) {
             telemetry.addData("running while ", i);
             targetFound = false;
-            desiredTag  = null;
-            drive           = 0;        // Desired forward power/speed (-1 to +1)
-            strafe          = 0;        // Desired strafe power/speed (-1 to +1)
-            turn            = 0;
+            desiredTag = null;
+            drive = 0;        // Desired forward power/speed (-1 to +1)
+            strafe = 0;        // Desired strafe power/speed (-1 to +1)
+            turn = 0;
             List<AprilTagDetection> currentDetections = aprilTagProcessor.getDetections();
             for (AprilTagDetection detection : currentDetections) {
                 telemetry.addData("Inside detection loop", "detecting");
-                telemetry.update();
                 // Look to see if we have size info on this tag.
                 if (detection.metadata != null) {
                     //  Check to see if we want to track towards this tag.
@@ -244,7 +228,6 @@ public abstract class AutonomousMethods extends LinearOpMode {
                         targetFound = true;
                         desiredTag = detection;
                         telemetry.addData("Detection", detection.id);
-                        telemetry.update();
                         sleep(500);
                         break;  // don't look any further.
                     } else {
@@ -257,26 +240,24 @@ public abstract class AutonomousMethods extends LinearOpMode {
                 }
             }
             telemetry.addData("targetFound ", targetFound);
-            telemetry.update();
             sleep(500);
 
 
             /* -------------------------------------------- MOVEMENT -------------------------------------------- */
 //            targetFound = false;
 
+
             if (targetFound) { //should add timer
                 telemetry.addData("found ", "continuing");
-                telemetry.update();
                 rangeError = (desiredTag.ftcPose.range - DESIRED_DISTANCE);
                 double headingError = desiredTag.ftcPose.bearing;
                 double yawError = desiredTag.ftcPose.yaw;
 
                 // Use the speed and turn "gains" to calculate how we want the robot to move.
-                drive  = Range.clip(rangeError * SPEED_GAIN, -MAX_AUTO_SPEED, MAX_AUTO_SPEED) * -1;
-                turn   = 0.1 * Range.clip(headingError * TURN_GAIN, -MAX_AUTO_TURN, MAX_AUTO_TURN) ;
+                drive = Range.clip(rangeError * SPEED_GAIN, -MAX_AUTO_SPEED, MAX_AUTO_SPEED) * -1;
+                turn = 0.1 * Range.clip(headingError * TURN_GAIN, -MAX_AUTO_TURN, MAX_AUTO_TURN);
                 strafe = Range.clip(-yawError * STRAFE_GAIN, -MAX_AUTO_STRAFE, MAX_AUTO_STRAFE) * -1;
                 telemetry.addData("rangeError ", rangeError);
-                telemetry.update();
                 sleep(500);
 
 
@@ -284,20 +265,18 @@ public abstract class AutonomousMethods extends LinearOpMode {
                 sleep(10);
             } else { //does not detect
                 telemetry.addData("not found", "continuing");
-                telemetry.update();
 
                 if (startPosition.equals("blueRight") || startPosition.equals("blueLeft")) {
-                    telemetry.addData("into blueRight ", "driving");
-                    telemetry.update();
+                    telemetry.addData("into blueRight ", "driving");;
 
                     roadrunnerToBackdrop(DESIRED_TAG_ID, startPosition);
                     /**
-                    Pose2d currentPose = robot.getPoseEstimate();
-                    Trajectory backdropTraj = robot.trajectoryBuilder(currentPose, Math.toRadians(0))
-                            .splineToSplineHeading(new Pose2d(new Vector2d(46, 29), Math.toRadians(180)), Math.toRadians(180))
-                            //.splineToSplineHeading(new Vector2d(45, 30), Math.toRadians(180), )
-                            .build();
-                    robot.followTrajectory(backdropTraj);**/
+                     Pose2d currentPose = robot.getPoseEstimate();
+                     Trajectory backdropTraj = robot.trajectoryBuilder(currentPose, Math.toRadians(0))
+                     .splineToSplineHeading(new Pose2d(new Vector2d(46, 29), Math.toRadians(180)), Math.toRadians(180))
+                     //.splineToSplineHeading(new Vector2d(45, 30), Math.toRadians(180), )
+                     .build();
+                     robot.followTrajectory(backdropTraj);**/
                     sleep(2000);
                 } else {
                     PoseConstants.redRight startPose = new PoseConstants.redRight();
@@ -310,6 +289,8 @@ public abstract class AutonomousMethods extends LinearOpMode {
             }
             i++;
             telemetry.update();
+
+        }
 
     }
 
@@ -378,7 +359,7 @@ public abstract class AutonomousMethods extends LinearOpMode {
 
     public void moveRobotAprilTag(double x, double y, double yaw, DcMotor leftFrontDrive, DcMotor rightFrontDrive, DcMotor leftBackDrive, DcMotor rightBackDrive) {
         telemetry.addData("inside moveRobotAprilTag = ", "true");
-        telemetry.update();
+//        telemetry.update();
         // Calculate wheel powers.
         // Calculate wheel powers.
         double leftFrontPower    =  x -y -yaw;
@@ -399,12 +380,12 @@ public abstract class AutonomousMethods extends LinearOpMode {
         }
 
         // Send powers to the wheels.
-        telemetry.addData("leftFrontPower ", leftFrontPower);
-        telemetry.addData("rightFrontPower ", rightFrontPower);
-        telemetry.addData("leftBackPower ", leftBackPower);
-        telemetry.addData("rightBackPower", rightBackPower);
-        telemetry.update();
-        sleep(500);
+//        telemetry.addData("leftFrontPower ", leftFrontPower);
+//        telemetry.addData("rightFrontPower ", rightFrontPower);
+//        telemetry.addData("leftBackPower ", leftBackPower);
+//        telemetry.addData("rightBackPower", rightBackPower);
+//        telemetry.update();
+//        sleep(500);
         leftFrontDrive.setPower(leftFrontPower);
         rightFrontDrive.setPower(rightFrontPower);
         leftBackDrive.setPower(leftBackPower);
