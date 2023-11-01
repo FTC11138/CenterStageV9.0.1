@@ -39,9 +39,9 @@ public class visionTestAuto extends AutonomousMethods {
         telemetry.addLine("Final Location: " + propLocation);
         telemetry.update();
 
-        robot.setClawArmServo(Constants.clawArmDrive);
+//        robot.setClawArmServo(Constants.clawArmDrive);
+//        robot.setClawServo(Constants.clawClose);
         robot.setPixelServo(Constants.pixelHold);
-        robot.setClawServo(Constants.clawClose);
 
         dropPixel_toBackdrop(propLocation, "redLeft");
 
@@ -57,29 +57,29 @@ public class visionTestAuto extends AutonomousMethods {
         telemetry.addData("done with dropPixel", "moving on");
         telemetry.update();
 
-        roadrunnerToBackdrop(propLocation, "redLeft");
+//        roadrunnerToBackdrop(propLocation, "blueRight");
 
-//        goToAprilTag(propLocation, "blueRight", robot.visionPortal, robot.aprilTagProcessor);
+        goToAprilTag(propLocation, "redLeft", robot.visionPortal, robot.aprilTagProcessor);
 
 
-        sleep(3000);
-
-        robot.setLiftMotor(1, Constants.liftDropAuto);
-        robot.setClawArmServo(Constants.clawArmHigh);
-        sleep(1000);
-        robot.setClawArmServo(Constants.clawArmUp);
-        sleep(1000);
-        robot.setClawServo(Constants.clawOpen);
-        sleep(500);
-
-        Trajectory toPark = robot.trajectoryBuilder(robot.getPoseEstimate())
-                .splineTo(PoseConstants.redLeft.parkRight, Math.toRadians(0))
-                .build();
-
-        robot.setLiftMotor(1, Constants.liftLow);
-        robot.setClawArmServo(Constants.clawArmDrive);
-//        robot.followTrajectory(toPark);
-        sleep(5000);
+//        sleep(3000);
+//
+//        robot.setLiftMotor(1, Constants.liftDropAuto);
+//        robot.setClawArmServo(Constants.clawArmHigh);
+//        sleep(1000);
+//        robot.setClawArmServo(Constants.clawArmUp);
+//        sleep(1000);
+//        robot.setClawServo(Constants.clawOpen);
+//        sleep(500);
+//
+//        Trajectory toPark = robot.trajectoryBuilder(robot.getPoseEstimate())
+//                .splineTo(PoseConstants.redLeft.parkRight, Math.toRadians(0))
+//                .build();
+//
+//        robot.setLiftMotor(1, Constants.liftLow);
+//        robot.setClawArmServo(Constants.clawArmDrive);
+////        robot.followTrajectory(toPark);
+//        sleep(5000);
 
 
     }

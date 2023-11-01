@@ -59,8 +59,8 @@ public class Attachments extends SampleMecanumDrive {
 
 
         // Servos
-        clawServo = hardwareMap.get(Servo.class, names.clawServo);
-        clawArmServo = hardwareMap.get(Servo.class, names.clawArmServo);
+//        clawServo = hardwareMap.get(Servo.class, names.clawServo);
+//        clawArmServo = hardwareMap.get(Servo.class, names.clawArmServo);
         planeServo = hardwareMap.get(Servo.class, names.planeServo);
         pixelServo = hardwareMap.get(Servo.class, names.pixelServo);
 
