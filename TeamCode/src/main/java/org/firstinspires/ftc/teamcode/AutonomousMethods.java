@@ -83,7 +83,8 @@ public abstract class AutonomousMethods extends LinearOpMode {
             afterPixelAngle = PoseConstants.redLeft.afterPixelAngle[propLocation - 1];
 
             beforeBackdrop = PoseConstants.redLeft.beforeBackdrop;
-            backdrop = PoseConstants.redLeft.backdrop;
+            backdrop = (propLocation == 4) ? PoseConstants.redLeft.backdrop4 : ( (propLocation == 5) ? PoseConstants.redLeft.backdrop : PoseConstants.redLeft.backdrop6);
+            //backdrop = PoseConstants.redLeft.backdrop;
             backdropTangent = PoseConstants.redLeft.backdropTangent;
 
         } else if ( Objects.equals(startPosition, "redRight") ) {
@@ -435,7 +436,7 @@ public abstract class AutonomousMethods extends LinearOpMode {
             toBackDrop = (propLocation == 1) ? PoseConstants.backDropBlueRight.left : ( (propLocation == 2) ? PoseConstants.backDropBlueRight.center : PoseConstants.backDropBlueRight.right);
         }
         else if (startPosition.equals("redRight") || startPosition.equals("redLeft")) {
-            toBackDrop = (propLocation == 1) ? PoseConstants.backDropRedRight.left : ( (propLocation == 2) ? PoseConstants.backDropRedRight.center : PoseConstants.backDropRedRight.right);
+            toBackDrop = (propLocation == 4) ? PoseConstants.backDropRedRight.left : ( (propLocation == 5) ? PoseConstants.backDropRedRight.center : PoseConstants.backDropRedRight.right);
         }
 
         Pose2d currentPose = robot.getPoseEstimate();

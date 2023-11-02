@@ -29,12 +29,12 @@ public class Constants {
     public static double pixelDrop = 1;
 
     public static double clawClose = 0.2;
-    public static double clawOpen = 0;
+    public static double clawOpen = 0.1;
 
-    public static double clawArmDown = 0.75;
-    public static double clawArmUp = 0.2;
+    public static double clawArmDown = 0.1;
+    public static double clawArmUp = 0.75;
     public static double clawArmHigh = 0.5;
-    public static double clawArmDrive = 0.65;
+    public static double clawArmDrive = 0.2;
     public static double clawArmSpeed = 0.003;
     public static double clawArmSlowRatio = 0.5;
 
@@ -90,19 +90,19 @@ public class Constants {
     /* -------------------------------------------- VISION RECTANGLE CONSTANTS -------------------------------------------- */
 
     public static int rLx = 5;
-    public static int rLy = 320;
+    public static int rLy = 360;
     public static int rLw = 100;
     public static int rLh = 60;
 
     public static int rRx = 500;
-    public static int rRy = 330;
+    public static int rRy = 360;
     public static int rRw = 135;
     public static int rRh = 80;
 
     public static int rMx = 140;
-    public static int rMy = 280;
+    public static int rMy = 360;
     public static int rMw = 300;
-    public static int rMh = 80;
+    public static int rMh = 60;
 
     /* --------------------------------------------  APRILTAG CONSTANTS ------------------------------------------ */
     public static double DESIRED_DISTANCE = 6.0;

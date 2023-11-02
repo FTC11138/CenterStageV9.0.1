@@ -39,11 +39,11 @@ public class visionTestAuto extends AutonomousMethods {
         telemetry.addLine("Final Location: " + propLocation);
         telemetry.update();
 
-//        robot.setClawArmServo(Constants.clawArmDrive);
-//        robot.setClawServo(Constants.clawClose);
+        robot.setClawArmServo(Constants.clawArmDrive);
+        robot.setClawServo(Constants.clawClose);
         robot.setPixelServo(Constants.pixelHold);
 
-        dropPixel_toBackdrop(propLocation, "redLeft");
+        dropPixel_toBackdrop(propLocation, "redRight");
 
 
         //going to detect point
@@ -57,9 +57,9 @@ public class visionTestAuto extends AutonomousMethods {
         telemetry.addData("done with dropPixel", "moving on");
         telemetry.update();
 
-//        roadrunnerToBackdrop(propLocation, "blueRight");
+        //roadrunnerToBackdrop(propLocation, "redLeft");
 
-        goToAprilTag(propLocation, "redLeft", robot.visionPortal, robot.aprilTagProcessor);
+        goToAprilTag(propLocation, "redRight", robot.visionPortal, robot.aprilTagProcessor);
 
 
 //        sleep(3000);

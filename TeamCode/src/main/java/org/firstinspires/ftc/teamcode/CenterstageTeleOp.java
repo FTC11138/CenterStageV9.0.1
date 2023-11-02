@@ -97,11 +97,11 @@ public class CenterstageTeleOp extends OpMode {
         }
 
         if (gamepad2.b) {
-//            clawArmPosition = Constants.clawArmUp;
-            stage = 2;
+            clawArmPosition = Constants.clawArmUp;
+            //stage = 2;
         } else if (gamepad2.a) {
-//            clawArmPosition = Constants.clawArmDown;
-            stage = 1;
+           clawArmPosition = Constants.clawArmDown;
+            //stage = 1;
         }
 
         if (gamepad1.right_trigger > 0.2|| gamepad2.right_trigger > 0.2) {
@@ -282,7 +282,7 @@ public class CenterstageTeleOp extends OpMode {
         currentLiftPosition = robot.getLiftMotorPosition();
         currentHangPosition1 = robot.getHangMotorPosition1();
         currentHangPosition2 = robot.getHangMotorPosition2();
-//        clawArmPosition = robot.getClawArmPosition();
+        //clawArmPosition = robot.getClawArmPosition();
 
 
 
