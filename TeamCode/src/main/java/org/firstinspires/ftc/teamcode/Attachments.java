@@ -40,7 +40,6 @@ public class Attachments extends SampleMecanumDrive {
         initializeRoadrunner(hardwareMap);
 
         telemetry.addLine("Roadrunner Initialized");
-        telemetry.update();
 
         // Motors
         liftMotor = hardwareMap.get(DcMotorEx.class, names.liftMotor);
@@ -55,7 +54,6 @@ public class Attachments extends SampleMecanumDrive {
         hangMotor2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         telemetry.addLine("Motors Initialized");
-        telemetry.update();
 
 
         // Servos
@@ -65,14 +63,13 @@ public class Attachments extends SampleMecanumDrive {
         pixelServo = hardwareMap.get(Servo.class, names.pixelServo);
 
         telemetry.addLine("Servos Initialized");
-        telemetry.update();
 
 
         // Camera
         webcam = hardwareMap.get(WebcamName.class, names.webcam);
 
         telemetry.addLine("Camera Initialized");
-        telemetry.update();
+
 
         // Change Drive Motor Modes if not autonomous
         if (!auto) {

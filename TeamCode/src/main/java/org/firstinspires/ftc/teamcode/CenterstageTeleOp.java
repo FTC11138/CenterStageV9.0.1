@@ -1,9 +1,14 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
+
+import org.firstinspires.ftc.teamcode.drive.StandardTrackingWheelLocalizer;
+
+import java.util.ArrayList;
 
 @TeleOp(name = "Tele Op", group = "Iterative Opmode")
 public class CenterstageTeleOp extends OpMode {
@@ -38,10 +43,28 @@ public class CenterstageTeleOp extends OpMode {
     private int stage = -1;
     private int stageCounter = 0;
 
+    StandardTrackingWheelLocalizer localizer;
+    Pose2d currentPose;
+    double xPos;
+    double yPos;
+    double heading;
+
 
     @Override
     public void init() {
         robot.initialize(hardwareMap, telemetry, false);
+        localizer = new StandardTrackingWheelLocalizer(hardwareMap, new ArrayList<>(), new ArrayList<>());
+
+        if (Constants.startPos == 1) {
+            localizer.setPoseEstimate(PoseConstants.blueLeft.start);
+        } else if (Constants.startPos == 2) {
+            localizer.setPoseEstimate(PoseConstants.blueRight.start);
+        } else if (Constants.startPos == 3) {
+            localizer.setPoseEstimate(PoseConstants.redLeft.start);
+        } else {
+            localizer.setPoseEstimate(PoseConstants.redRight.start);
+        }
+
     }
 
     @Override
@@ -52,8 +75,24 @@ public class CenterstageTeleOp extends OpMode {
     @Override
     public void loop() {
 
-        double lx = gamepad1.left_stick_x;
-        double ly = -gamepad1.left_stick_y;
+
+        localizer.update();
+        currentPose = localizer.getPoseEstimate();
+        heading = currentPose.getHeading();
+        xPos = currentPose.getX();
+        yPos = currentPose.getY();
+
+        double joyX = gamepad1.left_stick_x;
+        double joyY = -gamepad1.left_stick_y;
+        double joyAngle = Math.atan(joyY/joyX);
+        double robotAngle = heading;
+        double moveAngle = joyAngle - robotAngle;
+        double ly = Math.sin(moveAngle) * joyY;
+        double lx = Math.cos(moveAngle) * joyX;
+
+
+//        lx = gamepad1.left_stick_x;
+//        ly = -gamepad1.left_stick_y;
         double speedMultiplier = Constants.moveSpeed;
         double rotationMultiplier = Constants.rotSpeed;
 
@@ -87,7 +126,6 @@ public class CenterstageTeleOp extends OpMode {
 
 
         /* -------------------------------------------- CHANGE -------------------------------------------- */
-
 
 
         if (gamepad2.left_bumper) {
@@ -152,7 +190,9 @@ public class CenterstageTeleOp extends OpMode {
 
 
         if (gamepad1.right_bumper) {
-            limits = !limits;
+            limits = true;
+        } else if (gamepad1.left_bumper) {
+            limits = false;
         }
 
         if (liftModeUpdate && liftUseEnc) {
@@ -262,14 +302,12 @@ public class CenterstageTeleOp extends OpMode {
 
         double clawArmJoystick = gamepad2.right_stick_x;
         if (clawArmJoystick > 0.2) {
-            // User trying to push the clawArm up by pushing the joystick up
-            if ((clawArmPosition - Constants.clawArmSpeed) > Constants.clawArmUp) { // making sure servo value doesnt go higher than max
+            if ((clawArmPosition - Constants.clawArmSpeed) > Constants.clawArmUp) {
                 clawArmPosition -= Constants.clawArmSpeed * clawArmJoystick;
             } else {
                 clawArmPosition = Constants.clawArmUp;
             }
         } else if (clawArmJoystick < -0.2) {
-            // User trying to pull the clawArm down by pushing the joystick down
             if ((clawArmPosition + Constants.clawArmSpeed) < Constants.clawArmDown) {
                 clawArmPosition -= Constants.clawArmSpeed * clawArmJoystick;
             } else {
@@ -282,7 +320,6 @@ public class CenterstageTeleOp extends OpMode {
         currentLiftPosition = robot.getLiftMotorPosition();
         currentHangPosition1 = robot.getHangMotorPosition1();
         currentHangPosition2 = robot.getHangMotorPosition2();
-        //clawArmPosition = robot.getClawArmPosition();
 
 
 
@@ -320,7 +357,8 @@ public class CenterstageTeleOp extends OpMode {
 
         /* -------------------------------------------- TELEMETRY -------------------------------------------- */
 
-
+        telemetry.addData("X Joy", joyX);
+        telemetry.addData("Y Joy", joyY);
         telemetry.addData("Lift Joy", liftJoystick);
         telemetry.addData("Hang Joy", hangJoystick);
         telemetry.addData("Claw Arm Joy", clawArmJoystick);

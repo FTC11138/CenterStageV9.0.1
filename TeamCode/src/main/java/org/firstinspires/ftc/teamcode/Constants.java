@@ -5,6 +5,16 @@ import com.acmerobotics.dashboard.config.Config;
 @Config
 public class Constants {
 
+    /* -------------------------------------------- TELE OP CONSTANTS -------------------------------------------- */
+
+    public static int startPos = 1;
+    /*
+        1: Blue Left
+        2: Blue Right
+        3: Red Left
+        4: Red Right
+     */
+
 
     /* -------------------------------------------- DRIVE CONSTANTS -------------------------------------------- */
 
@@ -70,7 +80,7 @@ public class Constants {
 
     public static int hangMin = 0;
     public static int hangLow = -1300;
-    public static int hangHigh = 0;
+    public static int hangHigh = -3000;
     public static int hangMax = -3100;
 
     public static double hangUpRatio = 1;
