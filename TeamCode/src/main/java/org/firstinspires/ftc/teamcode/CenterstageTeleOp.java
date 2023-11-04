@@ -330,6 +330,7 @@ public class CenterstageTeleOp extends OpMode {
 
         robot.setClawServo(clawPosition);
         robot.setClawArmServo(clawArmPosition);
+        robot.setTurnClawServo(turnClawPosition);
         robot.setPlaneServo(planePosition);
         robot.setPixelServo(pixelPosition);
 
