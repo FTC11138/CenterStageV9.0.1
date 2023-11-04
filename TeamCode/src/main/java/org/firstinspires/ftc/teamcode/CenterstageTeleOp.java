@@ -142,7 +142,7 @@ public class CenterstageTeleOp extends OpMode {
         } else if (gamepad2.a) {
 //           clawArmPosition = Constants.clawArmDown;
 //           turnClawPosition = Constants.turnClawDown;
-            stage = 1;
+            stage = 0;
         }
 
         if (gamepad1.right_trigger > 0.2|| gamepad2.right_trigger > 0.2) {
