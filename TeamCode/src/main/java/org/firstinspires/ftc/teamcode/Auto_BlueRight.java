@@ -12,54 +12,58 @@ import org.firstinspires.ftc.robotcore.external.Const;
 
 import java.util.Arrays;
 
-@Autonomous(name="visionTestAuto", group="Linear Opmode")
-public class visionTestAuto extends AutonomousMethods {
+@Autonomous(name="Auto_BlueRight", group="Linear Opmode", preselectTeleOp = "TeleOp")
+public class Auto_BlueRight extends AutonomousMethods {
     @Override
     public void runOpMode() throws InterruptedException {
-        int propLocation;
+        int propLocation = 2;
+        String startPos = "blueRight";
+        boolean targetFound = true;
 
         robot.initialize(hardwareMap, telemetry, true);
-        robot.setPoseEstimate(PoseConstants.redRight.start);
-        propLocation = Constants.testPropLoc;
+        robot.setPoseEstimate(PoseConstants.blueRight.start);
 
         while (!isStarted()) {;
             propLocation = robot.getPropLocation();
             telemetry.addLine("Location: " + propLocation);
             telemetry.update();
         }
-
         telemetry.addLine("Final Location: " + propLocation);
         telemetry.update();
+
+
 
         robot.setClawArmServo(Constants.clawArmLow);
         robot.setClawServo(Constants.clawClose);
         robot.setPixelServo(Constants.pixelHold);
 
-        dropPixel_toBackdrop(propLocation, "redRight", Constants.continueAutoAfterSpikeMark);
-
+        dropPixel_toBackdrop(propLocation, startPos, Constants.continueAutoAfterSpikeMark);
         telemetry.addData("done with dropPixel", "moving on");
         telemetry.update();
 
-        goToAprilTag( propLocation, "redRight", robot.visionPortal, robot.aprilTagProcessor);
-
+        targetFound = goToAprilTag(propLocation, startPos, robot.visionPortal, robot.aprilTagProcessor);
 
         sleep(1000);
 
-        robot.setClawArmServo(Constants.clawArmUp);
-        robot.setTurnClawServo(Constants.turnClawUp);
-        sleep(1000);
-        robot.setLiftMotor(1, Constants.liftDropAuto);
-        sleep(4000);
+        if (targetFound) {
+
+            robot.setClawArmServo(Constants.clawArmUp);
+            robot.setTurnClawServo(Constants.turnClawUp);
+            sleep(1000);
+            robot.setLiftMotor(1, Constants.liftDropAuto);
+            sleep(4000);
+            robot.setClawServo(Constants.clawOpen);
+            sleep(500);
+
+            robot.setLiftMotor(1, Constants.liftLow);
+            robot.setClawArmServo(Constants.clawArmLow);
+            sleep(2000);
+            robot.setTurnClawServo(Constants.turnClawDown);
+
+        }
+
+        toPark(Constants.parkLoc, startPos);
         robot.setClawServo(Constants.clawOpen);
-        sleep(500);
-
-        robot.setLiftMotor(1, Constants.liftLow);
-        robot.setClawArmServo(Constants.clawArmLow);
-        sleep(2000);
-        robot.setTurnClawServo(Constants.turnClawDown);
-        toPark(1, "redRight");
-        sleep(5000);
-
 
     }
 }

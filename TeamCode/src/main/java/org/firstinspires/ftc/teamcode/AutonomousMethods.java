@@ -44,8 +44,7 @@ public abstract class AutonomousMethods extends LinearOpMode {
     }
 
 
-
-    public void dropPixel_toBackdrop(int propLocation, String startPosition) {
+    public void dropPixel_toBackdrop(int propLocation, String startPosition, boolean continueAfterPixel) {
         Trajectory spikeMarkTraj = null;
         Trajectory afterSpikeMarkTraj = null;
         Trajectory toBeforeBackBoardTraj = null;
@@ -66,7 +65,7 @@ public abstract class AutonomousMethods extends LinearOpMode {
         boolean backdropSide = true;
 
 
-        if ( Objects.equals(startPosition, "redLeft") ) { // Done
+        if (Objects.equals(startPosition, "redLeft")) { // Done
 
             backdropSide = PoseConstants.redLeft.backdropSide;
 
@@ -83,11 +82,10 @@ public abstract class AutonomousMethods extends LinearOpMode {
             afterPixelAngle = PoseConstants.redLeft.afterPixelAngle[propLocation - 1];
 
             beforeBackdrop = PoseConstants.redLeft.beforeBackdrop;
-            backdrop = (propLocation == 4) ? PoseConstants.redLeft.backdrop4 : ( (propLocation == 5) ? PoseConstants.redLeft.backdrop : PoseConstants.redLeft.backdrop6);
-            //backdrop = PoseConstants.redLeft.backdrop;
+            backdrop = PoseConstants.redLeft.backdrop[propLocation - 1];
             backdropTangent = PoseConstants.redLeft.backdropTangent;
 
-        } else if ( Objects.equals(startPosition, "redRight") ) {
+        } else if (Objects.equals(startPosition, "redRight")) {
 
             backdropSide = PoseConstants.redRight.backdropSide;
 
@@ -103,10 +101,10 @@ public abstract class AutonomousMethods extends LinearOpMode {
             afterPixel = PoseConstants.redRight.afterPixel;
             afterPixelAngle = PoseConstants.redRight.afterPixelAngle[propLocation - 1];
 
-            backdrop = PoseConstants.redRight.backdrop;
+            backdrop = PoseConstants.redRight.backdrop[propLocation - 1];
             backdropTangent = PoseConstants.redRight.backdropTangent;
 
-        } else if ( Objects.equals(startPosition, "blueLeft") ) {
+        } else if (Objects.equals(startPosition, "blueLeft")) {
 
             backdropSide = PoseConstants.blueLeft.backdropSide;
 
@@ -122,10 +120,10 @@ public abstract class AutonomousMethods extends LinearOpMode {
             afterPixel = PoseConstants.blueLeft.afterPixel;
             afterPixelAngle = PoseConstants.blueLeft.afterPixelAngle[propLocation - 1];
 
-            backdrop = PoseConstants.blueLeft.backdrop;
+            backdrop = PoseConstants.blueLeft.backdrop[propLocation - 1];
             backdropTangent = PoseConstants.blueLeft.backdropTangent;
 
-        } else if ( Objects.equals(startPosition, "blueRight") ) { // Done
+        } else if (Objects.equals(startPosition, "blueRight")) { // Done
 
             backdropSide = PoseConstants.blueRight.backdropSide;
 
@@ -142,7 +140,7 @@ public abstract class AutonomousMethods extends LinearOpMode {
             afterPixelAngle = PoseConstants.blueRight.afterPixelAngle[propLocation - 1];
 
             beforeBackdrop = PoseConstants.blueRight.beforeBackdrop;
-            backdrop = PoseConstants.blueRight.backdrop;
+            backdrop = PoseConstants.blueRight.backdrop[propLocation - 1];
             backdropTangent = PoseConstants.blueRight.backdropTangent;
 
         }
@@ -162,6 +160,10 @@ public abstract class AutonomousMethods extends LinearOpMode {
             robot.setPixelServo(Constants.pixelDrop);
             sleep(1000);
             robot.setPixelServo(Constants.pixelHold);
+
+            if (continueAfterPixel) {
+                return;
+            }
 
             robot.followTrajectory(afterSpikeMarkTraj);
 
@@ -192,6 +194,10 @@ public abstract class AutonomousMethods extends LinearOpMode {
             sleep(1000);
             robot.setPixelServo(Constants.pixelHold);
 
+            if (continueAfterPixel) {
+                return;
+            }
+
             robot.followTrajectory(afterSpikeMarkTraj);
 
             toBackBoardTraj = robot.trajectoryBuilder(robot.getPoseEstimate(), Math.toRadians(0))
@@ -203,45 +209,18 @@ public abstract class AutonomousMethods extends LinearOpMode {
 
     }
 
-    public void goToAprilTag(int propLocation, String startPosition, VisionPortal visionPortal, AprilTagProcessor aprilTagProcessor) {
+    public boolean goToAprilTag(int propLocation, String startPosition, VisionPortal visionPortal, AprilTagProcessor aprilTagProcessor) {
         telemetry.addData("Made it: ", "to goToAprilTag");
         telemetry.update();
         final double DESIRED_DISTANCE = Constants.DESIRED_DISTANCE;
-        final double SPEED_GAIN = Constants.SPEED_GAIN;
-        final double STRAFE_GAIN = Constants.STRAFE_GAIN;
-        final double TURN_GAIN = Constants.TURN_GAIN;
-        final double MAX_AUTO_SPEED = Constants.MAX_AUTO_SPEED;
-        final double MAX_AUTO_STRAFE = Constants.MAX_AUTO_STRAFE;
-        final double MAX_AUTO_TURN = Constants.MAX_AUTO_TURN;
 
         final boolean USE_WEBCAM = true;
         int DESIRED_TAG_ID = propLocation;
         if (startPosition.equals("redLeft") || startPosition.equals("redRight")) {
             DESIRED_TAG_ID += 3;
         }
-        //VisionPortal visionPortal = new VisionPortal.Builder().build();
-        //AprilTagProcessor aprilTag = new AprilTagProcessor.Builder().build();
         AprilTagDetection desiredTag = null;
-
-        boolean targetFound = true; // setting to true so it goes into loop at least once
-        double  drive           = 0;        // Desired forward power/speed (-1 to +1)
-        double  strafe          = 0;        // Desired strafe power/speed (-1 to +1)
-        double  turn            = 0;
-        //double rangeError = Integer.MAX_VALUE;
-        //double headingError = Integer.MIN_VALUE;
-        //double yawError = Integer.MAX_VALUE;
-        //initAprilTag(visionPortal, aprilTagProcessor);
-
-        DcMotor leftFrontDrive  = hardwareMap.get(DcMotor.class, "lf"); //leftFront
-        DcMotor rightFrontDrive = hardwareMap.get(DcMotor.class, "rf"); //rightfront_drive
-        DcMotor leftBackDrive  = hardwareMap.get(DcMotor.class, "lr");
-        DcMotor rightBackDrive = hardwareMap.get(DcMotor.class, "rr");
-
-        leftFrontDrive.setDirection(DcMotor.Direction.REVERSE);
-        leftBackDrive.setDirection(DcMotor.Direction.REVERSE);
-        rightFrontDrive.setDirection(DcMotor.Direction.FORWARD);
-        rightBackDrive.setDirection(DcMotor.Direction.FORWARD);
-
+        boolean targetFound = false;
 
         /* -------------------------------------------- APRIL TAG DETECTION -------------------------------------------- */
 
@@ -251,118 +230,51 @@ public abstract class AutonomousMethods extends LinearOpMode {
 
         telemetry.addData("Finished ", "initialization");
         telemetry.update();
-        sleep(2000);
+        sleep(500);
 
-//        for (int i = 0; i < 2; i++) {
-
-            targetFound = false;
-            desiredTag = null;
-            drive = 0;        // Desired forward power/speed (-1 to +1)
-            strafe = 0;        // Desired strafe power/speed (-1 to +1)
-            turn = 0;
-            List<AprilTagDetection> currentDetections = aprilTagProcessor.getDetections();
-            for (AprilTagDetection detection : currentDetections) {
-                // Look to see if we have size info on this tag.
-                if (detection.metadata != null) {
-                    //  Check to see if we want to track towards this tag.
-                    if ((DESIRED_TAG_ID < 0) || (detection.id == DESIRED_TAG_ID)) {
-                        // Yes, we want to use this tag.
-                        targetFound = true;
-                        desiredTag = detection;
-                        break;  // don't look any further.
-                    }
+        List<AprilTagDetection> currentDetections = aprilTagProcessor.getDetections();
+        for (AprilTagDetection detection : currentDetections) {
+            // Look to see if we have size info on this tag.
+            if (detection.metadata != null) {
+                //  Check to see if we want to track towards this tag.
+                if ((DESIRED_TAG_ID < 0) || (detection.id == DESIRED_TAG_ID)) {
+                    // Yes, we want to use this tag.
+                    targetFound = true;
+                    desiredTag = detection;
+                    break;  // don't look any further.
                 }
             }
-            telemetry.addData("targetFound ", targetFound);
+        }
+        telemetry.addData("targetFound ", targetFound);
+        telemetry.update();
+
+
+        /* -------------------------------------------- MOVEMENT -------------------------------------------- */
+
+        if (targetFound) { //should add timer
+            telemetry.addLine("Detected");
+
+            double rangeError = (desiredTag.ftcPose.range - DESIRED_DISTANCE) * -1;
+            double xError = desiredTag.ftcPose.x * -1;
+
+            telemetry.addData("rangeError ", rangeError);
+            telemetry.addData("yawError", xError);
             telemetry.update();
-            sleep(2000);
 
+            TrajectorySequence toAprilTag = robot.trajectorySequenceBuilder(robot.getPoseEstimate())
+                    .forward(rangeError)
+                    .strafeRight(xError)
+                    .build();
+            robot.followTrajectorySequence(toAprilTag);
+            return true;
 
-            /* -------------------------------------------- MOVEMENT -------------------------------------------- */
-//            targetFound = false;
+        } else { //does not detect so use roadrunner
+            telemetry.addLine("Not Detected");
+            return false;
 
-
-            if (targetFound) { //should add timer
-                telemetry.addLine("Detected");
-
-                double rangeError   = (desiredTag.ftcPose.range - DESIRED_DISTANCE) * -1;
-                double xError     = desiredTag.ftcPose.x * -1;
-
-                // Use the speed and turn "gains" to calculate how we want the robot to move.
-//                drive  = Range.clip(rangeError * SPEED_GAIN, -MAX_AUTO_SPEED, MAX_AUTO_SPEED);
-//                turn   = Range.clip(headingError * TURN_GAIN, -MAX_AUTO_TURN, MAX_AUTO_TURN);
-//                strafe = Range.clip(-yawError * STRAFE_GAIN, -MAX_AUTO_STRAFE, MAX_AUTO_STRAFE);
-                telemetry.addData("rangeError ", rangeError);
-                telemetry.addData("yawError", xError);
-                telemetry.update();
-
-
-                TrajectorySequence toAprilTag = robot.trajectorySequenceBuilder(robot.getPoseEstimate())
-                        .forward(rangeError)
-                        .strafeRight(xError)
-                        .build();
-                robot.followTrajectorySequence(toAprilTag);
-
-//                currentDetections = aprilTagProcessor.getDetections();
-//                for (AprilTagDetection detection : currentDetections) {
-//                    // Look to see if we have size info on this tag.
-//                    if (detection.metadata != null) {
-//                        //  Check to see if we want to track towards this tag.
-//                        if ((DESIRED_TAG_ID < 0) || (detection.id == DESIRED_TAG_ID)) {
-//                            // Yes, we want to use this tag.
-//                            desiredTag = detection;
-//                            break;  // don't look any further.
-//                        }
-//                    }
-//                }
-//
-//                double headingError = desiredTag.ftcPose.yaw * -1;
-//
-//                toAprilTag = robot.trajectorySequenceBuilder(robot.getPoseEstimate())
-//                        .turn(Math.toRadians(headingError))
-//                        .build();
-//                robot.followTrajectorySequence(toAprilTag);
-
-//                moveRobotAprilTag(drive, strafe, turn, leftFrontDrive, rightFrontDrive, leftBackDrive, rightBackDrive);
-                sleep(10);
-
-            } else { //does not detect so use roadrunner
-                telemetry.addLine("Not Detected");
-
-                roadrunnerToBackdrop(DESIRED_TAG_ID, startPosition);
-
-            }
+        }
 
     }
-
-
-    /**
-    private void initAprilTag(VisionPortal visionPortal, AprilTagProcessor aprilTagProcessor) {
-        // Create the AprilTag processor by using a builder.
-        //aprilTagProcessor = new AprilTagProcessor.Builder().build();
-
-        // Adjust Image Decimation to trade-off detection-range for detection-rate.
-        // eg: Some typical detection data using a Logitech C920 WebCam
-        // Decimation = 1 ..  Detect 2" Tag from 10 feet away at 10 Frames per second
-        // Decimation = 2 ..  Detect 2" Tag from 6  feet away at 22 Frames per second
-        // Decimation = 3 ..  Detect 2" Tag from 4  feet away at 30 Frames Per Second
-        // Decimation = 3 ..  Detect 5" Tag from 10 feet away at 30 Frames Per Second
-        // Note: Decimation can be changed on-the-fly to adapt during a match.
-        aprilTagProcessor.setDecimation(2);
-
-        // Create the vision portal by using a builder.
-        if (true) {
-            visionPortal = new VisionPortal.Builder()
-                    .setCamera(hardwareMap.get(WebcamName.class, "Webcam 1"))
-                    .addProcessor(aprilTagProcessor)
-                    .build();
-        } else {
-            visionPortal = new VisionPortal.Builder()
-                    .setCamera(BuiltinCameraDirection.BACK)
-                    .addProcessor(aprilTagProcessor)
-                    .build();
-        }
-    }**/
 
     private void setManualExposure(int exposureMS, int gain, VisionPortal visionPortal) {
         // Wait for the camera to be open, then use the controls
@@ -383,14 +295,13 @@ public abstract class AutonomousMethods extends LinearOpMode {
         }
 
         // Set camera controls unless we are stopping.
-        if (!isStopRequested())
-        {
+        if (!isStopRequested()) {
             ExposureControl exposureControl = visionPortal.getCameraControl(ExposureControl.class);
             if (exposureControl.getMode() != ExposureControl.Mode.Manual) {
                 exposureControl.setMode(ExposureControl.Mode.Manual);
                 sleep(50);
             }
-            exposureControl.setExposure((long)exposureMS, TimeUnit.MILLISECONDS);
+            exposureControl.setExposure((long) exposureMS, TimeUnit.MILLISECONDS);
             sleep(20);
             GainControl gainControl = visionPortal.getCameraControl(GainControl.class);
             gainControl.setGain(gain);
@@ -404,10 +315,10 @@ public abstract class AutonomousMethods extends LinearOpMode {
 //        telemetry.update();
         // Calculate wheel powers.
         // Calculate wheel powers.
-        double leftFrontPower    =  x -y -yaw;
-        double rightFrontPower   =  x +y +yaw;
-        double leftBackPower     =  x +y -yaw;
-        double rightBackPower    =  x -y +yaw;
+        double leftFrontPower = x - y - yaw;
+        double rightFrontPower = x + y + yaw;
+        double leftBackPower = x + y - yaw;
+        double rightBackPower = x - y + yaw;
 
         // Normalize wheel powers to be less than 1.0
         double max = Math.max(Math.abs(leftFrontPower), Math.abs(rightFrontPower));
@@ -433,10 +344,9 @@ public abstract class AutonomousMethods extends LinearOpMode {
         Vector2d toBackDrop = null;
 
         if (startPosition.equals("blueRight") || startPosition.equals("blueLeft")) {
-            toBackDrop = (propLocation == 1) ? PoseConstants.backDropBlueRight.left : ( (propLocation == 2) ? PoseConstants.backDropBlueRight.center : PoseConstants.backDropBlueRight.right);
-        }
-        else if (startPosition.equals("redRight") || startPosition.equals("redLeft")) {
-            toBackDrop = (propLocation == 4) ? PoseConstants.backDropRedRight.left : ( (propLocation == 5) ? PoseConstants.backDropRedRight.center : PoseConstants.backDropRedRight.right);
+            toBackDrop = (propLocation == 1) ? PoseConstants.backDropBlueRight.left : ((propLocation == 2) ? PoseConstants.backDropBlueRight.center : PoseConstants.backDropBlueRight.right);
+        } else if (startPosition.equals("redRight") || startPosition.equals("redLeft")) {
+            toBackDrop = (propLocation == 4) ? PoseConstants.backDropRedRight.left : ((propLocation == 5) ? PoseConstants.backDropRedRight.center : PoseConstants.backDropRedRight.right);
         }
 
         Pose2d currentPose = robot.getPoseEstimate();
@@ -446,9 +356,39 @@ public abstract class AutonomousMethods extends LinearOpMode {
                 .build();
         robot.followTrajectory(backdropTraj);
 
-    /**
-        toBackBoardTraj = robot.trajectoryBuilder(new Pose2d(afterPixel, afterPixelAngle), Math.toRadians(0))
-                .splineToSplineHeading(new Pose2d(backdrop, Math.toRadians(180)), backdropTangent)
-                .build();**/
+    }
+
+    public void toPark(int parkLoc, String startPosition) {
+        Vector2d toPark = null;
+        double startingTangent = 0;
+
+        if (parkLoc == 3) {
+            return;
+        }
+
+        if (startPosition.equals("blueRight") || startPosition.equals("blueLeft")) {
+            if (parkLoc == 1) {
+                toPark = PoseConstants.blueRight.parkRight;
+                startingTangent = Math.toRadians(-90);
+            } else {
+                toPark = PoseConstants.blueRight.parkLeft;
+                startingTangent = Math.toRadians(90);
+            }
+        } else if (startPosition.equals("redRight") || startPosition.equals("redLeft")) {
+            if (parkLoc == 1) {
+                toPark = PoseConstants.redLeft.parkLeft;
+                startingTangent = Math.toRadians(90);
+            } else {
+                toPark = PoseConstants.redLeft.parkRight;
+                startingTangent = Math.toRadians(-90);
+            }
+        }
+
+        Pose2d currentPose = robot.getPoseEstimate();
+        Trajectory parkTraj = robot.trajectoryBuilder(currentPose, startingTangent)
+                .splineToSplineHeading(new Pose2d(toPark, Math.toRadians(0)), Math.toRadians(0))
+                //.splineToSplineHeading(new Pose2d(new Vector2d(46, 29), Math.toRadians(180)), Math.toRadians(180))
+                .build();
+        robot.followTrajectory(parkTraj);
     }
 }

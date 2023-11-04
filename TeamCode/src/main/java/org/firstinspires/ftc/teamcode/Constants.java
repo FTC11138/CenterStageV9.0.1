@@ -16,8 +16,10 @@ public class Constants {
      */
 
 
-    /* -------------------------------------------- DRIVE CONSTANTS -------------------------------------------- */
+    /* -------------------------------------------- AUTO CONSTANTS -------------------------------------------- */
 
+    public static int parkLoc = 1;
+    public static boolean continueAutoAfterSpikeMark = true;
     public static int testPropLoc = 1;
 
 
@@ -38,18 +40,20 @@ public class Constants {
     public static double pixelHold = 0.5;
     public static double pixelDrop = 1;
 
-    public static double clawClose = 0.2;
-    public static double clawOpen = 0.1;
+    public static double clawClose = 0.6;
+    public static double clawOpen = 0.2;
 
-    public static double clawArmDown = 0.82;
+    public static double clawArmDown = 0.9;
     public static double clawArmUp = 0.38;
     public static double clawArmHigh = 0.5;
+    public static double clawArmLow = 0.83; // Arm position where it is safe to lower claw
     public static double clawArmDrive = 0.2;
     public static double clawArmSpeed = 0.003;
     public static double clawArmSlowRatio = 0.5;
 
-    public static double turnClawDown = 0.75;
-    public static double turnClawUp = 0.1;
+    public static double turnClawUp = 0.75;
+    public static double turnClawDown = 0.27;
+    public static double turnClawSpeed = 0.01;
 
     public static double planeHold = 0.8;
     public static double planeRelease = 0.65;
@@ -59,8 +63,8 @@ public class Constants {
 
 
     public static int liftMin = 0;
-    public static int liftLow = 0;
-    public static int liftDropAuto = 600;
+    public static int liftLow = 100;
+    public static int liftDropAuto = 700;
     public static int liftArm = 100;
     public static int liftHigh = 600;
     public static int liftMax = 2000;
@@ -118,7 +122,7 @@ public class Constants {
     public static int rMh = 60;
 
     /* --------------------------------------------  APRILTAG CONSTANTS ------------------------------------------ */
-    public static double DESIRED_DISTANCE = 6.0;
+    public static double DESIRED_DISTANCE = 12;
     public static double SPEED_GAIN  =  0.02;
     public static double STRAFE_GAIN =  0.015;
     public static double TURN_GAIN   =  0.01;

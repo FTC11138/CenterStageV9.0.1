@@ -69,7 +69,7 @@ public class SampleMecanumDrive extends MecanumDrive {
 
 
 
-    public static double LATERAL_MULTIPLIER = 0.99173553719;
+    public static double LATERAL_MULTIPLIER = 1.3043478261;
 
     public static double VX_WEIGHT = 1;
     public static double VY_WEIGHT = 1;
