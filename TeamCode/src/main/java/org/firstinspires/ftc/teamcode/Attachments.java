@@ -22,7 +22,7 @@ public class Attachments extends SampleMecanumDrive {
     private Telemetry telemetry;
     private ElapsedTime runtime = new ElapsedTime();
 
-    public Servo clawServo, clawArmServo, planeServo, pixelServo;
+    public Servo clawServo, clawArmServo, planeServo, pixelServo, turnClawServo;
     public DcMotorEx liftMotor, hangMotor1, hangMotor2;
     public WebcamName webcam;
     public VisionProcessor visionProcessor;
@@ -59,6 +59,7 @@ public class Attachments extends SampleMecanumDrive {
         // Servos
         clawServo = hardwareMap.get(Servo.class, names.clawServo);
         clawArmServo = hardwareMap.get(Servo.class, names.clawArmServo);
+        turnClawServo = hardwareMap.get(Servo.class, names.turnClawServo);
         planeServo = hardwareMap.get(Servo.class, names.planeServo);
         pixelServo = hardwareMap.get(Servo.class, names.pixelServo);
 
@@ -123,6 +124,7 @@ public class Attachments extends SampleMecanumDrive {
     // Set Servos
     public void setClawServo (double position) {clawServo.setPosition(position);}
     public void setClawArmServo (double position) {clawArmServo.setPosition(position);}
+    public void setTurnClawServo (double position) {turnClawServo.setPosition(position);}
     public void setPlaneServo (double position) {planeServo.setPosition(position);}
     public void setPixelServo (double position) {pixelServo.setPosition(position);}
 

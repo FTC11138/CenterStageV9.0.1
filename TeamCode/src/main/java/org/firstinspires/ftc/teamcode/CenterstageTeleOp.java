@@ -20,6 +20,7 @@ public class CenterstageTeleOp extends OpMode {
 
     private double clawPosition = Constants.clawOpen;
     private double clawArmPosition = Constants.clawArmDown;
+    private double turnClawPosition = Constants.turnClawDown;
     private double planePosition = Constants.planeHold;
     private double pixelPosition = Constants.pixelHold;
     private double liftPower = 0;
@@ -136,9 +137,11 @@ public class CenterstageTeleOp extends OpMode {
 
         if (gamepad2.b) {
             clawArmPosition = Constants.clawArmUp;
+            turnClawPosition = Constants.turnClawUp;
             //stage = 2;
         } else if (gamepad2.a) {
            clawArmPosition = Constants.clawArmDown;
+           turnClawPosition = Constants.turnClawDown;
             //stage = 1;
         }
 
