@@ -41,8 +41,8 @@ public class Constants {
     public static double clawClose = 0.2;
     public static double clawOpen = 0.1;
 
-    public static double clawArmDown = 0.5; //0.6
-    public static double clawArmUp = 0.4;
+    public static double clawArmDown = 0.5; 
+    public static double clawArmUp = 0.75;
     public static double clawArmHigh = 0.5;
     public static double clawArmDrive = 0.2;
     public static double clawArmSpeed = 0.003;
