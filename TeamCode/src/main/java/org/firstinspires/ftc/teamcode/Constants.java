@@ -43,16 +43,16 @@ public class Constants {
     public static double clawClose = 0.6;
     public static double clawOpen = 0.2;
 
-    public static double clawArmDown = 0.9;
+    public static double clawArmDown = 0.88;
     public static double clawArmUp = 0.38;
     public static double clawArmHigh = 0.5;
     public static double clawArmLow = 0.83; // Arm position where it is safe to lower claw
-    public static double clawArmDrive = 0.2;
+    public static double clawArmDrive = 0.83;
     public static double clawArmSpeed = 0.003;
     public static double clawArmSlowRatio = 0.5;
 
-    public static double turnClawUp = 0.75;
-    public static double turnClawDown = 0.27;
+    public static double turnClawUp = 0.82;
+    public static double turnClawDown = 0.34;
     public static double turnClawSpeed = 0.01;
 
     public static double planeHold = 0.8;

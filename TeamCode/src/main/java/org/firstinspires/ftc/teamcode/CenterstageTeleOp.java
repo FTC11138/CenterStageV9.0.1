@@ -19,7 +19,7 @@ public class CenterstageTeleOp extends OpMode {
 
 
     private double clawPosition = Constants.clawOpen;
-    private double clawArmPosition = Constants.clawArmDown;
+    private double clawArmPosition = Constants.clawArmDrive;
     private double turnClawPosition = Constants.turnClawDown;
     private double planePosition = Constants.planeHold;
     private double pixelPosition = Constants.pixelHold;
@@ -145,6 +145,13 @@ public class CenterstageTeleOp extends OpMode {
             stage = 0;
         }
 
+        if (gamepad2.left_stick_button) {
+            clawArmPosition = Constants.clawArmDrive;
+        }
+        else if (gamepad2.right_stick_button) {
+            clawArmPosition = Constants.clawArmDown;
+        }
+
         if (gamepad1.right_trigger > 0.2|| gamepad2.right_trigger > 0.2) {
             planePosition = Constants.planeRelease;
         }
@@ -205,11 +212,11 @@ public class CenterstageTeleOp extends OpMode {
             liftModeUpdate = false;
         }
 
-        if (stage > 0) {
+        if (stage >= 0) {
             switch (stage) {
                 case 0:
                     // Bring Lift Down
-                    if (currentLiftPosition > Constants.liftLow) {
+                    if (currentLiftPosition > Constants.liftLow) { //liftLow
                         useLiftPower = false;
                         targetLiftPosition = Constants.liftMin;
                         liftUseEnc = true;
@@ -219,7 +226,8 @@ public class CenterstageTeleOp extends OpMode {
                     break;
                 case 1:
                     // Bring Arm Down
-                    if ((clawArmPosition + Constants.clawArmSpeed) <= Constants.clawArmLow) {
+                    if ((clawArmPosition + Constants.clawArmSpeed) <= Constants.clawArmLow) { //(clawArmPosition + Constants.clawArmSpeed) <= Constants.clawArmLow
+                        telemetry.addData("stage 1 ", true);
                         clawArmPosition += Constants.clawArmSpeed;
                     } else {
                         stage = 2;
