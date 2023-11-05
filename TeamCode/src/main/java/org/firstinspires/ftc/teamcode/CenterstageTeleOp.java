@@ -138,7 +138,7 @@ public class CenterstageTeleOp extends OpMode {
         if (gamepad2.b) {
 //            clawArmPosition = Constants.clawArmUp;
 //            turnClawPosition = Constants.turnClawUp;
-            stage = 4;
+            stage = 5;
         } else if (gamepad2.a) {
 //           clawArmPosition = Constants.clawArmDown;
 //           turnClawPosition = Constants.turnClawDown;
@@ -148,14 +148,16 @@ public class CenterstageTeleOp extends OpMode {
         if (gamepad2.left_stick_button) {
             clawArmPosition = Constants.clawArmDrive;
         }
-        else if (gamepad2.right_stick_button) {
-            clawArmPosition = Constants.clawArmDown;
+
+
+        if (gamepad2.right_stick_button && currentLiftPosition >= Constants.liftClawArmFar) {
+            clawArmPosition = Constants.clawArmFar;
         }
 
-        if (gamepad1.right_trigger > 0.2|| gamepad2.right_trigger > 0.2) {
+        if (gamepad1.right_trigger > 0.2 || gamepad2.right_trigger > 0.2) {
             planePosition = Constants.planeRelease;
         }
-        else if (gamepad1.left_trigger > 0.2|| gamepad2.left_trigger > 0.2) {
+        else if (gamepad1.left_trigger > 0.2 || gamepad2.left_trigger > 0.2) {
             planePosition = Constants.planeHold;
         }
 
@@ -215,48 +217,56 @@ public class CenterstageTeleOp extends OpMode {
         if (stage >= 0) {
             switch (stage) {
                 case 0:
+                    // Bring Claw Arm to lift down position
+                    if ((clawArmPosition + Constants.clawArmSpeed) <= Constants.clawArmUp) {
+                        clawArmPosition += Constants.clawArmSpeed;
+                    } else {
+                        stage = 1;
+                    }
+                    break;
+                case 1:
                     // Bring Lift Down
                     if (currentLiftPosition > Constants.liftLow) { //liftLow
                         useLiftPower = false;
                         targetLiftPosition = Constants.liftMin;
                         liftUseEnc = true;
                     } else {
-                        stage = 1;
+                        stage = 2;
                     }
                     break;
-                case 1:
+                case 2:
                     // Bring Arm Down
                     if ((clawArmPosition + Constants.clawArmSpeed) <= Constants.clawArmLow) { //(clawArmPosition + Constants.clawArmSpeed) <= Constants.clawArmLow
                         telemetry.addData("stage 1 ", true);
                         clawArmPosition += Constants.clawArmSpeed;
                     } else {
-                        stage = 2;
-                    }
-                    break;
-                case 2:
-                    // Bring Claw Down
-                    if ((turnClawPosition - Constants.turnClawSpeed) >= Constants.turnClawDown) {
-                        turnClawPosition -= Constants.turnClawSpeed;
-                    } else {
                         stage = 3;
                     }
                     break;
                 case 3:
+                    // Bring Claw Down
+                    if ((turnClawPosition - Constants.turnClawSpeed) >= Constants.turnClawDown) {
+                        turnClawPosition -= Constants.turnClawSpeed;
+                    } else {
+                        stage = 4;
+                    }
+                    break;
+                case 4:
                     if ((clawArmPosition + Constants.clawArmSpeed) <= Constants.clawArmDown) {
                         clawArmPosition += Constants.clawArmSpeed;
                     } else {
                         stage = -1;
                     }
                     break;
-                case 4:
+                case 5:
                     // Bring Claw Up
                     if ((turnClawPosition + Constants.turnClawSpeed) <= Constants.turnClawUp) {
                         turnClawPosition += Constants.turnClawSpeed;
                     } else {
-                        stage = 5;
+                        stage = 6;
                     }
                     break;
-                case 5:
+                case 6:
                     // Bring Arm Up
                     if ((clawArmPosition - Constants.clawArmSpeed) >= Constants.clawArmUp) {
                         clawArmPosition -= Constants.clawArmSpeed;
@@ -290,6 +300,10 @@ public class CenterstageTeleOp extends OpMode {
                 liftPower = liftJoystick * Constants.liftDownRatio;
                 if (currentLiftPosition > Constants.liftSlow) {
                     liftPower *= Constants.liftSlowRatio;
+                }
+
+                if ((currentLiftPosition <= Constants.liftClawArmFar) && clawArmPosition <= Constants.clawArmUp) {
+                    liftPower = 0;
                 }
             } else {
                 liftPower = 0;
@@ -344,7 +358,7 @@ public class CenterstageTeleOp extends OpMode {
 
         double clawArmJoystick = gamepad2.right_stick_x;
         if (clawArmJoystick > 0.2) {
-            if ((clawArmPosition - Constants.clawArmSpeed) > Constants.clawArmUp) {
+            if ((clawArmPosition - Constants.clawArmSpeed) > Constants.clawArmFar) {
                 clawArmPosition -= Constants.clawArmSpeed * clawArmJoystick;
             } else {
                 clawArmPosition = Constants.clawArmUp;

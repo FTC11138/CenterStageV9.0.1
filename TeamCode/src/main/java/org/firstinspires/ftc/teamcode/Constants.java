@@ -18,7 +18,7 @@ public class Constants {
 
     /* -------------------------------------------- AUTO CONSTANTS -------------------------------------------- */
 
-    public static int parkLoc = 1;
+    public static int parkLoc = 2;
     public static boolean continueAutoAfterSpikeMark = true;
     public static int testPropLoc = 1;
 
@@ -43,20 +43,21 @@ public class Constants {
     public static double clawClose = 0.6;
     public static double clawOpen = 0.2;
 
-    public static double clawArmDown = 0.88;
+    public static double clawArmDown = 0.895;
     public static double clawArmUp = 0.38;
     public static double clawArmHigh = 0.5;
+    public static double clawArmFar = 0.34;
     public static double clawArmLow = 0.83; // Arm position where it is safe to lower claw
     public static double clawArmDrive = 0.83;
     public static double clawArmSpeed = 0.003;
     public static double clawArmSlowRatio = 0.5;
 
-    public static double turnClawUp = 0.82;
-    public static double turnClawDown = 0.34;
+    public static double turnClawUp = 1;
+    public static double turnClawDown = 0.57;
     public static double turnClawSpeed = 0.01;
 
-    public static double planeHold = 0.8;
-    public static double planeRelease = 0.65;
+    public static double planeHold = 0.3;
+    public static double planeRelease = 0.15;
 
 
     /* -------------------------------------------- MOTOR CONSTANTS -------------------------------------------- */
@@ -64,15 +65,16 @@ public class Constants {
 
     public static int liftMin = 0;
     public static int liftLow = 100;
+    public static int liftClawArmFar = 300;
     public static int liftDropAuto = 700;
     public static int liftArm = 100;
-    public static int liftHigh = 600;
+    public static int liftHigh = 1500;
     public static int liftMax = 2000;
 
     public static double liftUpRatio = 1;
     public static double liftDownRatio = 0.5;
     public static int liftSlow = 100;
-    public static double liftSlowRatio = 0.4;
+    public static double liftSlowRatio = 1;
 
     public static int liftTolerance = 15;
     public static int liftkPTele = 10;
@@ -87,7 +89,7 @@ public class Constants {
 
     public static int hangMin = 0;
     public static int hangLow = -1300;
-    public static int hangHigh = -3000;
+    public static int hangHigh = -2600;
     public static int hangMax = -3100;
 
     public static double hangUpRatio = 1;

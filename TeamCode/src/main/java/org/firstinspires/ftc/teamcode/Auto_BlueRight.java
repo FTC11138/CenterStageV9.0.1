@@ -51,19 +51,20 @@ public class Auto_BlueRight extends AutonomousMethods {
             robot.setTurnClawServo(Constants.turnClawUp);
             sleep(1000);
             robot.setLiftMotor(1, Constants.liftDropAuto);
-            sleep(4000);
+            sleep(3000);
             robot.setClawServo(Constants.clawOpen);
             sleep(500);
 
-            robot.setLiftMotor(1, Constants.liftLow);
+            robot.setLiftMotor(1, Constants.liftMin);
             robot.setClawArmServo(Constants.clawArmLow);
-            sleep(2000);
             robot.setTurnClawServo(Constants.turnClawDown);
 
         }
 
         toPark(Constants.parkLoc, startPos);
+        robot.setTurnClawServo(Constants.turnClawDown);
         robot.setClawServo(Constants.clawOpen);
+        sleep(2000);
 
     }
 }

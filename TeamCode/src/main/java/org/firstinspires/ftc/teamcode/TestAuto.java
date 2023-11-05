@@ -6,10 +6,12 @@ import com.acmerobotics.roadrunner.trajectory.constraints.MinVelocityConstraint;
 import com.acmerobotics.roadrunner.trajectory.constraints.TrajectoryVelocityConstraint;
 import com.acmerobotics.roadrunner.trajectory.constraints.TranslationalVelocityConstraint;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 
 import java.util.Arrays;
 
 @Autonomous(name="TestAuto", group="Linear Opmode")
+@Disabled
 public class TestAuto extends AutonomousMethods {
     @Override
     public void runOpMode() throws InterruptedException {

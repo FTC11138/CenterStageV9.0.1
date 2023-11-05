@@ -6,6 +6,7 @@ import com.acmerobotics.roadrunner.trajectory.constraints.MinVelocityConstraint;
 import com.acmerobotics.roadrunner.trajectory.constraints.TrajectoryVelocityConstraint;
 import com.acmerobotics.roadrunner.trajectory.constraints.TranslationalVelocityConstraint;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 
 import org.apache.commons.math3.analysis.function.Constant;
 import org.firstinspires.ftc.robotcore.external.Const;
@@ -13,6 +14,7 @@ import org.firstinspires.ftc.robotcore.external.Const;
 import java.util.Arrays;
 
 @Autonomous(name="visionTestAuto", group="Linear Opmode")
+@Disabled
 public class visionTestAuto extends AutonomousMethods {
     @Override
     public void runOpMode() throws InterruptedException {

@@ -161,7 +161,7 @@ public abstract class AutonomousMethods extends LinearOpMode {
             sleep(1000);
             robot.setPixelServo(Constants.pixelHold);
 
-            if (continueAfterPixel) {
+            if (!continueAfterPixel) {
                 return;
             }
 
@@ -194,7 +194,7 @@ public abstract class AutonomousMethods extends LinearOpMode {
             sleep(1000);
             robot.setPixelServo(Constants.pixelHold);
 
-            if (continueAfterPixel) {
+            if (!continueAfterPixel) {
                 return;
             }
 
