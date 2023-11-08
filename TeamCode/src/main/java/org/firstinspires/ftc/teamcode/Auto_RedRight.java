@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.acmerobotics.roadrunner.trajectory.constraints.AngularVelocityConstraint;
 import com.acmerobotics.roadrunner.trajectory.constraints.MinVelocityConstraint;
@@ -17,17 +18,19 @@ public class Auto_RedRight extends AutonomousMethods {
     @Override
     public void runOpMode() throws InterruptedException {
         int propLocation = 2;
+        int parkLocation = Constants.parkLoc;
         String startPos = "redRight";
         boolean targetFound = true;
 
         robot.initialize(hardwareMap, telemetry, true);
-        robot.setPoseEstimate(PoseConstants.redRight.start);
+        PoseConstants.redRight poses = new PoseConstants.redRight();
 
         while (!isStarted()) {;
             propLocation = robot.getPropLocation();
             telemetry.addLine("Location: " + propLocation);
             telemetry.update();
         }
+        int finalPropLocation = propLocation;
         telemetry.addLine("Final Location: " + propLocation);
         telemetry.update();
 
@@ -37,31 +40,27 @@ public class Auto_RedRight extends AutonomousMethods {
         robot.setClawServo(Constants.clawClose);
         robot.setPixelServo(Constants.pixelHold);
 
-        dropPixel_toBackdrop(propLocation, startPos, Constants.continueAutoAfterSpikeMark);
-        telemetry.addData("done with dropPixel", "moving on");
-        telemetry.update();
+        runAuto(
+                propLocation,
+                startPos,
 
-        targetFound = goToAprilTag(propLocation, startPos, robot.visionPortal, robot.aprilTagProcessor);
+                poses.start,
+                poses.startingTangent[propLocation - 1],
 
-        sleep(1000);
+                poses.pixel[propLocation - 1],
+                poses.pixelAngle[propLocation - 1],
+                poses.pixelApproachingTangent[propLocation - 1],
 
-        if (targetFound) {
+                poses.backdrop[propLocation - 1],
+                poses.backdropTangent,
 
-            robot.setClawArmServo(Constants.clawArmUp);
-            robot.setTurnClawServo(Constants.turnClawUp);
-            sleep(1000);
-            robot.setLiftMotor(1, Constants.liftDropAuto);
-            sleep(3000);
-            robot.setClawServo(Constants.clawOpen);
-            sleep(500);
+                poses.park[parkLocation - 1],
+                poses.parkAngle[parkLocation - 1],
+                poses.parkStartingTangent[parkLocation - 1],
+                poses.parkEndingTangent[parkLocation - 1]
+        );
 
-            robot.setLiftMotor(1, Constants.liftMin);
-            robot.setClawArmServo(Constants.clawArmLow);
-            robot.setTurnClawServo(Constants.turnClawDown);
-
-        }
-
-        toPark(Constants.parkLoc, startPos);
+        PoseStorage.currentPose = robot.getPoseEstimate();
         robot.setTurnClawServo(Constants.turnClawDown);
         robot.setClawServo(Constants.clawOpen);
         sleep(2000);

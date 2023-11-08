@@ -18,7 +18,9 @@ import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
 import org.firstinspires.ftc.vision.VisionPortal;
 import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
 import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
+import org.firstinspires.ftc.teamcode.PoseConstants;
 
+import java.sql.Time;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
@@ -43,170 +45,134 @@ public abstract class AutonomousMethods extends LinearOpMode {
 
     }
 
+    public void runAuto(
+            int propLocation,
+            String startPos,
 
-    public void dropPixel_toBackdrop(int propLocation, String startPosition, boolean continueAfterPixel) {
-        Trajectory spikeMarkTraj = null;
-        Trajectory afterSpikeMarkTraj = null;
-        Trajectory toBeforeBackBoardTraj = null;
-        Trajectory toBackBoardTraj = null;
+            Pose2d startPose,
+            double startTangent,
 
-        Pose2d startPose = null;
-        Vector2d pixel = null;
-        Vector2d afterPixel = null;
-        Vector2d backdrop = null;
-        Vector2d beforeBackdrop = null;
-        double startTangent = 0;
-        double afterPixelAngle = 0;
-        double pixelAngle = 0;
-        double pixelApproachingTangent = 0;
-        double afterPixelStartingTangent = 0;
-        double afterPixelEndingTangent = 0;
-        double backdropTangent = 0;
-        boolean backdropSide = true;
+            Vector2d pixel,
+            double pixelAngle,
+            double pixelApproachingTangent,
 
+            double afterPixelStartingTangent,
+            double afterPixelEndingTangent,
+            Vector2d afterPixel,
+            double afterPixelAngle,
 
-        if (Objects.equals(startPosition, "redLeft")) { // Done
+            Vector2d beforeBackdrop,
+            Vector2d backdrop,
+            double backdropTangent,
 
-            backdropSide = PoseConstants.redLeft.backdropSide;
+            Vector2d park,
+            double parkAngle,
+            double parkStartingTangent,
+            double parkEndingTangent
+    ) {
 
-            startPose = PoseConstants.redLeft.start;
-            startTangent = PoseConstants.redLeft.startingTangent[propLocation - 1];
+        robot.setPoseEstimate(startPose);
+        robot.followTrajectorySequence(
+                robot.trajectorySequenceBuilder(startPose)
+                        .setTangent(startTangent)
+                        .splineToSplineHeading(new Pose2d(pixel, pixelAngle), pixelApproachingTangent)
+                        .addDisplacementMarker(() -> {
+                            robot.setPixelServo(Constants.pixelDrop);
+                            roadrunnerSleep(200);
+                            robot.setPixelServo(Constants.pixelHold);
+                        })
+                        .setTangent(afterPixelStartingTangent)
+                        .splineToSplineHeading(new Pose2d(afterPixel, afterPixelAngle), afterPixelEndingTangent)
+                        .splineToSplineHeading(new Pose2d(beforeBackdrop, afterPixelAngle), Math.toRadians(0))
+                        .addDisplacementMarker(() -> {
+                            robot.setClawArmServo(Constants.clawArmUp);
+                            robot.setTurnClawServo(Constants.turnClawUp);
+                            robot.setLiftMotor(0.5, Constants.liftDropAuto);
+                        })
+                        .splineToSplineHeading(new Pose2d(backdrop, Math.toRadians(180)), backdropTangent)
+                        .addDisplacementMarker(() -> {
+                            if (goToAprilTag(propLocation, startPos, robot.visionPortal, robot.aprilTagProcessor)) {
+                                robot.setLiftMotor(1, Constants.liftDropAuto);
+                                roadrunnerSleep(500);
+                                robot.setClawServo(Constants.clawOpen);
+                                roadrunnerSleep(500);
 
-            pixel = PoseConstants.redLeft.pixel[propLocation - 1];
-            pixelAngle = PoseConstants.redLeft.pixelAngle[propLocation - 1];
+                                robot.setLiftMotor(1, Constants.liftMin);
+                                robot.setClawArmServo(Constants.clawArmLow);
+                                robot.setTurnClawServo(Constants.turnClawDown);
+                                roadrunnerSleep(300);
+                            }
+                        })
+                        .setTangent(parkStartingTangent)
+                        .splineToSplineHeading(new Pose2d(park, parkAngle), parkEndingTangent)
+                        .build()
+        );
+    }
 
-            pixelApproachingTangent = PoseConstants.redLeft.pixelApproachingTangent[propLocation - 1];
-            afterPixelStartingTangent = PoseConstants.redLeft.afterPixelStartingTangent[propLocation - 1];
-            afterPixelEndingTangent = PoseConstants.redLeft.afterPixelEndingTangent[propLocation - 1];
-            afterPixel = PoseConstants.redLeft.afterPixel;
-            afterPixelAngle = PoseConstants.redLeft.afterPixelAngle[propLocation - 1];
+    public void runAuto(
+            int propLocation,
+            String startPos,
 
-            beforeBackdrop = PoseConstants.redLeft.beforeBackdrop;
-            backdrop = PoseConstants.redLeft.backdrop[propLocation - 1];
-            backdropTangent = PoseConstants.redLeft.backdropTangent;
+            Pose2d startPose,
+            double startTangent,
 
-        } else if (Objects.equals(startPosition, "redRight")) {
+            Vector2d pixel,
+            double pixelAngle,
+            double pixelApproachingTangent,
 
-            backdropSide = PoseConstants.redRight.backdropSide;
+            Vector2d backdrop,
+            double backdropTangent,
 
-            startPose = PoseConstants.redRight.start;
-            startTangent = PoseConstants.redRight.startingTangent[propLocation - 1];
+            Vector2d park,
+            double parkAngle,
+            double parkStartingTangent,
+            double parkEndingTangent
+    ) {
 
-            pixel = PoseConstants.redRight.pixel[propLocation - 1];
-            pixelAngle = PoseConstants.redRight.pixelAngle[propLocation - 1];
-            pixelApproachingTangent = PoseConstants.redRight.pixelApproachingTangent[propLocation - 1];
+        robot.setPoseEstimate(startPose);
+        robot.followTrajectorySequence(
+                robot.trajectorySequenceBuilder(startPose)
+                        .addDisplacementMarker(() -> {
+                            robot.setClawArmServo(Constants.clawArmUp);
+                            robot.setTurnClawServo(Constants.turnClawUp);
+                            robot.setLiftMotor(0.5, Constants.liftDropAuto);
+                        })
+                        .setTangent(startTangent)
+                        .splineToSplineHeading(new Pose2d(backdrop, Math.toRadians(180)), backdropTangent)
+                        .addDisplacementMarker(() -> {
+                            if (goToAprilTag(propLocation, startPos, robot.visionPortal, robot.aprilTagProcessor)) {
+                                robot.setLiftMotor(1, Constants.liftDropAuto);
+                                roadrunnerSleep(500);
+                                robot.setClawServo(Constants.clawOpen);
+                                roadrunnerSleep(500);
 
-            afterPixelStartingTangent = PoseConstants.redRight.afterPixelStartingTangent[propLocation - 1];
-            afterPixelEndingTangent = PoseConstants.redRight.afterPixelEndingTangent[propLocation - 1];
-            afterPixel = PoseConstants.redRight.afterPixel;
-            afterPixelAngle = PoseConstants.redRight.afterPixelAngle[propLocation - 1];
+                                robot.setLiftMotor(1, Constants.liftMin);
+                                robot.setClawArmServo(Constants.clawArmLow);
+                                robot.setTurnClawServo(Constants.turnClawDown);
+                                roadrunnerSleep(300);
+                            }
+                        })
+                        .setTangent(pixelApproachingTangent)
+                        .splineToSplineHeading(new Pose2d(pixel, pixelAngle), pixelApproachingTangent)
+                        .addDisplacementMarker(() -> {
+                            robot.setPixelServo(Constants.pixelDrop);
+                            roadrunnerSleep(200);
+                            robot.setPixelServo(Constants.pixelHold);
+                        })
+                        .setTangent(parkStartingTangent)
+                        .splineToSplineHeading(new Pose2d(park, parkAngle), parkEndingTangent)
+                        .build()
+        );
+    }
 
-            backdrop = PoseConstants.redRight.backdrop[propLocation - 1];
-            backdropTangent = PoseConstants.redRight.backdropTangent;
-
-        } else if (Objects.equals(startPosition, "blueLeft")) {
-
-            backdropSide = PoseConstants.blueLeft.backdropSide;
-
-            startPose = PoseConstants.blueLeft.start;
-            startTangent = PoseConstants.blueLeft.startingTangent[propLocation - 1];
-
-            pixel = PoseConstants.blueLeft.pixel[propLocation - 1];
-            pixelAngle = PoseConstants.blueLeft.pixelAngle[propLocation - 1];
-            pixelApproachingTangent = PoseConstants.blueLeft.pixelApproachingTangent[propLocation - 1];
-
-            afterPixelStartingTangent = PoseConstants.blueLeft.afterPixelStartingTangent[propLocation - 1];
-            afterPixelEndingTangent = PoseConstants.blueLeft.afterPixelEndingTangent[propLocation - 1];
-            afterPixel = PoseConstants.blueLeft.afterPixel;
-            afterPixelAngle = PoseConstants.blueLeft.afterPixelAngle[propLocation - 1];
-
-            backdrop = PoseConstants.blueLeft.backdrop[propLocation - 1];
-            backdropTangent = PoseConstants.blueLeft.backdropTangent;
-
-        } else if (Objects.equals(startPosition, "blueRight")) { // Done
-
-            backdropSide = PoseConstants.blueRight.backdropSide;
-
-            startPose = PoseConstants.blueRight.start;
-            startTangent = PoseConstants.blueRight.startingTangent[propLocation - 1];
-
-            pixel = PoseConstants.blueRight.pixel[propLocation - 1];
-            pixelAngle = PoseConstants.blueRight.pixelAngle[propLocation - 1];
-            pixelApproachingTangent = PoseConstants.blueRight.pixelApproachingTangent[propLocation - 1];
-
-            afterPixelStartingTangent = PoseConstants.blueRight.afterPixelStartingTangent[propLocation - 1];
-            afterPixelEndingTangent = PoseConstants.blueRight.afterPixelEndingTangent[propLocation - 1];
-            afterPixel = PoseConstants.blueRight.afterPixel;
-            afterPixelAngle = PoseConstants.blueRight.afterPixelAngle[propLocation - 1];
-
-            beforeBackdrop = PoseConstants.blueRight.beforeBackdrop;
-            backdrop = PoseConstants.blueRight.backdrop[propLocation - 1];
-            backdropTangent = PoseConstants.blueRight.backdropTangent;
-
+    /*
+     * Sleeps for some amount of milliseconds while updating the roadrunner position
+     */
+    public void roadrunnerSleep(int milliseconds) {
+        long timeStamp = runtime.now(TimeUnit.MILLISECONDS);
+        while (runtime.now(TimeUnit.MILLISECONDS) - timeStamp <= milliseconds) {
+            robot.update();
         }
-
-        if (!backdropSide) {
-
-            spikeMarkTraj = robot.trajectoryBuilder(startPose, startTangent)
-                    .splineToSplineHeading(new Pose2d(pixel, pixelAngle), pixelApproachingTangent)
-                    .build();
-
-            robot.followTrajectory(spikeMarkTraj);
-
-            afterSpikeMarkTraj = robot.trajectoryBuilder(robot.getPoseEstimate(), afterPixelStartingTangent)
-                    .splineToSplineHeading(new Pose2d(afterPixel, afterPixelAngle), afterPixelEndingTangent)
-                    .build();
-
-            robot.setPixelServo(Constants.pixelDrop);
-            sleep(1000);
-            robot.setPixelServo(Constants.pixelHold);
-
-            if (!continueAfterPixel) {
-                return;
-            }
-
-            robot.followTrajectory(afterSpikeMarkTraj);
-
-            toBeforeBackBoardTraj = robot.trajectoryBuilder(robot.getPoseEstimate(), Math.toRadians(0))
-                    .splineToSplineHeading(new Pose2d(beforeBackdrop, afterPixelAngle), Math.toRadians(0))
-                    .build();
-
-            robot.followTrajectory(toBeforeBackBoardTraj);
-
-            toBackBoardTraj = robot.trajectoryBuilder(robot.getPoseEstimate(), Math.toRadians(0))
-                    .splineToSplineHeading(new Pose2d(backdrop, Math.toRadians(180)), backdropTangent)
-                    .build();
-
-            robot.followTrajectory(toBackBoardTraj);
-
-        } else {
-            spikeMarkTraj = robot.trajectoryBuilder(startPose, startTangent)
-                    .splineToSplineHeading(new Pose2d(pixel, pixelAngle), pixelApproachingTangent)
-                    .build();
-
-            robot.followTrajectory(spikeMarkTraj);
-
-            afterSpikeMarkTraj = robot.trajectoryBuilder(robot.getPoseEstimate(), afterPixelStartingTangent)
-                    .splineToSplineHeading(new Pose2d(afterPixel, afterPixelAngle), afterPixelEndingTangent)
-                    .build();
-
-            robot.setPixelServo(Constants.pixelDrop);
-            sleep(1000);
-            robot.setPixelServo(Constants.pixelHold);
-
-            if (!continueAfterPixel) {
-                return;
-            }
-
-            robot.followTrajectory(afterSpikeMarkTraj);
-
-            toBackBoardTraj = robot.trajectoryBuilder(robot.getPoseEstimate(), Math.toRadians(0))
-                    .splineToSplineHeading(new Pose2d(backdrop, Math.toRadians(180)), backdropTangent)
-                    .build();
-
-            robot.followTrajectory(toBackBoardTraj);
-        }
-
     }
 
     public boolean goToAprilTag(int propLocation, String startPosition, VisionPortal visionPortal, AprilTagProcessor aprilTagProcessor) {
@@ -358,37 +324,4 @@ public abstract class AutonomousMethods extends LinearOpMode {
 
     }
 
-    public void toPark(int parkLoc, String startPosition) {
-        Vector2d toPark = null;
-        double startingTangent = 0;
-
-        if (parkLoc == 3) {
-            return;
-        }
-
-        if (startPosition.equals("blueRight") || startPosition.equals("blueLeft")) {
-            if (parkLoc == 1) {
-                toPark = PoseConstants.blueRight.parkRight;
-                startingTangent = Math.toRadians(-90);
-            } else {
-                toPark = PoseConstants.blueRight.parkLeft;
-                startingTangent = Math.toRadians(90);
-            }
-        } else if (startPosition.equals("redRight") || startPosition.equals("redLeft")) {
-            if (parkLoc == 1) {
-                toPark = PoseConstants.redLeft.parkLeft;
-                startingTangent = Math.toRadians(90);
-            } else {
-                toPark = PoseConstants.redLeft.parkRight;
-                startingTangent = Math.toRadians(-90);
-            }
-        }
-
-        Pose2d currentPose = robot.getPoseEstimate();
-        Trajectory parkTraj = robot.trajectoryBuilder(currentPose, startingTangent)
-                .splineToSplineHeading(new Pose2d(toPark, Math.toRadians(0)), Math.toRadians(0))
-                //.splineToSplineHeading(new Pose2d(new Vector2d(46, 29), Math.toRadians(180)), Math.toRadians(180))
-                .build();
-        robot.followTrajectory(parkTraj);
-    }
 }

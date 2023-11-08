@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.acmerobotics.roadrunner.geometry.Pose2d;
+import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -55,17 +56,7 @@ public class CenterstageTeleOp extends OpMode {
     public void init() {
         robot.initialize(hardwareMap, telemetry, false);
         localizer = new StandardTrackingWheelLocalizer(hardwareMap, new ArrayList<>(), new ArrayList<>());
-
-        if (Constants.startPos == 1) {
-            localizer.setPoseEstimate(PoseConstants.blueLeft.start);
-        } else if (Constants.startPos == 2) {
-            localizer.setPoseEstimate(PoseConstants.blueRight.start);
-        } else if (Constants.startPos == 3) {
-            localizer.setPoseEstimate(PoseConstants.redLeft.start);
-        } else {
-            localizer.setPoseEstimate(PoseConstants.redRight.start);
-        }
-
+        localizer.setPoseEstimate(PoseStorage.currentPose);
     }
 
     @Override
@@ -76,24 +67,32 @@ public class CenterstageTeleOp extends OpMode {
     @Override
     public void loop() {
 
-
         localizer.update();
         currentPose = localizer.getPoseEstimate();
         heading = currentPose.getHeading();
         xPos = currentPose.getX();
         yPos = currentPose.getY();
 
-        double joyX = gamepad1.left_stick_x;
-        double joyY = -gamepad1.left_stick_y;
-        double joyAngle = Math.atan(joyY/joyX);
-        double robotAngle = heading;
-        double moveAngle = joyAngle - robotAngle;
-        double ly = Math.sin(moveAngle) * joyY;
-        double lx = Math.cos(moveAngle) * joyX;
+        // Create a vector from the gamepad x/y inputs
+        // Then, rotate that vector by the inverse of that heading
+        Vector2d input = new Vector2d(
+                -gamepad1.left_stick_y,
+                -gamepad1.left_stick_x
+        ).rotated(-currentPose.getHeading());
+
+        // Pass in the rotated input + right stick value for rotation
+        // Rotation is not part of the rotated input thus must be passed in separately
+        robot.setWeightedDrivePower(
+                new Pose2d(
+                        input.getX(),
+                        input.getY(),
+                        -gamepad1.right_stick_x
+                )
+        );
 
 
-        lx = gamepad1.left_stick_x;
-        ly = -gamepad1.left_stick_y;
+        double lx = gamepad1.left_stick_x;
+        double ly = -gamepad1.left_stick_y;
         double speedMultiplier = Constants.moveSpeed;
         double rotationMultiplier = Constants.rotSpeed;
 
@@ -123,7 +122,9 @@ public class CenterstageTeleOp extends OpMode {
         double v_rotation = gamepad1.right_stick_x;
 
         // Drive
-        robot.drive(theta, speedMultiplier * v_theta, rotationMultiplier * v_rotation);
+//        robot.drive(theta, speedMultiplier * v_theta, rotationMultiplier * v_rotation);
+
+
 
 
         /* -------------------------------------------- CHANGE -------------------------------------------- */
@@ -148,7 +149,6 @@ public class CenterstageTeleOp extends OpMode {
         if (gamepad2.left_stick_button) {
             clawArmPosition = Constants.clawArmDrive;
         }
-
 
         if (gamepad2.right_stick_button && currentLiftPosition >= Constants.liftClawArmFar) {
             clawArmPosition = Constants.clawArmFar;
@@ -209,10 +209,10 @@ public class CenterstageTeleOp extends OpMode {
             limits = false;
         }
 
-        if (liftModeUpdate && liftUseEnc) {
-            robot.liftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            liftModeUpdate = false;
-        }
+//        if (liftModeUpdate && liftUseEnc) {
+//            robot.liftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+//            liftModeUpdate = false;
+//        }
 
         if (stage >= 0) {
             switch (stage) {
@@ -414,8 +414,6 @@ public class CenterstageTeleOp extends OpMode {
 
         /* -------------------------------------------- TELEMETRY -------------------------------------------- */
 
-        telemetry.addData("X Joy", joyX);
-        telemetry.addData("Y Joy", joyY);
         telemetry.addData("Lift Joy", liftJoystick);
         telemetry.addData("Hang Joy", hangJoystick);
         telemetry.addData("Claw Arm Joy", clawArmJoystick);
