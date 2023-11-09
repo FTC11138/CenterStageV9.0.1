@@ -141,12 +141,12 @@ public abstract class AutonomousMethods extends LinearOpMode {
                         .splineToSplineHeading(new Pose2d(backdrop, Math.toRadians(180)), backdropTangent)
                         .addDisplacementMarker(() -> {
                             if (goToAprilTag(propLocation, startPos, robot.visionPortal, robot.aprilTagProcessor)) {
-                                robot.setLiftMotor(1, Constants.liftDropAuto);
+                                robot.setLiftMotor(0.8, Constants.liftDropAuto);
                                 roadrunnerSleep(500);
                                 robot.setClawServo(Constants.clawOpen);
                                 roadrunnerSleep(500);
 
-                                robot.setLiftMotor(1, Constants.liftMin);
+                                robot.setLiftMotor(0.8, Constants.liftMin);
                                 robot.setClawArmServo(Constants.clawArmLow);
                                 robot.setTurnClawServo(Constants.turnClawDown);
                                 roadrunnerSleep(300);

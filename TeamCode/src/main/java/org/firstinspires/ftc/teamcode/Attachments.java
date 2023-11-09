@@ -24,6 +24,7 @@ public class Attachments extends SampleMecanumDrive {
 
     public Servo clawServo, clawArmServo, planeServo, pixelServo, turnClawServo;
     public DcMotorEx liftMotor, hangMotor1, hangMotor2;
+    public PIDFController liftPIDController;
     public WebcamName webcam;
     public VisionProcessor visionProcessor;
     public VisionPortal visionPortal;
@@ -52,6 +53,8 @@ public class Attachments extends SampleMecanumDrive {
         hangMotor1.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         hangMotor2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         hangMotor2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+        liftPIDController = new PIDFController(Constants.liftkP, Constants.liftkI, Constants.liftkD, Constants.liftkF);
 
         telemetry.addLine("Motors Initialized");
 

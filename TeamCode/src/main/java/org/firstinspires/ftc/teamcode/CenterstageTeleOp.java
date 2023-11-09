@@ -5,6 +5,7 @@ import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.drive.StandardTrackingWheelLocalizer;
@@ -17,13 +18,17 @@ public class CenterstageTeleOp extends OpMode {
     private ElapsedTime runtime = new ElapsedTime();
     private Attachments robot = new Attachments();
 
-
+    Gamepad previousGamepad1 = new Gamepad();
+    Gamepad previousGamepad2 = new Gamepad();
 
     private double clawPosition = Constants.clawOpen;
+    private boolean clawToggle = true;
     private double clawArmPosition = Constants.clawArmDrive;
     private double turnClawPosition = Constants.turnClawDown;
     private double planePosition = Constants.planeHold;
+    private boolean planeToggle = true;
     private double pixelPosition = Constants.pixelHold;
+
     private double liftPower = 0;
     private boolean useLiftPower = true;
     private boolean liftModeUpdate = false;
@@ -66,6 +71,9 @@ public class CenterstageTeleOp extends OpMode {
 
     @Override
     public void loop() {
+
+        previousGamepad1.copy(gamepad1);
+        previousGamepad2.copy(gamepad2);
 
         localizer.update();
         currentPose = localizer.getPoseEstimate();
@@ -130,9 +138,13 @@ public class CenterstageTeleOp extends OpMode {
         /* -------------------------------------------- CHANGE -------------------------------------------- */
 
 
-        if (gamepad2.left_bumper) {
+        if (gamepad2.right_bumper && !previousGamepad2.right_bumper) {
+            clawToggle = !clawToggle;
+        }
+
+        if (clawToggle) {
             clawPosition = Constants.clawOpen;
-        } else if (gamepad2.right_bumper) {
+        } else {
             clawPosition = Constants.clawClose;
         }
 
@@ -154,17 +166,14 @@ public class CenterstageTeleOp extends OpMode {
             clawArmPosition = Constants.clawArmFar;
         }
 
-        if (gamepad1.right_trigger > 0.2 || gamepad2.right_trigger > 0.2) {
-            planePosition = Constants.planeRelease;
-        }
-        else if (gamepad1.left_trigger > 0.2 || gamepad2.left_trigger > 0.2) {
-            planePosition = Constants.planeHold;
+        if ( (gamepad1.right_trigger > 0.2 || gamepad2.right_trigger > 0.2) && !(gamepad1.right_trigger > 0.2 || gamepad2.right_trigger > 0.2) ) {
+            planeToggle = !planeToggle;
         }
 
-        if (gamepad1.x) {
-            pixelPosition = Constants.pixelHold;
-        } else if (gamepad1.y) {
-            pixelPosition = Constants.pixelDrop;
+        if (planeToggle) {
+            planePosition = Constants.planeHold;
+        } else {
+            planePosition = Constants.planeRelease;
         }
 
         if (gamepad2.dpad_up) {
@@ -203,10 +212,8 @@ public class CenterstageTeleOp extends OpMode {
         }
 
 
-        if (gamepad1.right_bumper) {
-            limits = true;
-        } else if (gamepad1.left_bumper) {
-            limits = false;
+        if (gamepad1.right_bumper && !previousGamepad1.right_bumper) {
+            limits = !limits;
         }
 
 //        if (liftModeUpdate && liftUseEnc) {
@@ -395,7 +402,7 @@ public class CenterstageTeleOp extends OpMode {
         if (useLiftPower) {
             robot.runLiftMotor(liftPower);
         } else {
-            setLiftMotor(targetLiftPosition);
+            setLiftMotorPID(targetLiftPosition);
         }
 
         if (hangModeUpdate && hangUseEnc) {
@@ -433,19 +440,26 @@ public class CenterstageTeleOp extends OpMode {
     }
 
     void setLiftMotor(int position) {
-        robot.setLiftMotor(1, position);
+        robot.setLiftMotor(0.7, position);
         liftUseEnc = false;
         liftModeUpdate = true;
     }
 
-//    void setLiftMotor(int position) {
+    void setLiftMotorPID(int position) {
+        double newPower = robot.liftPIDController.calculate(
+                currentLiftPosition, position
+        );
+        robot.runLiftMotor(newPower);
+    }
+
+//    void setLiftMotorPID(int position) {
 //        //Undefined constants
 //        double newPower, powDir;
 //        //Initial error
-//        double error = -(position - currentLiftPosition) / Constants.liftMax;
+//        double error = (double) (position - currentLiftPosition) / Constants.liftMax;
 //        //Initial Time
 //        telemetry.addData("1", "error: " + error);
-//        if (Math.abs(error) > (Constants.liftTolerance / -Constants.liftMax)) {
+//        if (Math.abs(error) > (double) (Constants.liftTolerance / Constants.liftMax)) {
 //            //Setting p action
 //            newPower = error * Constants.liftkPTele;
 //            powDir = Math.signum(error);
