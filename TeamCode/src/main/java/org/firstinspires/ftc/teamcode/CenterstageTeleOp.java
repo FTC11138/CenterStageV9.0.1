@@ -168,14 +168,10 @@ public class CenterstageTeleOp extends OpMode {
             clawArmPosition = Constants.clawArmFar;
         }
 
-        if ( (gamepad1.right_trigger > 0.2 || gamepad2.right_trigger > 0.2) && !(gamepad1.right_trigger > 0.2 || gamepad2.right_trigger > 0.2) ) {
-            planeToggle = !planeToggle;
-        }
-
-        if (planeToggle) {
-            planePosition = Constants.planeHold;
-        } else {
+        if (gamepad1.right_trigger > 0.2 || gamepad2.right_trigger > 0.2) {
             planePosition = Constants.planeRelease;
+        } else if (gamepad1.left_trigger > 0.2 || gamepad2.left_trigger > 0.2) {
+            planePosition = Constants.planeHold;
         }
 
         if (gamepad2.dpad_up) {
