@@ -138,15 +138,17 @@ public class CenterstageTeleOp extends OpMode {
         /* -------------------------------------------- CHANGE -------------------------------------------- */
 
 
-        if (gamepad2.right_bumper && !previousGamepad2.right_bumper) {
-            clawToggle = !clawToggle;
-        }
-
-        if (clawToggle) {
+        if (gamepad2.right_bumper) {
             clawPosition = Constants.clawOpen;
-        } else {
+        } else if (gamepad2.left_bumper) {
             clawPosition = Constants.clawClose;
         }
+
+//        if (clawToggle) {
+//            clawPosition = Constants.clawOpen;
+//        } else {
+//            clawPosition = Constants.clawClose;
+//        }
 
         if (gamepad2.b) {
 //            clawArmPosition = Constants.clawArmUp;
