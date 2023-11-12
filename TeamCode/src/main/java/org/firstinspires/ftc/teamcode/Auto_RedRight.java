@@ -51,6 +51,11 @@ public class Auto_RedRight extends AutonomousMethods {
                 poses.pixelAngle[propLocation - 1],
                 poses.pixelApproachingTangent[propLocation - 1],
 
+                poses.afterPixelStartingTangent[propLocation - 1],
+                poses.afterPixelEndingTangent[propLocation - 1],
+                poses.afterPixel,
+                poses.afterPixelAngle[propLocation - 1],
+
                 poses.backdrop[propLocation - 1],
                 poses.backdropTangent,
 

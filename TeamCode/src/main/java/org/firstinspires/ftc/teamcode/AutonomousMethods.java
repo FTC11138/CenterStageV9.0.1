@@ -120,6 +120,11 @@ public abstract class AutonomousMethods extends LinearOpMode {
             double pixelAngle,
             double pixelApproachingTangent,
 
+            double afterPixelStartingTangent,
+            double afterPixelEndingTangent,
+            Vector2d afterPixel,
+            double afterPixelAngle,
+
             Vector2d backdrop,
             double backdropTangent,
 
@@ -138,6 +143,15 @@ public abstract class AutonomousMethods extends LinearOpMode {
                             robot.setLiftMotor(0.5, Constants.liftDropAuto);
                         })
                         .setTangent(startTangent)
+                        .splineToSplineHeading(new Pose2d(pixel, pixelAngle), pixelApproachingTangent)
+                        .addDisplacementMarker(() -> {
+                            robot.setPixelServo(Constants.pixelDrop);
+                            roadrunnerSleep(200);
+                            robot.setPixelServo(Constants.pixelHold);
+                        })
+                        .setTangent(afterPixelStartingTangent)
+                        .splineToSplineHeading(new Pose2d(afterPixel, afterPixelAngle), afterPixelEndingTangent)
+                        .setTangent(Math.toRadians(0))
                         .splineToSplineHeading(new Pose2d(backdrop, Math.toRadians(180)), backdropTangent)
                         .addDisplacementMarker(() -> {
                             if (goToAprilTag(propLocation, startPos, robot.visionPortal, robot.aprilTagProcessor)) {
@@ -151,13 +165,6 @@ public abstract class AutonomousMethods extends LinearOpMode {
                                 robot.setTurnClawServo(Constants.turnClawDown);
                                 roadrunnerSleep(300);
                             }
-                        })
-                        .setTangent(pixelApproachingTangent)
-                        .splineToSplineHeading(new Pose2d(pixel, pixelAngle), pixelApproachingTangent)
-                        .addDisplacementMarker(() -> {
-                            robot.setPixelServo(Constants.pixelDrop);
-                            roadrunnerSleep(200);
-                            robot.setPixelServo(Constants.pixelHold);
                         })
                         .setTangent(parkStartingTangent)
                         .splineToSplineHeading(new Pose2d(park, parkAngle), parkEndingTangent)
