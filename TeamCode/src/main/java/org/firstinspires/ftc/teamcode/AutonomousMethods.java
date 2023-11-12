@@ -234,11 +234,12 @@ public abstract class AutonomousMethods extends LinearOpMode {
             telemetry.addData("yawError", xError);
             telemetry.update();
 
-            TrajectorySequence toAprilTag = robot.trajectorySequenceBuilder(robot.getPoseEstimate())
-                    .forward(rangeError)
-                    .strafeRight(xError)
-                    .build();
-            robot.followTrajectorySequence(toAprilTag);
+            Pose2d currentPose = robot.getPoseEstimate();
+            robot.followTrajectorySequence(
+                    robot.trajectorySequenceBuilder(currentPose)
+                            .lineToSplineHeading(calcNewPose(rangeError, xError, currentPose))
+                            .build()
+            );
             return true;
 
         } else { //does not detect so use roadrunner
@@ -247,6 +248,12 @@ public abstract class AutonomousMethods extends LinearOpMode {
 
         }
 
+    }
+
+    private Pose2d calcNewPose(double x, double y, Pose2d currentPose) {
+        double newX = currentPose.getX() + x;
+        double newY = currentPose.getY() - y;
+        return new Pose2d(newX, newY, Math.toRadians(180));
     }
 
     private void setManualExposure(int exposureMS, int gain, VisionPortal visionPortal) {
