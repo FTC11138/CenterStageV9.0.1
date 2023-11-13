@@ -52,8 +52,6 @@ public class CenterstageTeleOp extends OpMode {
 
     StandardTrackingWheelLocalizer localizer;
     Pose2d currentPose;
-    double xPos;
-    double yPos;
     double heading;
 
 
@@ -77,19 +75,13 @@ public class CenterstageTeleOp extends OpMode {
 
         localizer.update();
         currentPose = localizer.getPoseEstimate();
-        heading = currentPose.getHeading();
-        xPos = currentPose.getX();
-        yPos = currentPose.getY();
+        heading = robot.getRawExternalHeading();
 
-        // Create a vector from the gamepad x/y inputs
-        // Then, rotate that vector by the inverse of that heading
         Vector2d input = new Vector2d(
                 -gamepad1.left_stick_y,
                 -gamepad1.left_stick_x
         ).rotated(-currentPose.getHeading());
 
-        // Pass in the rotated input + right stick value for rotation
-        // Rotation is not part of the rotated input thus must be passed in separately
         robot.setWeightedDrivePower(
                 new Pose2d(
                         input.getX(),
@@ -99,8 +91,8 @@ public class CenterstageTeleOp extends OpMode {
         );
 
 
-        double lx = gamepad1.left_stick_x;
-        double ly = -gamepad1.left_stick_y;
+        double lx = 0;
+        double ly = 0;
         double speedMultiplier = Constants.moveSpeed;
         double rotationMultiplier = Constants.rotSpeed;
 
@@ -400,7 +392,7 @@ public class CenterstageTeleOp extends OpMode {
         if (useLiftPower) {
             robot.runLiftMotor(liftPower);
         } else {
-            setLiftMotorPID(targetLiftPosition);
+            setLiftMotor(targetLiftPosition);
         }
 
         if (hangModeUpdate && hangUseEnc) {
@@ -438,7 +430,7 @@ public class CenterstageTeleOp extends OpMode {
     }
 
     void setLiftMotor(int position) {
-        robot.setLiftMotor(0.7, position);
+        robot.setLiftMotor(0.5, position);
         liftUseEnc = false;
         liftModeUpdate = true;
     }

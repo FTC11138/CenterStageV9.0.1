@@ -4,6 +4,8 @@ import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
+import com.acmerobotics.roadrunner.trajectory.constraints.TrajectoryVelocityConstraint;
+import com.acmerobotics.roadrunner.trajectory.constraints.TranslationalVelocityConstraint;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -33,6 +35,8 @@ public abstract class AutonomousMethods extends LinearOpMode {
     FtcDashboard dashboard = FtcDashboard.getInstance();
     private Orientation angles;
     public ElapsedTime runtime = new ElapsedTime();
+
+    TrajectoryVelocityConstraint velocityConstraint = new TranslationalVelocityConstraint(Constants.slowerSplineVel);
 
     public boolean opModeStatus() {
         return opModeIsActive();
@@ -82,6 +86,7 @@ public abstract class AutonomousMethods extends LinearOpMode {
                             robot.setPixelServo(Constants.pixelHold);
                         })
                         .setTangent(afterPixelStartingTangent)
+                        .setVelConstraint(velocityConstraint)
                         .splineToSplineHeading(new Pose2d(afterPixel, afterPixelAngle), afterPixelEndingTangent)
                         .splineToSplineHeading(new Pose2d(beforeBackdrop, afterPixelAngle), Math.toRadians(0))
                         .addDisplacementMarker(() -> {
@@ -90,19 +95,26 @@ public abstract class AutonomousMethods extends LinearOpMode {
                             robot.setLiftMotor(0.5, Constants.liftDropAuto);
                         })
                         .splineToSplineHeading(new Pose2d(backdrop, Math.toRadians(180)), backdropTangent)
-                        .addDisplacementMarker(() -> {
-                            if (goToAprilTag(propLocation, startPos, robot.visionPortal, robot.aprilTagProcessor)) {
-                                robot.setLiftMotor(1, Constants.liftDropAuto);
-                                roadrunnerSleep(500);
-                                robot.setClawServo(Constants.clawOpen);
-                                roadrunnerSleep(500);
+                        .resetVelConstraint()
+                        .build()
+        );
 
-                                robot.setLiftMotor(1, Constants.liftMin);
-                                robot.setClawArmServo(Constants.clawArmLow);
-                                robot.setTurnClawServo(Constants.turnClawDown);
-                                roadrunnerSleep(300);
-                            }
-                        })
+        roadrunnerSleep(500);
+        boolean targetFound = goToAprilTag(propLocation, startPos, robot.visionPortal, robot.aprilTagProcessor);
+        if (targetFound) {
+            robot.setLiftMotor(1, Constants.liftDropAuto);
+            roadrunnerSleep(500);
+            robot.setClawServo(Constants.clawOpen);
+            roadrunnerSleep(500);
+        }
+
+        robot.setLiftMotor(1, Constants.liftMin);
+        robot.setClawArmServo(Constants.clawArmLow);
+        robot.setTurnClawServo(Constants.turnClawDown);
+        roadrunnerSleep(1000);
+
+        robot.followTrajectorySequence(
+                robot.trajectorySequenceBuilder(robot.getPoseEstimate())
                         .setTangent(parkStartingTangent)
                         .splineToSplineHeading(new Pose2d(park, parkAngle), parkEndingTangent)
                         .build()
@@ -153,19 +165,25 @@ public abstract class AutonomousMethods extends LinearOpMode {
                         .splineToSplineHeading(new Pose2d(afterPixel, afterPixelAngle), afterPixelEndingTangent)
                         .setTangent(Math.toRadians(0))
                         .splineToSplineHeading(new Pose2d(backdrop, Math.toRadians(180)), backdropTangent)
-                        .addDisplacementMarker(() -> {
-                            if (goToAprilTag(propLocation, startPos, robot.visionPortal, robot.aprilTagProcessor)) {
-                                robot.setLiftMotor(0.8, Constants.liftDropAuto);
-                                roadrunnerSleep(500);
-                                robot.setClawServo(Constants.clawOpen);
-                                roadrunnerSleep(500);
+                        .build()
+        );
 
-                                robot.setLiftMotor(0.8, Constants.liftMin);
-                                robot.setClawArmServo(Constants.clawArmLow);
-                                robot.setTurnClawServo(Constants.turnClawDown);
-                                roadrunnerSleep(300);
-                            }
-                        })
+        roadrunnerSleep(500);
+        boolean targetFound = goToAprilTag(propLocation, startPos, robot.visionPortal, robot.aprilTagProcessor);
+        if (targetFound) {
+            robot.setLiftMotor(1, Constants.liftDropAuto);
+            roadrunnerSleep(500);
+            robot.setClawServo(Constants.clawOpen);
+            roadrunnerSleep(500);
+        }
+
+        robot.setLiftMotor(1, Constants.liftMin);
+        robot.setClawArmServo(Constants.clawArmLow);
+        robot.setTurnClawServo(Constants.turnClawDown);
+        roadrunnerSleep(1000);
+
+        robot.followTrajectorySequence(
+                robot.trajectorySequenceBuilder(robot.getPoseEstimate())
                         .setTangent(parkStartingTangent)
                         .splineToSplineHeading(new Pose2d(park, parkAngle), parkEndingTangent)
                         .build()
@@ -237,7 +255,8 @@ public abstract class AutonomousMethods extends LinearOpMode {
             Pose2d currentPose = robot.getPoseEstimate();
             robot.followTrajectorySequence(
                     robot.trajectorySequenceBuilder(currentPose)
-                            .lineToSplineHeading(calcNewPose(rangeError, xError, currentPose))
+                            .forward(rangeError)
+                            .strafeRight(xError)
                             .build()
             );
             return true;
