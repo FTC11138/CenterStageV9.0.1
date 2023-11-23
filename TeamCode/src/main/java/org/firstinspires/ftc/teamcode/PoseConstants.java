@@ -85,9 +85,8 @@ public class PoseConstants {
         public Vector2d afterPixel = new Vector2d(-36, -11);;
         public double[] afterPixelAngle = {Math.toRadians(0), Math.toRadians(90), Math.toRadians(180)};
 
-        public Vector2d beforeBackdrop = new Vector2d(12, -7);
-
-
+        public Vector2d beforeBackdrop = new Vector2d(12, -11);
+        public double[] beforeBackdropAngle = {Math.toRadians(90), Math.toRadians(180), Math.toRadians(-90)};
         public Vector2d[] backdrop = {new Vector2d(36, -34), new Vector2d(36, -36), new Vector2d(36, -38)};
         public double backdropTangent = Math.toRadians(-90);
 
@@ -114,8 +113,9 @@ public class PoseConstants {
         public Vector2d afterPixel = new Vector2d(-36, 11);;
         public double[] afterPixelAngle = {Math.toRadians(180), Math.toRadians(-90), Math.toRadians(0)};
 
-        public Vector2d beforeBackdrop = new Vector2d(12, 7);
-        public Vector2d[] backdrop = {new Vector2d(36, 38), new Vector2d(36, 36), new Vector2d(36, 34)};
+        public Vector2d beforeBackdrop = new Vector2d(12, 11);
+        public double[] beforeBackdropAngle = {Math.toRadians(-90), Math.toRadians(180), Math.toRadians(90)};
+        public Vector2d[] backdrop = {new Vector2d(36, 38), new Vector2d(36, 36), new Vector2d(36, 32)};
         public double backdropTangent = Math.toRadians(90);
 
         public Vector2d[] park = {new Vector2d(60, 10), new Vector2d(60, 60)};

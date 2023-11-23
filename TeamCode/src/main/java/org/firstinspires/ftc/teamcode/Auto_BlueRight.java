@@ -57,6 +57,7 @@ public class Auto_BlueRight extends AutonomousMethods {
                 poses.afterPixelAngle[propLocation - 1],
 
                 poses.beforeBackdrop,
+                poses.beforeBackdropAngle[propLocation - 1],
                 poses.backdrop[propLocation - 1],
                 poses.backdropTangent,
 

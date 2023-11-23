@@ -66,6 +66,7 @@ public abstract class AutonomousMethods extends LinearOpMode {
             double afterPixelAngle,
 
             Vector2d beforeBackdrop,
+            double beforeBackdropAngle,
             Vector2d backdrop,
             double backdropTangent,
 
@@ -85,17 +86,29 @@ public abstract class AutonomousMethods extends LinearOpMode {
                             roadrunnerSleep(200);
                             robot.setPixelServo(Constants.pixelHold);
                         })
-                        .setTangent(afterPixelStartingTangent)
+
                         .setVelConstraint(velocityConstraint)
-                        .splineToSplineHeading(new Pose2d(afterPixel, afterPixelAngle), afterPixelEndingTangent)
-                        .splineToSplineHeading(new Pose2d(beforeBackdrop, afterPixelAngle), Math.toRadians(0))
+//                        .setTangent(afterPixelStartingTangent)
+//                        .splineToSplineHeading(new Pose2d(afterPixel, afterPixelAngle), afterPixelEndingTangent)
+//                        .splineToSplineHeading(new Pose2d(beforeBackdrop, beforeBackdropAngle), Math.toRadians(0))
+//                        .addDisplacementMarker(() -> {
+//                            robot.setClawArmServo(Constants.clawArmUp);
+//                            robot.setTurnClawServo(Constants.turnClawUp);
+//                            robot.setLiftMotor(0.5, Constants.liftDropAuto);
+//                        })
+//                        .splineToSplineHeading(new Pose2d(backdrop, Math.toRadians(180)), backdropTangent)
+//                        .resetVelConstraint()
+                        .setTangent(afterPixelStartingTangent)
+                        .splineToLinearHeading(new Pose2d(afterPixel, afterPixelAngle), afterPixelEndingTangent)
+                        .setTangent(Math.toRadians(0))
+                        .splineToLinearHeading(new Pose2d(beforeBackdrop, afterPixelAngle), Math.toRadians(0))
                         .addDisplacementMarker(() -> {
                             robot.setClawArmServo(Constants.clawArmUp);
                             robot.setTurnClawServo(Constants.turnClawUp);
                             robot.setLiftMotor(0.5, Constants.liftDropAuto);
                         })
-                        .splineToSplineHeading(new Pose2d(backdrop, Math.toRadians(180)), backdropTangent)
-                        .resetVelConstraint()
+                        .splineToLinearHeading(new Pose2d(backdrop, afterPixelAngle), backdropTangent)
+                        .turn(Math.toRadians(180) - afterPixelAngle)
                         .build()
         );
 
@@ -110,15 +123,19 @@ public abstract class AutonomousMethods extends LinearOpMode {
 
         robot.setLiftMotor(1, Constants.liftMin);
         robot.setClawArmServo(Constants.clawArmLow);
-        robot.setTurnClawServo(Constants.turnClawDown);
-        roadrunnerSleep(1000);
+        roadrunnerSleep(500);
 
-        robot.followTrajectorySequence(
+        robot.followTrajectorySequenceAsync(
                 robot.trajectorySequenceBuilder(robot.getPoseEstimate())
                         .setTangent(parkStartingTangent)
                         .splineToSplineHeading(new Pose2d(park, parkAngle), parkEndingTangent)
                         .build()
         );
+
+        roadrunnerSleep(1000);
+        robot.setTurnClawServo(Constants.turnClawDown);
+        robot.waitForIdle();
+
     }
 
     public void runAuto(
@@ -149,11 +166,6 @@ public abstract class AutonomousMethods extends LinearOpMode {
         robot.setPoseEstimate(startPose);
         robot.followTrajectorySequence(
                 robot.trajectorySequenceBuilder(startPose)
-                        .addDisplacementMarker(() -> {
-                            robot.setClawArmServo(Constants.clawArmUp);
-                            robot.setTurnClawServo(Constants.turnClawUp);
-                            robot.setLiftMotor(0.5, Constants.liftDropAuto);
-                        })
                         .setTangent(startTangent)
                         .splineToSplineHeading(new Pose2d(pixel, pixelAngle), pixelApproachingTangent)
                         .addDisplacementMarker(() -> {
@@ -163,6 +175,11 @@ public abstract class AutonomousMethods extends LinearOpMode {
                         })
                         .setTangent(afterPixelStartingTangent)
                         .splineToSplineHeading(new Pose2d(afterPixel, afterPixelAngle), afterPixelEndingTangent)
+                        .addDisplacementMarker(() -> {
+                            robot.setClawArmServo(Constants.clawArmUp);
+                            robot.setTurnClawServo(Constants.turnClawUp);
+                            robot.setLiftMotor(0.5, Constants.liftDropAuto);
+                        })
                         .setTangent(Math.toRadians(0))
                         .splineToSplineHeading(new Pose2d(backdrop, Math.toRadians(180)), backdropTangent)
                         .build()
@@ -179,15 +196,19 @@ public abstract class AutonomousMethods extends LinearOpMode {
 
         robot.setLiftMotor(1, Constants.liftMin);
         robot.setClawArmServo(Constants.clawArmLow);
-        robot.setTurnClawServo(Constants.turnClawDown);
-        roadrunnerSleep(1000);
+        roadrunnerSleep(500);
 
-        robot.followTrajectorySequence(
+        robot.followTrajectorySequenceAsync(
                 robot.trajectorySequenceBuilder(robot.getPoseEstimate())
                         .setTangent(parkStartingTangent)
                         .splineToSplineHeading(new Pose2d(park, parkAngle), parkEndingTangent)
                         .build()
         );
+
+        roadrunnerSleep(1000);
+        robot.setTurnClawServo(Constants.turnClawDown);
+        robot.waitForIdle();
+
     }
 
     /*
