@@ -13,11 +13,16 @@ public class Configuration {
     public final String rightRear = "rr";
 
     // Servos
-    public final String clawServo = "claw";
+    public final String claw1Servo = "claw";
+    public final String claw2Servo = "claw2";
+    public final String intake1 = "intake1";
+    public final String intake2 = "intake2";
     public final String clawArmServo = "clawArm";
     public final String turnClawServo = "turnClaw";
     public final String planeServo = "plane";
     public final String pixelServo = "pixel";
+
+    public final String leds = "leds";
 
     public final String webcam = "Webcam 1";
 

@@ -1,11 +1,10 @@
 package org.firstinspires.ftc.teamcode;
 
-import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.hardwareMap;
-
 import com.acmerobotics.dashboard.FtcDashboard;
+import com.qualcomm.hardware.rev.RevBlinkinLedDriver;
+import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -22,7 +21,9 @@ public class Attachments extends SampleMecanumDrive {
     private Telemetry telemetry;
     private ElapsedTime runtime = new ElapsedTime();
 
-    public Servo clawServo, clawArmServo, planeServo, pixelServo, turnClawServo;
+    public Servo claw1Servo, claw2Servo, clawArmServo, planeServo, pixelServo, turnClawServo, lights;
+    public RevBlinkinLedDriver leds;
+    public CRServo intake1Servo, intake2Servo;
     public DcMotorEx liftMotor, hangMotor1, hangMotor2;
     public PIDFController liftPIDController;
     public WebcamName webcam;
@@ -60,13 +61,19 @@ public class Attachments extends SampleMecanumDrive {
 
 
         // Servos
-        clawServo = hardwareMap.get(Servo.class, names.clawServo);
+        claw1Servo = hardwareMap.get(Servo.class, names.claw1Servo);
+        claw2Servo = hardwareMap.get(Servo.class, names.claw2Servo);
+        intake1Servo = hardwareMap.get(CRServo.class, names.intake1);
+        intake2Servo = hardwareMap.get(CRServo.class, names.intake2);
         clawArmServo = hardwareMap.get(Servo.class, names.clawArmServo);
         turnClawServo = hardwareMap.get(Servo.class, names.turnClawServo);
         planeServo = hardwareMap.get(Servo.class, names.planeServo);
         pixelServo = hardwareMap.get(Servo.class, names.pixelServo);
 
         telemetry.addLine("Servos Initialized");
+
+        // LEDS
+        leds = hardwareMap.get(RevBlinkinLedDriver.class, names.leds);
 
 
         // Camera
@@ -125,12 +132,25 @@ public class Attachments extends SampleMecanumDrive {
 
 
     // Set Servos
-    public void setClawServo (double position) {clawServo.setPosition(position);}
+    public void setClaw1Servo(double position) {
+        claw1Servo.setPosition(position);
+    }
+    public void setClaw2Servo(double position) {
+        claw2Servo.setPosition(position);
+    }
+    public void setIntake1Servo(double power) {
+        intake1Servo.setPower(power);
+    }
+    public void setIntake2Servo(double power) {
+        intake2Servo.setPower(power);
+    }
     public void setClawArmServo (double position) {clawArmServo.setPosition(position);}
     public void setTurnClawServo (double position) {turnClawServo.setPosition(position);}
     public void setPlaneServo (double position) {planeServo.setPosition(position);}
     public void setPixelServo (double position) {pixelServo.setPosition(position);}
 
+
+    public void setLEDS (RevBlinkinLedDriver.BlinkinPattern pattern) {leds.setPattern(pattern);}
 
     // Get Motor Positions
     public int getLiftMotorPosition() {
@@ -145,8 +165,17 @@ public class Attachments extends SampleMecanumDrive {
     }
 
     // Get Servo Positions
-    public double getClawPosition() {
-        return clawServo.getPosition();
+    public double getClaw1Position() {
+        return claw1Servo.getPosition();
+    }
+    public double getClaw2Position() {
+        return claw2Servo.getPosition();
+    }
+    public double getIntake1Power() {
+        return intake1Servo.getPower();
+    }
+    public double getIntake2Power() {
+        return intake2Servo.getPower();
     }
     public double getClawArmPosition() {
         return clawArmServo.getPosition();

@@ -1,17 +1,6 @@
 package org.firstinspires.ftc.teamcode;
 
-import com.acmerobotics.roadrunner.geometry.Pose2d;
-import com.acmerobotics.roadrunner.trajectory.Trajectory;
-import com.acmerobotics.roadrunner.trajectory.constraints.AngularVelocityConstraint;
-import com.acmerobotics.roadrunner.trajectory.constraints.MinVelocityConstraint;
-import com.acmerobotics.roadrunner.trajectory.constraints.TrajectoryVelocityConstraint;
-import com.acmerobotics.roadrunner.trajectory.constraints.TranslationalVelocityConstraint;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-
-import org.apache.commons.math3.analysis.function.Constant;
-import org.firstinspires.ftc.robotcore.external.Const;
-
-import java.util.Arrays;
 
 @Autonomous(name="Auto_BlueLeft", group="Linear Opmode", preselectTeleOp = "TeleOp")
 public class Auto_BlueLeft extends AutonomousMethods {
@@ -34,10 +23,10 @@ public class Auto_BlueLeft extends AutonomousMethods {
         telemetry.addLine("Final Location: " + propLocation);
         telemetry.update();
 
-        robot.setClawArmServo(Constants.clawArmLow);
-        robot.setClawServo(Constants.clawClose);
+
+        robot.setClaw1Servo(Constants.clawClose);
+        robot.setClaw2Servo(Constants.clawClose);
         robot.setPixelServo(Constants.pixelHold);
-        robot.setPlaneServo(Constants.planeHold);
 
         runAuto(
                 propLocation,
@@ -65,8 +54,9 @@ public class Auto_BlueLeft extends AutonomousMethods {
         );
 
         PoseStorage.currentPose = robot.getPoseEstimate();
+        PoseStorage.fieldCentricOffset = Math.toRadians(-90);
         robot.setClawArmServo(Constants.clawArmDown);
-        robot.setClawServo(Constants.clawOpen);
+        robot.setClaw1Servo(Constants.clawOpen);
         sleep(2000);
 
     }

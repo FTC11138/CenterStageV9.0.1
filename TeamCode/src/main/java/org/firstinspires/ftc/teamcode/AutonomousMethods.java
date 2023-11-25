@@ -10,21 +10,16 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.ElapsedTime;
-import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.controls.ExposureControl;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.controls.GainControl;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
-import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
 import org.firstinspires.ftc.vision.VisionPortal;
 import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
 import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
-import org.firstinspires.ftc.teamcode.PoseConstants;
 
-import java.sql.Time;
 import java.util.List;
-import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
 public abstract class AutonomousMethods extends LinearOpMode {
@@ -103,7 +98,7 @@ public abstract class AutonomousMethods extends LinearOpMode {
                         .setTangent(Math.toRadians(0))
                         .splineToLinearHeading(new Pose2d(beforeBackdrop, afterPixelAngle), Math.toRadians(0))
                         .addDisplacementMarker(() -> {
-                            robot.setClawArmServo(Constants.clawArmUp);
+                            robot.setClawArmServo(Constants.clawArmHigh);
                             robot.setTurnClawServo(Constants.turnClawUp);
                             robot.setLiftMotor(0.5, Constants.liftDropAuto);
                         })
@@ -117,7 +112,8 @@ public abstract class AutonomousMethods extends LinearOpMode {
         if (targetFound) {
             robot.setLiftMotor(1, Constants.liftDropAuto);
             roadrunnerSleep(500);
-            robot.setClawServo(Constants.clawOpen);
+            robot.setClaw1Servo(Constants.clawOpen);
+            robot.setClaw2Servo(Constants.clawOpen);
             roadrunnerSleep(500);
         }
 
@@ -190,7 +186,7 @@ public abstract class AutonomousMethods extends LinearOpMode {
         if (targetFound) {
             robot.setLiftMotor(1, Constants.liftDropAuto);
             roadrunnerSleep(500);
-            robot.setClawServo(Constants.clawOpen);
+            robot.setClaw1Servo(Constants.clawOpen);
             roadrunnerSleep(500);
         }
 

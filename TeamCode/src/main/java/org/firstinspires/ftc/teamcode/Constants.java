@@ -1,9 +1,13 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.acmerobotics.dashboard.config.Config;
+import com.qualcomm.hardware.rev.RevBlinkinLedDriver;
 
 @Config
 public class Constants {
+
+    public static RevBlinkinLedDriver.BlinkinPattern closePattern = RevBlinkinLedDriver.BlinkinPattern.WHITE;
+    public static RevBlinkinLedDriver.BlinkinPattern openPattern = RevBlinkinLedDriver.BlinkinPattern.RED;
 
     /* -------------------------------------------- TELE OP CONSTANTS -------------------------------------------- */
 
@@ -40,20 +44,20 @@ public class Constants {
     public static double pixelHold = 0.5;
     public static double pixelDrop = 1;
 
-    public static double clawClose = 0.6;
-    public static double clawOpen = 0.2;
+    public static double clawClose = 0.3;
+    public static double clawOpen = 0.96;
 
-    public static double clawArmDown = 0.82;
+    public static double clawArmDown = 0.83;
     public static double clawArmUp = 0.3;
-    public static double clawArmHigh = 0.5;
+    public static double clawArmHigh = 0.46;
     public static double clawArmFar = 0.22;
     public static double clawArmLow = 0.7; // Arm position where it is safe to lower claw
     public static double clawArmDrive = 0.74;
     public static double clawArmSpeed = 0.01;
     public static double clawArmSlowRatio = 0.5;
 
-    public static double turnClawUp = 0.45;
-    public static double turnClawDown = 0.05;
+    public static double turnClawUp = 0.7;
+    public static double turnClawDown = 0.24;
     public static double turnClawSpeed = 0.01;
 
     public static double planeHold = 0.3;
@@ -66,9 +70,9 @@ public class Constants {
     public static int liftMin = 0;
     public static int liftLow = 100;
     public static int liftClawArmFar = 300;
-    public static int liftDropAuto = 750;
+    public static int liftDropAuto = 500;
     public static int liftArm = 100;
-    public static int liftHigh = 1500;
+    public static int liftHigh = 1100;
     public static int liftMax = 2000;
 
     public static double liftUpRatio = 1;
@@ -124,7 +128,7 @@ public class Constants {
     public static int rMh = 60;
 
     /* --------------------------------------------  APRILTAG CONSTANTS ------------------------------------------ */
-    public static double DESIRED_DISTANCE = 12;
+    public static double DESIRED_DISTANCE = 2;
     public static double SPEED_GAIN  =  0.02;
     public static double STRAFE_GAIN =  0.015;
     public static double TURN_GAIN   =  0.01;

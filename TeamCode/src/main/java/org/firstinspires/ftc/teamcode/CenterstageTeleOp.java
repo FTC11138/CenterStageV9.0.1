@@ -2,12 +2,14 @@ package org.firstinspires.ftc.teamcode;
 
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
+import com.qualcomm.hardware.rev.RevBlinkinLedDriver;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.robotcore.external.Const;
 import org.firstinspires.ftc.teamcode.drive.StandardTrackingWheelLocalizer;
 
 import java.util.ArrayList;
@@ -21,12 +23,18 @@ public class CenterstageTeleOp extends OpMode {
     Gamepad previousGamepad1 = new Gamepad();
     Gamepad previousGamepad2 = new Gamepad();
 
-    private double clawPosition = Constants.clawOpen;
-    private boolean clawToggle = true;
+    private RevBlinkinLedDriver.BlinkinPattern ledPattern = Constants.openPattern;
+
+    private double claw1Position = Constants.clawOpen;
+    private double claw2Position = Constants.clawOpen;
+    private boolean claw1Toggle = true;
+    private boolean claw2Toggle = true;
+    private int intakeState = 2;
+    private double intake1Power = 0;
+    private double intake2Power = 0;
     private double clawArmPosition = Constants.clawArmDrive;
     private double turnClawPosition = Constants.turnClawDown;
     private double planePosition = Constants.planeHold;
-    private boolean planeToggle = true;
     private double pixelPosition = Constants.pixelHold;
 
     private double liftPower = 0;
@@ -48,11 +56,11 @@ public class CenterstageTeleOp extends OpMode {
     private boolean limits = true;
 
     private int stage = -1;
-    private int stageCounter = 0;
 
     StandardTrackingWheelLocalizer localizer;
     Pose2d currentPose;
     double heading;
+    double fieldCentricOffset;
 
 
     @Override
@@ -60,6 +68,7 @@ public class CenterstageTeleOp extends OpMode {
         robot.initialize(hardwareMap, telemetry, false);
         localizer = new StandardTrackingWheelLocalizer(hardwareMap, new ArrayList<>(), new ArrayList<>());
         localizer.setPoseEstimate(PoseStorage.currentPose);
+        fieldCentricOffset = PoseStorage.fieldCentricOffset;
     }
 
     @Override
@@ -70,17 +79,14 @@ public class CenterstageTeleOp extends OpMode {
     @Override
     public void loop() {
 
-        previousGamepad1.copy(gamepad1);
-        previousGamepad2.copy(gamepad2);
-
         localizer.update();
         currentPose = localizer.getPoseEstimate();
-        heading = robot.getRawExternalHeading();
+        heading = -currentPose.getHeading();
 
         Vector2d input = new Vector2d(
                 -gamepad1.left_stick_y,
                 -gamepad1.left_stick_x
-        ).rotated(-currentPose.getHeading());
+        ).rotated(heading + fieldCentricOffset);
 
         robot.setWeightedDrivePower(
                 new Pose2d(
@@ -122,7 +128,9 @@ public class CenterstageTeleOp extends OpMode {
         double v_rotation = gamepad1.right_stick_x;
 
         // Drive
-//        robot.drive(theta, speedMultiplier * v_theta, rotationMultiplier * v_rotation);
+        if (lx != 0 || ly != 0) {
+            robot.drive(theta, speedMultiplier * v_theta, rotationMultiplier * v_rotation);
+        }
 
 
 
@@ -130,41 +138,57 @@ public class CenterstageTeleOp extends OpMode {
         /* -------------------------------------------- CHANGE -------------------------------------------- */
 
 
-        if (gamepad2.right_bumper) {
-            clawPosition = Constants.clawOpen;
-        } else if (gamepad2.left_bumper) {
-            clawPosition = Constants.clawClose;
+        if (gamepad2.right_bumper && !previousGamepad2.right_bumper) {
+            claw1Toggle = !claw1Toggle;
+        }
+        if (gamepad2.left_bumper && !previousGamepad2.left_bumper) {
+            claw2Toggle = !claw2Toggle;
         }
 
-//        if (clawToggle) {
-//            clawPosition = Constants.clawOpen;
-//        } else {
-//            clawPosition = Constants.clawClose;
-//        }
+        if (claw1Toggle) {
+            claw1Position = Constants.clawOpen;
+            claw2Position = Constants.clawOpen;
+            ledPattern = Constants.openPattern;
+        } else {
+            claw1Position = Constants.clawClose;
+            claw2Position = Constants.clawClose;
+            ledPattern = Constants.closePattern;
+        }
+
 
         if (gamepad2.b) {
-//            clawArmPosition = Constants.clawArmUp;
-//            turnClawPosition = Constants.turnClawUp;
-            stage = 5;
+            stage = 3;
         } else if (gamepad2.a) {
-//           clawArmPosition = Constants.clawArmDown;
-//           turnClawPosition = Constants.turnClawDown;
             stage = 0;
         }
 
-        if (gamepad2.left_stick_button) {
-            clawArmPosition = Constants.clawArmDrive;
+
+        if (gamepad2.right_trigger > 0.2) {
+            intakeState = 1;
+        } else if (gamepad2.left_trigger > 0.2) {
+            intakeState = 3;
+        } else if (gamepad2.right_stick_button || gamepad2.left_stick_button) {
+            intakeState = 2;
         }
 
-        if (gamepad2.right_stick_button && currentLiftPosition >= Constants.liftClawArmFar) {
-            clawArmPosition = Constants.clawArmFar;
+        if (intakeState == 1) {
+            intake1Power = -1;
+            intake2Power = 1;
+        } else if (intakeState == 3) {
+            intake1Power = 1;
+            intake2Power = -1;
+        } else {
+            intake1Power = 0;
+            intake2Power = 0;
         }
 
-        if (gamepad1.right_trigger > 0.2 || gamepad2.right_trigger > 0.2) {
+
+        if (gamepad1.right_trigger > 0.2) {
             planePosition = Constants.planeRelease;
-        } else if (gamepad1.left_trigger > 0.2 || gamepad2.left_trigger > 0.2) {
+        } else if (gamepad1.left_trigger > 0.2) {
             planePosition = Constants.planeHold;
         }
+
 
         if (gamepad2.dpad_up) {
             useLiftPower = false;
@@ -175,6 +199,7 @@ public class CenterstageTeleOp extends OpMode {
             targetLiftPosition = Constants.liftMin;
             liftUseEnc = true;
         }
+
 
         if (gamepad2.y) {
             useHangPower = false;
@@ -188,16 +213,8 @@ public class CenterstageTeleOp extends OpMode {
 
 
         if (gamepad2.dpad_right) {
-//            useLiftPower = false;
-//            targetLiftPosition = Constants.liftHigh;
-//            liftUseEnc = true;
-//            clawArmPosition = Constants.clawArmUp;
             turnClawPosition = Constants.turnClawDown;
         } else if (gamepad2.dpad_left) {
-//            useLiftPower = false;
-//            targetLiftPosition = Constants.liftLow;
-//            liftUseEnc = true;
-//            clawArmPosition = Constants.clawArmDown;
             turnClawPosition = Constants.turnClawUp;
         }
 
@@ -206,77 +223,75 @@ public class CenterstageTeleOp extends OpMode {
             limits = !limits;
         }
 
-//        if (liftModeUpdate && liftUseEnc) {
-//            robot.liftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-//            liftModeUpdate = false;
-//        }
 
         if (stage >= 0) {
             switch (stage) {
                 case 0:
-                    // Bring Claw Arm to lift down position
-                    if ((clawArmPosition + Constants.clawArmSpeed) <= Constants.clawArmUp) {
+                    // Bring Arm Down
+                    if ((clawArmPosition + Constants.clawArmSpeed) <= Constants.clawArmLow) { //(clawArmPosition + Constants.clawArmSpeed) <= Constants.clawArmLow
                         clawArmPosition += Constants.clawArmSpeed;
                     } else {
+                        clawArmPosition = Constants.clawArmLow;
                         stage = 1;
                     }
                     break;
                 case 1:
-                    // Bring Lift Down
-                    if (currentLiftPosition > Constants.liftLow) { //liftLow
-                        useLiftPower = false;
-                        targetLiftPosition = Constants.liftMin;
-                        liftUseEnc = true;
-                    } else {
-                        stage = 2;
-                    }
-                    break;
-                case 2:
-                    // Bring Arm Down
-                    if ((clawArmPosition + Constants.clawArmSpeed) <= Constants.clawArmLow) { //(clawArmPosition + Constants.clawArmSpeed) <= Constants.clawArmLow
-                        telemetry.addData("stage 1 ", true);
-                        clawArmPosition += Constants.clawArmSpeed;
-                    } else {
-                        stage = 3;
-                    }
-                    break;
-                case 3:
                     // Bring Claw Down
                     if ((turnClawPosition - Constants.turnClawSpeed) >= Constants.turnClawDown) {
                         turnClawPosition -= Constants.turnClawSpeed;
                     } else {
+                        turnClawPosition = Constants.turnClawDown;
+                        stage = 2;
+                        claw1Toggle = false;
+                        claw2Toggle = false;
+                    }
+                    break;
+                case 2:
+                    if ((clawArmPosition + Constants.clawArmSpeed) <= Constants.clawArmDown) {
+                        clawArmPosition += Constants.clawArmSpeed;
+                    } else {
+                        clawArmPosition = Constants.clawArmDown;
+                        stage = -1;
+                        claw1Toggle = true;
+                        claw2Toggle = true;
+                        intakeState = 1;
+                    }
+                    break;
+
+
+                case 3:
+                    // Bring Arm Up
+                    claw1Toggle = false;
+                    claw2Toggle = false;
+                    intakeState = 2;
+                    if ((clawArmPosition - Constants.clawArmSpeed) >= Constants.clawArmLow) {
+                        clawArmPosition -= Constants.clawArmSpeed;
+                    } else {
+                        clawArmPosition = Constants.clawArmLow;
                         stage = 4;
                     }
                     break;
                 case 4:
-                    if ((clawArmPosition + Constants.clawArmSpeed) <= Constants.clawArmDown) {
-                        clawArmPosition += Constants.clawArmSpeed;
-                    } else {
-                        stage = -1;
-                    }
-                    break;
-                case 5:
                     // Bring Claw Up
                     if ((turnClawPosition + Constants.turnClawSpeed) <= Constants.turnClawUp) {
                         turnClawPosition += Constants.turnClawSpeed;
                     } else {
-                        stage = 6;
+                        turnClawPosition = Constants.turnClawUp;
+                        stage = 5;
                     }
                     break;
-                case 6:
+                case 5:
                     // Bring Arm Up
-                    if ((clawArmPosition - Constants.clawArmSpeed) >= Constants.clawArmUp) {
+                    if ((clawArmPosition - Constants.clawArmSpeed) >= Constants.clawArmHigh) {
                         clawArmPosition -= Constants.clawArmSpeed;
                     } else {
+                        clawArmPosition = Constants.clawArmHigh;
                         stage = -1;
                     }
                     break;
             }
         }
 
-        if (stageCounter > 0) {
-            stageCounter--;
-        }
 
 
         double liftJoystick = -gamepad2.left_stick_y;
@@ -369,6 +384,8 @@ public class CenterstageTeleOp extends OpMode {
         }
 
 
+        previousGamepad1.copy(gamepad1);
+        previousGamepad2.copy(gamepad2);
 
         currentLiftPosition = robot.getLiftMotorPosition();
         currentHangPosition1 = robot.getHangMotorPosition1();
@@ -378,11 +395,15 @@ public class CenterstageTeleOp extends OpMode {
 
         /* -------------------------------------------- ACTION -------------------------------------------- */
 
-        robot.setClawServo(clawPosition);
+        robot.setClaw1Servo(claw1Position);
+        robot.setClaw2Servo(claw2Position);
         robot.setClawArmServo(clawArmPosition);
         robot.setTurnClawServo(turnClawPosition);
         robot.setPlaneServo(planePosition);
         robot.setPixelServo(pixelPosition);
+        robot.setIntake1Servo(intake1Power);
+        robot.setIntake2Servo(intake2Power);
+        robot.setLEDS(ledPattern);
 
         if (liftModeUpdate && liftUseEnc) {
             robot.liftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
