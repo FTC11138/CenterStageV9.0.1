@@ -47,6 +47,7 @@ public class Constants {
     public static double clawClose = 0.3;
     public static double clawOpen = 0.96;
 
+
     public static double clawArmDown = 0.83;
     public static double clawArmUp = 0.3;
     public static double clawArmHigh = 0.46;
@@ -56,12 +57,20 @@ public class Constants {
     public static double clawArmSpeed = 0.01;
     public static double clawArmSlowRatio = 0.5;
 
+    public static double clawArm0 = 0.28;
+    public static double clawArm60 = clawArmHigh;
+    public static double clawArmValPerDegree = (clawArm60 - clawArm0)/60;
+
     public static double turnClawUp = 0.7;
     public static double turnClawDown = 0.24;
     public static double turnClawSpeed = 0.01;
 
-    public static double planeHold = 0.3;
-    public static double planeRelease = 0.15;
+    public static double turnClaw180 = 0.69;
+    public static double turnClaw0 = 0.26;
+    public static double turnClawValPerDegree = (turnClaw180 - turnClaw0)/180;
+
+    public static double planeHold = 0.4;
+    public static double planeRelease = 0.25;
 
 
     /* -------------------------------------------- MOTOR CONSTANTS -------------------------------------------- */
@@ -70,9 +79,9 @@ public class Constants {
     public static int liftMin = 0;
     public static int liftLow = 100;
     public static int liftClawArmFar = 300;
-    public static int liftDropAuto = 500;
+    public static int liftDropAuto = 200;
     public static int liftArm = 100;
-    public static int liftHigh = 1100;
+    public static int liftHigh = 700;
     public static int liftMax = 2000;
 
     public static double liftUpRatio = 1;

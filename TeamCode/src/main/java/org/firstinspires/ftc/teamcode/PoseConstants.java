@@ -22,7 +22,7 @@ public class PoseConstants {
         public static Pose2d start = new Pose2d(12, -63, Math.toRadians(-90));
         public static double[] startingTangent = {Math.toRadians(45), Math.toRadians(45), Math.toRadians(45)};
 
-        public static Vector2d[] pixel = {new Vector2d(12, -32), new Vector2d(12, -12), new Vector2d(12, -32)};
+        public static Vector2d[] pixel = {new Vector2d(12, -32), new Vector2d(12, -13), new Vector2d(12, -32)};
         public static double[] pixelAngle = {Math.toRadians(0), Math.toRadians(90), Math.toRadians(180)};
         public static double[] pixelApproachingTangent = {Math.toRadians(135), Math.toRadians(135), Math.toRadians(135)};
 
@@ -36,9 +36,9 @@ public class PoseConstants {
         public static double backdropTangent = Math.toRadians(-90);
 
         public Vector2d[] park = {new Vector2d(60, -10), new Vector2d(60, -60)};
-        public double[] parkStartingTangent ={Math.toRadians(90), Math.toRadians(-90)};
+        public double[] parkStartingTangent ={Math.toRadians(135), Math.toRadians(-135)};
         public double[] parkEndingTangent = {Math.toRadians(0), Math.toRadians(0)};
-        public double[] parkAngle = {Math.toRadians(90), Math.toRadians(-90)};
+        public double[] parkAngle = {Math.toRadians(0), Math.toRadians(0)};
 
     }
 
@@ -49,7 +49,7 @@ public class PoseConstants {
         public static Pose2d start = new Pose2d(12, 63, Math.toRadians(90));
         public static double[] startingTangent = {Math.toRadians(-45), Math.toRadians(-45), Math.toRadians(-45)};
 
-        public static Vector2d[] pixel = {new Vector2d(12, 36), new Vector2d(12, 12), new Vector2d(12, 32)};
+        public static Vector2d[] pixel = {new Vector2d(12, 36), new Vector2d(12, 13), new Vector2d(12, 32)};
         public static double[] pixelAngle = {Math.toRadians(180), Math.toRadians(-90), Math.toRadians(0)};
         public static double[] pixelApproachingTangent = {Math.toRadians(-135), Math.toRadians(-135), Math.toRadians(-135)};
 
@@ -62,9 +62,9 @@ public class PoseConstants {
         public double backdropTangent = Math.toRadians(90);
 
         public Vector2d[] park = {new Vector2d(60, 10), new Vector2d(60, 60)};
-        public double[] parkStartingTangent = {Math.toRadians(-90), Math.toRadians(90)};
+        public double[] parkStartingTangent ={Math.toRadians(-135), Math.toRadians(135)};
         public double[] parkEndingTangent = {Math.toRadians(0), Math.toRadians(0)};
-        public double[] parkAngle = {Math.toRadians(-90), Math.toRadians(90)};
+        public double[] parkAngle = {Math.toRadians(0), Math.toRadians(0)};
 
     }
 
@@ -91,9 +91,9 @@ public class PoseConstants {
         public double backdropTangent = Math.toRadians(-90);
 
         public Vector2d[] park = {new Vector2d(60, -10), new Vector2d(60, -60)};
-        public double[] parkStartingTangent = {Math.toRadians(90), Math.toRadians(-90)};
+        public double[] parkStartingTangent ={Math.toRadians(135), Math.toRadians(-135)};
         public double[] parkEndingTangent = {Math.toRadians(0), Math.toRadians(0)};
-        public double[] parkAngle = {Math.toRadians(90), Math.toRadians(-90)};
+        public double[] parkAngle = {Math.toRadians(0), Math.toRadians(0)};
 
     }
 
@@ -119,9 +119,9 @@ public class PoseConstants {
         public double backdropTangent = Math.toRadians(90);
 
         public Vector2d[] park = {new Vector2d(60, 10), new Vector2d(60, 60)};
-        public double[] parkStartingTangent = {Math.toRadians(-90), Math.toRadians(90)};
+        public double[] parkStartingTangent ={Math.toRadians(-135), Math.toRadians(135)};
         public double[] parkEndingTangent = {Math.toRadians(0), Math.toRadians(0)};
-        public double[] parkAngle = {Math.toRadians(-90), Math.toRadians(90)};
+        public double[] parkAngle = {Math.toRadians(0), Math.toRadians(0)};
 
     }
 

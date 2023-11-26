@@ -106,20 +106,20 @@ public class CenterstageTeleOp extends OpMode {
         if (gamepad1.dpad_up) {
             ly = 1;
             lx = 0;
-            speedMultiplier = 0.3;
+            speedMultiplier = 0.6;
         } else if (gamepad1.dpad_down) {
             ly = -1;
             lx = 0;
-            speedMultiplier = 0.3;
+            speedMultiplier = 0.6;
         }
         if (gamepad1.dpad_left) {
             lx = -1;
             ly = 0;
-            speedMultiplier = 0.3;
+            speedMultiplier = 0.6;
         } else if (gamepad1.dpad_right) {
             lx = 1;
             ly = 0;
-            speedMultiplier = 0.3;
+            speedMultiplier = 0.6;
         }
 
         // Math
@@ -290,6 +290,14 @@ public class CenterstageTeleOp extends OpMode {
                     }
                     break;
             }
+        }
+
+
+        if (clawArmPosition < Constants.clawArmHigh) {
+            double clawArmOffset = Constants.clawArmHigh - clawArmPosition;
+            double clawArmDegrees = clawArmOffset / Constants.clawArmValPerDegree;
+            double turnClawOffset = Constants.turnClawValPerDegree * clawArmDegrees;
+            turnClawPosition -= turnClawOffset;
         }
 
 

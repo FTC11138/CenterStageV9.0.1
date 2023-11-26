@@ -107,7 +107,6 @@ public abstract class AutonomousMethods extends LinearOpMode {
                         .build()
         );
 
-        roadrunnerSleep(500);
         boolean targetFound = goToAprilTag(propLocation, startPos, robot.visionPortal, robot.aprilTagProcessor);
         if (targetFound) {
             robot.setLiftMotor(1, Constants.liftDropAuto);
@@ -172,7 +171,7 @@ public abstract class AutonomousMethods extends LinearOpMode {
                         .setTangent(afterPixelStartingTangent)
                         .splineToSplineHeading(new Pose2d(afterPixel, afterPixelAngle), afterPixelEndingTangent)
                         .addDisplacementMarker(() -> {
-                            robot.setClawArmServo(Constants.clawArmUp);
+                            robot.setClawArmServo(Constants.clawArmHigh);
                             robot.setTurnClawServo(Constants.turnClawUp);
                             robot.setLiftMotor(0.5, Constants.liftDropAuto);
                         })
@@ -181,7 +180,6 @@ public abstract class AutonomousMethods extends LinearOpMode {
                         .build()
         );
 
-        roadrunnerSleep(500);
         boolean targetFound = goToAprilTag(propLocation, startPos, robot.visionPortal, robot.aprilTagProcessor);
         if (targetFound) {
             robot.setLiftMotor(1, Constants.liftDropAuto);
@@ -238,7 +236,6 @@ public abstract class AutonomousMethods extends LinearOpMode {
 
         telemetry.addData("Finished ", "initialization");
         telemetry.update();
-        sleep(500);
 
         List<AprilTagDetection> currentDetections = aprilTagProcessor.getDetections();
         for (AprilTagDetection detection : currentDetections) {
