@@ -42,6 +42,7 @@ public class CenterstageTeleOp extends OpMode {
     private boolean liftModeUpdate = false;
     private boolean liftUseEnc = true;
     private int targetLiftPosition = Constants.liftLow;
+    private int pixelDropLiftPosition = Constants.liftHigh;
     private int currentLiftPosition = 0;
 
     private double hangPower1 = 0;
@@ -167,7 +168,7 @@ public class CenterstageTeleOp extends OpMode {
             intakeState = 1;
         } else if (gamepad2.left_trigger > 0.2) {
             intakeState = 3;
-        } else if (gamepad2.right_stick_button || gamepad2.left_stick_button) {
+        } else if (gamepad2.right_stick_button) {
             intakeState = 2;
         }
 
@@ -192,12 +193,16 @@ public class CenterstageTeleOp extends OpMode {
 
         if (gamepad2.dpad_up) {
             useLiftPower = false;
-            targetLiftPosition = Constants.liftHigh;
+            targetLiftPosition = pixelDropLiftPosition;
             liftUseEnc = true;
         } else if (gamepad2.dpad_down) {
             useLiftPower = false;
             targetLiftPosition = Constants.liftMin;
             liftUseEnc = true;
+        }
+
+        if (gamepad2.dpad_left) {
+            pixelDropLiftPosition = currentLiftPosition;
         }
 
 
@@ -211,12 +216,6 @@ public class CenterstageTeleOp extends OpMode {
             hangUseEnc = true;
         }
 
-
-        if (gamepad2.dpad_right) {
-            turnClawPosition = Constants.turnClawDown;
-        } else if (gamepad2.dpad_left) {
-            turnClawPosition = Constants.turnClawUp;
-        }
 
 
         if (gamepad1.right_bumper && !previousGamepad1.right_bumper) {
@@ -297,7 +296,7 @@ public class CenterstageTeleOp extends OpMode {
             double clawArmOffset = Constants.clawArmHigh - clawArmPosition;
             double clawArmDegrees = clawArmOffset / Constants.clawArmValPerDegree;
             double turnClawOffset = Constants.turnClawValPerDegree * clawArmDegrees;
-            turnClawPosition -= turnClawOffset;
+            turnClawPosition = Constants.turnClaw180 - turnClawOffset;
         }
 
 
