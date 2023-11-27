@@ -158,7 +158,7 @@ public class CenterstageTeleOp extends OpMode {
 
 
         if (gamepad2.b) {
-            stage = 3;
+            stage = 4;
         } else if (gamepad2.a) {
             stage = 0;
         }
@@ -226,26 +226,37 @@ public class CenterstageTeleOp extends OpMode {
         if (stage >= 0) {
             switch (stage) {
                 case 0:
+                    // Bring Claw Down
+                    if ((turnClawPosition - Constants.turnClawSpeed) >= Constants.turnClaw90) {
+                        turnClawPosition -= Constants.turnClawSpeed;
+                    } else {
+                        turnClawPosition = Constants.turnClaw90;
+                        stage = 1;
+                        claw1Toggle = false;
+                        claw2Toggle = false;
+                    }
+                    break;
+                case 1:
                     // Bring Arm Down
                     if ((clawArmPosition + Constants.clawArmSpeed) <= Constants.clawArmLow) { //(clawArmPosition + Constants.clawArmSpeed) <= Constants.clawArmLow
                         clawArmPosition += Constants.clawArmSpeed;
                     } else {
                         clawArmPosition = Constants.clawArmLow;
-                        stage = 1;
+                        stage = 2;
                     }
                     break;
-                case 1:
+                case 2:
                     // Bring Claw Down
                     if ((turnClawPosition - Constants.turnClawSpeed) >= Constants.turnClawDown) {
                         turnClawPosition -= Constants.turnClawSpeed;
                     } else {
                         turnClawPosition = Constants.turnClawDown;
-                        stage = 2;
+                        stage = 3;
                         claw1Toggle = false;
                         claw2Toggle = false;
                     }
                     break;
-                case 2:
+                case 3:
                     if ((clawArmPosition + Constants.clawArmSpeed) <= Constants.clawArmDown) {
                         clawArmPosition += Constants.clawArmSpeed;
                     } else {
@@ -258,7 +269,7 @@ public class CenterstageTeleOp extends OpMode {
                     break;
 
 
-                case 3:
+                case 4:
                     // Bring Arm Up
                     claw1Toggle = false;
                     claw2Toggle = false;
@@ -267,19 +278,19 @@ public class CenterstageTeleOp extends OpMode {
                         clawArmPosition -= Constants.clawArmSpeed;
                     } else {
                         clawArmPosition = Constants.clawArmLow;
-                        stage = 4;
+                        stage = 5;
                     }
                     break;
-                case 4:
+                case 5:
                     // Bring Claw Up
                     if ((turnClawPosition + Constants.turnClawSpeed) <= Constants.turnClawUp) {
                         turnClawPosition += Constants.turnClawSpeed;
                     } else {
                         turnClawPosition = Constants.turnClawUp;
-                        stage = 5;
+                        stage = 6;
                     }
                     break;
-                case 5:
+                case 6:
                     // Bring Arm Up
                     if ((clawArmPosition - Constants.clawArmSpeed) >= Constants.clawArmHigh) {
                         clawArmPosition -= Constants.clawArmSpeed;
