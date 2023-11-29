@@ -292,7 +292,7 @@ public class CenterstageTeleOp extends OpMode {
                     break;
                 case 6:
                     // Bring Arm Up
-                    if ((clawArmPosition - Constants.clawArmSpeed) >= Constants.clawArmHigh) {
+                    if ((clawArmPosition - Constants.clawArmSpeed) >= Constants.clawArmTeleDrop) {
                         clawArmPosition -= Constants.clawArmSpeed;
                     } else {
                         clawArmPosition = Constants.clawArmHigh;
