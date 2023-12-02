@@ -48,14 +48,16 @@ public class Constants {
     public static double clawOpen = 0.96;
 
 
+    public static int clawArmLiftDelay = 100;
+
     public static double clawArmAutoDrop = 0.35;
     public static double clawArmTeleDrop = 0.4;
-    public static double clawArmDown = 0.83;
+    public static double clawArmDown = 0.84;
     public static double clawArmUp = 0.3;
     public static double clawArmHigh = 0.46;
     public static double clawArmFar = 0.22;
     public static double clawArmLow = 0.7; // Arm position where it is safe to lower claw
-    public static double clawArmDrive = 0.74;
+    public static double clawArmDrive = 0.75;
     public static double clawArmSpeed = 0.01;
     public static double clawArmSlowRatio = 0.5;
 
@@ -64,8 +66,8 @@ public class Constants {
     public static double clawArmValPerDegree = (clawArm60 - clawArm0)/60;
 
     public static double turnClawUp = 0.7;
-    public static double turnClawDown = 0.24;
-    public static double turnClawSpeed = 0.01;
+    public static double turnClawDown = 0.21;
+    public static double turnClawSpeed = 0.02;
 
     public static double turnClaw180 = 0.69;
     public static double turnClaw90 = 0.48;

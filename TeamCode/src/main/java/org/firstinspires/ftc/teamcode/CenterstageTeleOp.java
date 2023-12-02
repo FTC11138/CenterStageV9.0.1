@@ -57,6 +57,7 @@ public class CenterstageTeleOp extends OpMode {
     private boolean limits = true;
 
     private int stage = -1;
+    private int counter = 0;
 
     StandardTrackingWheelLocalizer localizer;
     Pose2d currentPose;
@@ -170,6 +171,18 @@ public class CenterstageTeleOp extends OpMode {
             intakeState = 3;
         } else if (gamepad2.right_stick_button) {
             intakeState = 2;
+        }
+
+        if (gamepad2.left_stick_button) {
+            clawArmPosition = Constants.clawArmDrive;
+//            if (counter > 1) {
+//                counter--;
+//            } else if (counter == 1) {
+//                clawArmPosition = Constants.clawArmDrive;
+//                counter = 0;
+//            } else {
+//                counter = Constants.clawArmLiftDelay;
+//            }
         }
 
         if (intakeState == 1) {
