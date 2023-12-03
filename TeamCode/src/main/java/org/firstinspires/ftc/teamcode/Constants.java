@@ -49,6 +49,8 @@ public class Constants {
 
 
     public static int clawArmLiftDelay = 100;
+    public static int clawArmDownDelay = 30;
+
 
     public static double clawArmAutoDrop = 0.35;
     public static double clawArmTeleDrop = 0.4;

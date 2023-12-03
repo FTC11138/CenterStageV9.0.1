@@ -262,11 +262,19 @@ public class CenterstageTeleOp extends OpMode {
                     // Bring Claw Down
                     if ((turnClawPosition - Constants.turnClawSpeed) >= Constants.turnClawDown) {
                         turnClawPosition -= Constants.turnClawSpeed;
+                        
+                        counter = Constants.clawArmDownDelay;
                     } else {
-                        turnClawPosition = Constants.turnClawDown;
-                        stage = 3;
-                        claw1Toggle = false;
-                        claw2Toggle = false;
+                        if (counter == 1) {
+                            counter = 0;
+
+                            turnClawPosition = Constants.turnClawDown;
+                            stage = 3;
+                            claw1Toggle = false;
+                            claw2Toggle = false;
+                        } else {
+                            counter--;
+                        }
                     }
                     break;
                 case 3:
