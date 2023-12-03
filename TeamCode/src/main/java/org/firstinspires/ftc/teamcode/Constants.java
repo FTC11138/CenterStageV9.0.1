@@ -53,7 +53,7 @@ public class Constants {
 
 
     public static double clawArmAutoDrop = 0.35;
-    public static double clawArmTeleDrop = 0.4;
+    public static double clawArmTeleDrop = 0.36;
     public static double clawArmDown = 0.84;
     public static double clawArmUp = 0.3;
     public static double clawArmHigh = 0.46;

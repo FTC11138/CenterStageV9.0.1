@@ -50,6 +50,7 @@ public class Attachments extends SampleMecanumDrive {
         hangMotor1.setDirection(DcMotorEx.Direction.REVERSE);
         liftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         liftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        liftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         hangMotor1.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         hangMotor1.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         hangMotor2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
