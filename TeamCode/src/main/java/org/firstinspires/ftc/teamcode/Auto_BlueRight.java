@@ -28,6 +28,8 @@ public class Auto_BlueRight extends AutonomousMethods {
         robot.setClaw2Servo(Constants.clawClose);
         robot.setPixelServo(Constants.pixelHold);
 
+        roadrunnerSleep(10000);
+
         runAuto(
                 finalPropLocation,
                 startPos,

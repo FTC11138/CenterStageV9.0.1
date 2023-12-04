@@ -22,7 +22,7 @@ public class Constants {
 
     /* -------------------------------------------- AUTO CONSTANTS -------------------------------------------- */
 
-    public static int parkLoc = 2;
+    public static int parkLoc = 1;
     public static boolean continueAutoAfterSpikeMark = true;
     public static int testPropLoc = 1;
 
@@ -68,12 +68,12 @@ public class Constants {
     public static double clawArmValPerDegree = (clawArm60 - clawArm0)/60;
 
     public static double turnClawUp = 0.7;
-    public static double turnClawDown = 0.21;
+    public static double turnClawDown = 0.25;
     public static double turnClawSpeed = 0.02;
 
-    public static double turnClaw180 = 0.69;
-    public static double turnClaw90 = 0.48;
-    public static double turnClaw0 = 0.26;
+    public static double turnClaw180 = 0.75;
+    public static double turnClaw90 = 0.54;
+    public static double turnClaw0 = 0.33;
     public static double turnClawValPerDegree = (turnClaw180 - turnClaw0)/180;
 
     public static double planeHold = 0.4;

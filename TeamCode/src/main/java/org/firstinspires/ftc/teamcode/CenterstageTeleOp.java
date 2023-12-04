@@ -214,11 +214,17 @@ public class CenterstageTeleOp extends OpMode {
             liftUseEnc = true;
         }
 
+//        if (gamepad2.dpad_left) {
+//            pixelDropLiftPosition = currentLiftPosition;
+//            useLiftPower = false;
+//            targetLiftPosition = pixelDropLiftPosition;
+//            liftUseEnc = true;
+//        }
+
         if (gamepad2.dpad_left) {
-            pixelDropLiftPosition = currentLiftPosition;
-            useLiftPower = false;
-            targetLiftPosition = pixelDropLiftPosition;
-            liftUseEnc = true;
+            turnClawPosition = Constants.turnClaw0;
+        } else if (gamepad2.dpad_right) {
+            turnClawPosition = Constants.turnClaw180;
         }
 
 
