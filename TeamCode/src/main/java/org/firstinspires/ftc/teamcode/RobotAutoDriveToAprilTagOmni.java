@@ -87,7 +87,6 @@ import java.util.concurrent.TimeUnit;
  */
 
 @TeleOp(name="Omni Drive To AprilTag", group = "Concept")
-@Disabled
 public class RobotAutoDriveToAprilTagOmni extends LinearOpMode
 {
     // Adjust these numbers to suit your robot.
@@ -130,8 +129,8 @@ public class RobotAutoDriveToAprilTagOmni extends LinearOpMode
         // step (using the FTC Robot Controller app on the phone).
         leftFrontDrive  = hardwareMap.get(DcMotor.class, "lf");
         rightFrontDrive = hardwareMap.get(DcMotor.class, "rf"); //rightfront_drive
-        leftBackDrive  = hardwareMap.get(DcMotor.class, "lr");
-        rightBackDrive = hardwareMap.get(DcMotor.class, "rr");
+        leftBackDrive  = hardwareMap.get(DcMotor.class, "lb");
+        rightBackDrive = hardwareMap.get(DcMotor.class, "rb");
 
         // To drive forward, most robots need the motor on one side to be reversed, because the axles point in opposite directions.
         // When run, this OpMode should start both motors driving forward. So adjust these two lines based on your first test drive.
