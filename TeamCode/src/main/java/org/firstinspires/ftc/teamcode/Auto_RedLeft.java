@@ -2,7 +2,7 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
-@Autonomous(name="Auto_RedLeft", group="Linear Opmode", preselectTeleOp = "TeleOp")
+@Autonomous(name="Auto_RedAudience", group="Linear Opmode", preselectTeleOp = "TeleOp")
 public class Auto_RedLeft extends AutonomousMethods {
     @Override
     public void runOpMode() throws InterruptedException {
@@ -27,9 +27,7 @@ public class Auto_RedLeft extends AutonomousMethods {
         robot.setClaw2Servo(Constants.clawClose);
         robot.setPixelServo(Constants.pixelHold);
 
-        roadrunnerSleep(10000);
-
-        runAuto(
+        runAutoNoStack(
                 finalPropLocation,
                 startPos,
 
@@ -42,11 +40,15 @@ public class Auto_RedLeft extends AutonomousMethods {
 
                 poses.afterPixelStartingTangent[propLocation - 1],
                 poses.afterPixelEndingTangent[propLocation - 1],
-                poses.afterPixel,
+                poses.afterPixel[propLocation - 1],
                 poses.afterPixelAngle[propLocation - 1],
 
+                poses.stack,
+                poses.stackAngle,
+                poses.stackApproachingTangent,
+
                 poses.beforeBackdrop,
-                poses.beforeBackdropAngle[propLocation - 1],
+                poses.afterPixelAngle[propLocation - 1],
                 poses.backdrop[propLocation - 1],
                 poses.backdropTangent,
 

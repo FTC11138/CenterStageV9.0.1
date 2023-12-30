@@ -2,7 +2,7 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
-@Autonomous(name="Auto_BlueLeft", group="Linear Opmode", preselectTeleOp = "TeleOp")
+@Autonomous(name="Auto_BlueBackdrop", group="Linear Opmode", preselectTeleOp = "TeleOp")
 public class Auto_BlueLeft extends AutonomousMethods {
     @Override
     public void runOpMode() throws InterruptedException {
@@ -28,7 +28,7 @@ public class Auto_BlueLeft extends AutonomousMethods {
         robot.setClaw2Servo(Constants.clawClose);
         robot.setPixelServo(Constants.pixelHold);
 
-        runAuto(
+        runAutoNoStack(
                 propLocation,
                 startPos,
 
