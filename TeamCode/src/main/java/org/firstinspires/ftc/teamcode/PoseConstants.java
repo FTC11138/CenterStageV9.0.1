@@ -83,7 +83,7 @@ public class PoseConstants {
         public Pose2d start = new Pose2d(-36, -63, Math.toRadians(-90));
         public double[] startingTangent = {Math.toRadians(180), Math.toRadians(90), Math.toRadians(135)};
 
-        public Vector2d[] pixel = {new Vector2d(-59, -32), new Vector2d(-36, -36), new Vector2d(-36, -32)};
+        public Vector2d[] pixel = {new Vector2d(-59, -36), new Vector2d(-36, -36), new Vector2d(-36, -32)};
         public double[] pixelAngle = {Math.toRadians(180), Math.toRadians(-90), Math.toRadians(180)};
         public double[] pixelApproachingTangent = {Math.toRadians(180), Math.toRadians(90), Math.toRadians(45)};
 
