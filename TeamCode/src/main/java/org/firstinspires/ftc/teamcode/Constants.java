@@ -34,7 +34,7 @@ public class Constants {
 
 
     public static double slowerMoveVel = 10;
-    public static double slowerSplineVel = 40;
+    public static double slowerSplineVel =20;
 
 
     /* -------------------------------------------- SERVO CONSTANTS -------------------------------------------- */
@@ -67,13 +67,13 @@ public class Constants {
     public static double clawArm60 = clawArmHigh;
     public static double clawArmValPerDegree = (clawArm60 - clawArm0)/60;
 
-    public static double turnClawUp = 0.7;
-    public static double turnClawDown = 0.25;
+    public static double turnClawUp = 0.9; //0.7
+    public static double turnClawDown = 0.55; //0.25
     public static double turnClawSpeed = 0.02;
 
-    public static double turnClaw180 = 0.75;
-    public static double turnClaw90 = 0.54;
-    public static double turnClaw0 = 0.33;
+    public static double turnClaw180 = 1; //0.75
+    public static double turnClaw90 = 0.7; //0.54
+    public static double turnClaw0 = 0.63; //0.33
     public static double turnClawValPerDegree = (turnClaw180 - turnClaw0)/180;
 
     public static double planeHold = 0.4;
@@ -145,6 +145,7 @@ public class Constants {
 
     /* --------------------------------------------  APRILTAG CONSTANTS ------------------------------------------ */
     public static double DESIRED_DISTANCE = 7;
+    public static double CAMERA_TO_CENTER = 8;
     public static double SPEED_GAIN  =  0.02;
     public static double STRAFE_GAIN =  0.015;
     public static double TURN_GAIN   =  0.01;

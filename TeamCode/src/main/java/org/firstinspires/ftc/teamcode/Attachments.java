@@ -31,6 +31,12 @@ public class Attachments extends SampleMecanumDrive {
     public VisionPortal visionPortal;
     public AprilTagProcessor aprilTagProcessor;
 
+    public enum intakeState {
+        IN,
+        STOP,
+        OUT
+    }
+
     public void initialize(HardwareMap hardwareMap, Telemetry telemetry_, boolean auto) {
 
         // Random Stuff IDK
@@ -144,6 +150,18 @@ public class Attachments extends SampleMecanumDrive {
     }
     public void setIntake2Servo(double power) {
         intake2Servo.setPower(power);
+    }
+    public void setIntakeState(Attachments.intakeState state) {
+        if (state == intakeState.IN) {
+            setIntake1Servo(-1);
+            setIntake2Servo(1);
+        } else if (state == intakeState.OUT) {
+            setIntake1Servo(1);
+            setIntake2Servo(-1);
+        } else {
+            setIntake1Servo(0);
+            setIntake2Servo(0);
+        }
     }
     public void setClawArmServo (double position) {clawArmServo.setPosition(position);}
     public void setTurnClawServo (double position) {turnClawServo.setPosition(position);}
