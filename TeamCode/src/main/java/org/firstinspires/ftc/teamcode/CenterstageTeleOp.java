@@ -214,17 +214,17 @@ public class CenterstageTeleOp extends OpMode {
             liftUseEnc = true;
         }
 
-//        if (gamepad2.dpad_left) {
-//            pixelDropLiftPosition = currentLiftPosition;
-//            useLiftPower = false;
-//            targetLiftPosition = pixelDropLiftPosition;
-//            liftUseEnc = true;
-//        }
         if (gamepad2.dpad_left) {
-            turnClawPosition = Constants.turnClaw0;
-        } else if (gamepad2.dpad_right) {
-            turnClawPosition = Constants.turnClaw180;
+            pixelDropLiftPosition = currentLiftPosition;
+            useLiftPower = false;
+            targetLiftPosition = pixelDropLiftPosition;
+            liftUseEnc = true;
         }
+//        if (gamepad2.dpad_left) {
+//            turnClawPosition = Constants.turnClaw0;
+//        } else if (gamepad2.dpad_right) {
+//            turnClawPosition = Constants.turnClaw180;
+//        }
 
         if (gamepad2.y) {
             useHangPower = false;
@@ -340,6 +340,17 @@ public class CenterstageTeleOp extends OpMode {
         }
 
 
+        if (useLiftPower && liftPower == 0) {
+            useLiftPower = false;
+            targetLiftPosition = currentLiftPosition;
+            liftUseEnc = true;
+        }
+
+        if (gamepad1.right_stick_button) {
+            localizer.setPoseEstimate(new Pose2d(0, 0, Math.toRadians(0)));
+        }
+
+
         if (clawArmPosition < Constants.clawArmHigh) {
             double clawArmOffset = Constants.clawArmHigh - clawArmPosition;
             double clawArmDegrees = clawArmOffset / Constants.clawArmValPerDegree;
@@ -437,6 +448,8 @@ public class CenterstageTeleOp extends OpMode {
                 clawArmPosition = Constants.clawArmDown;
             }
         }
+
+
 
 
         previousGamepad1.copy(gamepad1);

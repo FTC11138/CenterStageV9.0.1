@@ -9,6 +9,7 @@ public class Auto_RedLeft extends AutonomousMethods {
         int propLocation = 2;
         int parkLocation = Constants.parkLoc;
         String startPos = "redLeft";
+        PoseStorage.fieldCentricOffset = Math.toRadians(90);
         boolean targetFound = true;
 
         robot.initialize(hardwareMap, telemetry, true);
@@ -93,7 +94,6 @@ public class Auto_RedLeft extends AutonomousMethods {
         }
 
         PoseStorage.currentPose = robot.getPoseEstimate();
-        PoseStorage.fieldCentricOffset = Math.toRadians(90);
         robot.setClawArmServo(Constants.clawArmDown);
         robot.setClaw1Servo(Constants.clawOpen);
         sleep(2000);
