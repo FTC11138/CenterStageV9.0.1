@@ -27,36 +27,70 @@ public class Auto_RedLeft extends AutonomousMethods {
         robot.setClaw2Servo(Constants.clawClose);
         robot.setPixelServo(Constants.pixelHold);
 
-        runAutoNoStack(
-                finalPropLocation,
-                startPos,
+        sleep(Constants.sleepTime);
 
-                poses.start,
-                poses.startingTangent[propLocation - 1],
+        if (Constants.cycle) {
+            runAuto(
+                    finalPropLocation,
+                    startPos,
 
-                poses.pixel[propLocation - 1],
-                poses.pixelAngle[propLocation - 1],
-                poses.pixelApproachingTangent[propLocation - 1],
+                    poses.start,
+                    poses.startingTangent[propLocation - 1],
 
-                poses.afterPixelStartingTangent[propLocation - 1],
-                poses.afterPixelEndingTangent[propLocation - 1],
-                poses.afterPixel[propLocation - 1],
-                poses.afterPixelAngle[propLocation - 1],
+                    poses.pixel[propLocation - 1],
+                    poses.pixelAngle[propLocation - 1],
+                    poses.pixelApproachingTangent[propLocation - 1],
 
-                poses.stack,
-                poses.stackAngle,
-                poses.stackApproachingTangent,
+                    poses.afterPixel[propLocation - 1],
+                    poses.afterPixelAngle[propLocation - 1],
 
-                poses.beforeBackdrop,
-                poses.afterPixelAngle[propLocation - 1],
-                poses.backdrop[propLocation - 1],
-                poses.backdropTangent,
+                    poses.stack[propLocation - 1],
+                    poses.stack2[propLocation - 1],
+                    poses.beforeStack,
+                    poses.stackAngle,
+                    poses.stackApproachingTangent,
+                    poses.stackLeavingTangent,
 
-                poses.park[parkLocation - 1],
-                poses.parkAngle[parkLocation - 1],
-                poses.parkStartingTangent[parkLocation - 1],
-                poses.parkEndingTangent[parkLocation - 1]
-        );
+                    poses.beforeBackdrop,
+                    poses.afterPixelAngle[propLocation - 1],
+                    poses.backdrop[propLocation - 1],
+                    poses.backdropTangent,
+
+                    poses.park[parkLocation - 1],
+                    poses.parkAngle[parkLocation - 1],
+                    poses.parkStartingTangent[parkLocation - 1],
+                    poses.parkEndingTangent[parkLocation - 1]
+            );
+        } else {
+            runAutoNoStack(
+                    finalPropLocation,
+                    startPos,
+
+                    poses.start,
+                    poses.startingTangent[propLocation - 1],
+
+                    poses.pixel[propLocation - 1],
+                    poses.pixelAngle[propLocation - 1],
+                    poses.pixelApproachingTangent[propLocation - 1],
+
+                    poses.afterPixel[propLocation - 1],
+                    poses.afterPixelAngle[propLocation - 1],
+
+                    poses.stack[propLocation - 1],
+                    poses.stackAngle,
+                    poses.stackApproachingTangent,
+
+                    poses.beforeBackdrop,
+                    poses.afterPixelAngle[propLocation - 1],
+                    poses.backdrop[propLocation - 1],
+                    poses.backdropTangent,
+
+                    poses.park[parkLocation - 1],
+                    poses.parkAngle[parkLocation - 1],
+                    poses.parkStartingTangent[parkLocation - 1],
+                    poses.parkEndingTangent[parkLocation - 1]
+            );
+        }
 
         PoseStorage.currentPose = robot.getPoseEstimate();
         PoseStorage.fieldCentricOffset = Math.toRadians(90);

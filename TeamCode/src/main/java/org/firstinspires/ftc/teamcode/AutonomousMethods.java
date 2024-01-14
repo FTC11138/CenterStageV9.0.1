@@ -55,8 +55,6 @@ public abstract class AutonomousMethods extends LinearOpMode {
             double pixelAngle,
             double pixelApproachingTangent,
 
-            double afterPixelStartingTangent,
-            double afterPixelEndingTangent,
             Vector2d afterPixel,
             double afterPixelAngle,
 
@@ -88,7 +86,6 @@ public abstract class AutonomousMethods extends LinearOpMode {
                             roadrunnerSleep(200);
                             robot.setPixelServo(Constants.pixelHold);
                         })
-
                         .setVelConstraint(velocityConstraint)
                         .setTangent(stackApproachingTangent)
                         .splineToSplineHeading(new Pose2d(stack, stackAngle), stackApproachingTangent)
@@ -99,6 +96,7 @@ public abstract class AutonomousMethods extends LinearOpMode {
                             sleep(200);
                             robot.setIntakeState(Attachments.intakeState.OUT);
                         })
+                        .back(0.5)
                         .lineTo(afterPixel)
                         .setTangent(Math.toRadians(0))
                         .splineToSplineHeading(new Pose2d(beforeBackdrop, beforeBackdropAngle), Math.toRadians(0))
@@ -110,7 +108,11 @@ public abstract class AutonomousMethods extends LinearOpMode {
                         .build()
         );
 
+        roadrunnerSleep(200);
+
         dropPixel(true, propLocation, startPos);
+
+        roadrunnerSleep(500);
 
         robot.followTrajectorySequenceAsync(
                 robot.trajectorySequenceBuilder(robot.getPoseEstimate())
@@ -136,14 +138,11 @@ public abstract class AutonomousMethods extends LinearOpMode {
             double pixelAngle,
             double pixelApproachingTangent,
 
-            double afterPixelStartingTangent,
-            double afterPixelEndingTangent,
             Vector2d afterPixel,
             double afterPixelAngle,
 
             Vector2d stack,
             Vector2d stack2,
-            Vector2d afterStack,
             Vector2d beforeStack,
             double stackAngle,
             double stackApproachingTangent,
@@ -153,7 +152,6 @@ public abstract class AutonomousMethods extends LinearOpMode {
             double beforeBackdropAngle,
             Vector2d backdrop,
             double backdropTangent,
-
             Vector2d park,
             double parkAngle,
             double parkStartingTangent,
@@ -184,6 +182,7 @@ public abstract class AutonomousMethods extends LinearOpMode {
                             sleep(200);
                             robot.setIntakeState(Attachments.intakeState.OUT);
                         })
+                        .back(0.5)
                         .lineTo(afterPixel)
                         .setTangent(Math.toRadians(0))
                         .splineToSplineHeading(new Pose2d(beforeBackdrop, beforeBackdropAngle), Math.toRadians(0))
@@ -195,24 +194,38 @@ public abstract class AutonomousMethods extends LinearOpMode {
                         .build()
         );
 
+        roadrunnerSleep(200);
+
         dropPixel(true, propLocation, startPos);
+
+        roadrunnerSleep(100);
+
+        int tan = -90;
+        if (startPos.startsWith("red")) {
+            tan = 90;
+        }
 
         robot.followTrajectorySequenceAsync(
                 robot.trajectorySequenceBuilder(robot.getPoseEstimate())
-                        .setTangent(Math.toRadians(-135))
+                        .setTangent(Math.toRadians(tan))
                         .splineToSplineHeading(new Pose2d(beforeBackdrop, afterPixelAngle), stackApproachingTangent)
                         .splineToSplineHeading(new Pose2d(beforeStack, afterPixelAngle), stackApproachingTangent)
                         .setVelConstraint(velocityConstraint)
                         .splineToSplineHeading(new Pose2d(stack2, stackAngle), stackApproachingTangent)
                         .build()
         );
-
-        roadrunnerSleep(500);
         resetSystem();
         robot.setIntakeState(Attachments.intakeState.IN);
         robot.waitForIdle();
 
-        roadrunnerSleep(1000);
+        roadrunnerSleep(500);
+//        robot.followTrajectorySequence(
+//                robot.trajectorySequenceBuilder(robot.getPoseEstimate())
+//                        .back(1)
+//                        .forward(1)
+//                        .build()
+//        );
+        roadrunnerSleep(500);
 
         robot.followTrajectorySequence(
                 robot.trajectorySequenceBuilder(robot.getPoseEstimate())
@@ -227,7 +240,7 @@ public abstract class AutonomousMethods extends LinearOpMode {
                         .splineToSplineHeading(new Pose2d(beforeBackdrop, afterPixelAngle), Math.toRadians(0))
                         .addDisplacementMarker(() -> {
                             robot.setIntakeState(Attachments.intakeState.STOP);
-                            raiseSystem(Constants.liftDropAuto + 200, Constants.clawArmAutoDrop);
+                            raiseSystem(Constants.liftDropAuto + 300, Constants.clawArmAutoDrop);
                         })
                         .splineToSplineHeading(new Pose2d(backdrop, afterPixelAngle), backdropTangent)
                         .build()
@@ -364,7 +377,7 @@ public abstract class AutonomousMethods extends LinearOpMode {
 
         robot.followTrajectorySequenceAsync(
                 robot.trajectorySequenceBuilder(robot.getPoseEstimate())
-                        .setTangent(Math.toRadians(135))
+                        .setTangent(Math.toRadians(-100))
                         .splineToSplineHeading(new Pose2d(beforeBackdrop, afterPixelAngle), stackApproachingTangent)
                         .splineToSplineHeading(new Pose2d(beforeStack, afterPixelAngle), stackApproachingTangent)
                         .setVelConstraint(velocityConstraint)
@@ -423,8 +436,20 @@ public abstract class AutonomousMethods extends LinearOpMode {
         }
 
         if (targetFound) {
-            robot.setClaw1Servo(Constants.clawOpen);
+            if (aprilTag) {
+                robot.setClaw2Servo(Constants.clawOpen);
+                robot.followTrajectorySequence(
+                        robot.trajectorySequenceBuilder(robot.getPoseEstimate())
+                                .forward(3)
+                                .addDisplacementMarker(() -> {
+                                    robot.setLiftMotor(1, Constants.liftDropAuto + 350);
+                                })
+                                .back(3)
+                                .build()
+                );
+            }
             robot.setClaw2Servo(Constants.clawOpen);
+            robot.setClaw1Servo(Constants.clawOpen);
         }
     }
 
@@ -463,17 +488,17 @@ public abstract class AutonomousMethods extends LinearOpMode {
     public void relocalize(int propLocation, double x, double y) {
         Vector2d newVector = null;
         if (propLocation == 1) {
-            newVector = new Vector2d(PoseConstants.apriltags.one.getX() - x, PoseConstants.apriltags.one.getY() - y);
+            newVector = new Vector2d(PoseConstants.apriltags.one.getX() - x, PoseConstants.apriltags.one.getY() + y);
         } else if (propLocation == 2) {
-            newVector = new Vector2d(PoseConstants.apriltags.two.getX() - x, PoseConstants.apriltags.two.getY() - y);
+            newVector = new Vector2d(PoseConstants.apriltags.two.getX() - x, PoseConstants.apriltags.two.getY() + y);
         } else if (propLocation == 3) {
-            newVector = new Vector2d(PoseConstants.apriltags.three.getX() - x, PoseConstants.apriltags.three.getY() - y);
+            newVector = new Vector2d(PoseConstants.apriltags.three.getX() - x, PoseConstants.apriltags.three.getY() + y);
         } else if (propLocation == 4) {
-            newVector = new Vector2d(PoseConstants.apriltags.four.getX() - x, PoseConstants.apriltags.four.getY() - y);
+            newVector = new Vector2d(PoseConstants.apriltags.four.getX() - x, PoseConstants.apriltags.four.getY() + y);
         } else if (propLocation == 5) {
-            newVector = new Vector2d(PoseConstants.apriltags.five.getX() - x, PoseConstants.apriltags.five.getY() - y);
+            newVector = new Vector2d(PoseConstants.apriltags.five.getX() - x, PoseConstants.apriltags.five.getY() + y);
         } else if (propLocation == 6) {
-            newVector = new Vector2d(PoseConstants.apriltags.six.getX() - x, PoseConstants.apriltags.six.getY() - y);
+            newVector = new Vector2d(PoseConstants.apriltags.six.getX() - x, PoseConstants.apriltags.six.getY() + y);
         }
 
         assert newVector != null;
@@ -527,6 +552,8 @@ public abstract class AutonomousMethods extends LinearOpMode {
             double rangeError = (desiredTag.ftcPose.range - DESIRED_DISTANCE) * -1;
             double xError = desiredTag.ftcPose.x * -1;
 
+            relocalize(DESIRED_TAG_ID, desiredTag.ftcPose.range + Constants.CAMERA_TO_CENTER, desiredTag.ftcPose.x);
+
             telemetry.addData("rangeError ", rangeError);
             telemetry.addData("yawError", xError);
             telemetry.update();
@@ -538,8 +565,6 @@ public abstract class AutonomousMethods extends LinearOpMode {
                             .strafeRight(xError)
                             .build()
             );
-
-            relocalize(DESIRED_TAG_ID, DESIRED_DISTANCE + Constants.CAMERA_TO_CENTER, 0);
 
             return true;
 

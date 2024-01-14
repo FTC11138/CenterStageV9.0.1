@@ -29,8 +29,10 @@ public class Auto_RedRight extends AutonomousMethods {
         robot.setClaw2Servo(Constants.clawClose);
         robot.setPixelServo(Constants.pixelHold);
 
+        sleep(Constants.sleepTime);
+
         runAutoNoStack(
-                propLocation,
+                finalPropLocation,
                 startPos,
 
                 poses.start,

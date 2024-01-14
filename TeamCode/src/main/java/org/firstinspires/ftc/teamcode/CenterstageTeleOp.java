@@ -506,7 +506,7 @@ public class CenterstageTeleOp extends OpMode {
     }
 
     void setLiftMotor(int position) {
-        robot.setLiftMotor(0.5, position);
+        robot.setLiftMotor(1, position);
         liftUseEnc = false;
         liftModeUpdate = true;
     }

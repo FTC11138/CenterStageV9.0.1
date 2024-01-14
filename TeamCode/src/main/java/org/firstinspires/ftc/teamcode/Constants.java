@@ -22,7 +22,10 @@ public class Constants {
 
     /* -------------------------------------------- AUTO CONSTANTS -------------------------------------------- */
 
-    public static int parkLoc = 1;
+    public static int parkLoc = 1; // 2 - 1 - 1 - 2 -> LEFT TO RIGHT
+    public static int sleepTime = 0; // MILLISECONDS
+    public static boolean cycle = false;
+
     public static boolean continueAutoAfterSpikeMark = true;
     public static int testPropLoc = 1;
 
@@ -45,7 +48,7 @@ public class Constants {
     public static double pixelDrop = 1;
 
     public static double clawClose = 0.3;
-    public static double clawOpen = 0.96;
+    public static double clawOpen = 1;
 
 
     public static int clawArmLiftDelay = 100;
@@ -63,7 +66,7 @@ public class Constants {
     public static double clawArmSpeed = 0.01;
     public static double clawArmSlowRatio = 0.5;
 
-    public static double clawArm0 = 0.28;
+    public static double clawArm0 = 0.26;
     public static double clawArm60 = clawArmHigh;
     public static double clawArmValPerDegree = (clawArm60 - clawArm0)/60;
 
@@ -86,7 +89,7 @@ public class Constants {
     public static int liftMin = 0;
     public static int liftLow = 100;
     public static int liftClawArmFar = 300;
-    public static int liftDropAuto = 600;
+    public static int liftDropAuto = 500;
     public static int liftArm = 100;
     public static int liftHigh = 550;
     public static int liftMax = 2000;
@@ -145,6 +148,7 @@ public class Constants {
 
     /* --------------------------------------------  APRILTAG CONSTANTS ------------------------------------------ */
     public static double DESIRED_DISTANCE = 7;
+    public static double DROP_TOP_FIRST = 1.8;
     public static double CAMERA_TO_CENTER = 8;
     public static double SPEED_GAIN  =  0.02;
     public static double STRAFE_GAIN =  0.015;
