@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
 @Autonomous(name="Auto_RedBackdrop", group="Linear Opmode", preselectTeleOp = "TeleOp")
@@ -32,30 +33,74 @@ public class Auto_RedRight extends AutonomousMethods {
 
         sleep(Constants.sleepTime);
 
-        runAutoNoStack(
-                finalPropLocation,
-                startPos,
-
-                poses.start,
-                poses.startingTangent[propLocation - 1],
-
-                poses.pixel[propLocation - 1],
-                poses.pixelAngle[propLocation - 1],
-                poses.pixelApproachingTangent[propLocation - 1],
-
-                poses.afterPixelStartingTangent[propLocation - 1],
-                poses.afterPixelEndingTangent[propLocation - 1],
-                poses.afterPixel,
-                poses.afterPixelAngle[propLocation - 1],
-
-                poses.backdrop[propLocation - 1],
-                poses.backdropTangent,
-
-                poses.park[parkLocation - 1],
-                poses.parkAngle[parkLocation - 1],
-                poses.parkStartingTangent[parkLocation - 1],
-                poses.parkEndingTangent[parkLocation - 1]
+        robot.setPoseEstimate(PoseConstants.newRedRight.start);
+        raiseSystem(Constants.liftDropAuto, Constants.clawArmAutoDrop);
+        robot.followTrajectoryAsync(
+                robot.trajectoryBuilder(PoseConstants.newRedRight.start)
+                        .lineToSplineHeading(PoseConstants.newRedRight.backdrop[finalPropLocation - 1])
+                        .build()
         );
+        robot.waitForIdle();
+
+        dropPixelNoAprilTag();
+
+        roadrunnerSleep(300);
+
+        robot.followTrajectorySequenceAsync(
+                robot.trajectorySequenceBuilder(robot.getPoseEstimate())
+                        .forward(2)
+                        .lineToSplineHeading(PoseConstants.newRedRight.pixel[finalPropLocation - 1])
+                        .build()
+        );
+        roadrunnerSleep(500);
+        resetSystem();
+        robot.waitForIdle();
+
+        robot.setPixelServo(Constants.pixelDrop);
+        roadrunnerSleep(200);
+        robot.setPixelServo(Constants.pixelHold);
+
+        if (Constants.parkLoc == 2) {
+            robot.followTrajectorySequenceAsync(
+                    robot.trajectorySequenceBuilder(robot.getPoseEstimate())
+                            .lineToSplineHeading(new Pose2d(48, -60, Math.toRadians(0)))
+                            .lineToSplineHeading(new Pose2d(60, -60, Math.toRadians(0)))
+                            .build()
+            );
+        } else {
+            robot.followTrajectorySequenceAsync(
+                    robot.trajectorySequenceBuilder(robot.getPoseEstimate())
+                            .lineToSplineHeading(new Pose2d(48, -12, Math.toRadians(0)))
+                            .lineToSplineHeading(new Pose2d(60, -12, Math.toRadians(0)))
+                            .build()
+            );
+        }
+        robot.waitForIdle();
+
+//        runAutoNoStack(
+//                finalPropLocation,
+//                startPos,
+//
+//                poses.start,
+//                poses.startingTangent[propLocation - 1],
+//
+//                poses.pixel[propLocation - 1],
+//                poses.pixelAngle[propLocation - 1],
+//                poses.pixelApproachingTangent[propLocation - 1],
+//
+//                poses.afterPixelStartingTangent[propLocation - 1],
+//                poses.afterPixelEndingTangent[propLocation - 1],
+//                poses.afterPixel,
+//                poses.afterPixelAngle[propLocation - 1],
+//
+//                poses.backdrop[propLocation - 1],
+//                poses.backdropTangent,
+//
+//                poses.park[parkLocation - 1],
+//                poses.parkAngle[parkLocation - 1],
+//                poses.parkStartingTangent[parkLocation - 1],
+//                poses.parkEndingTangent[parkLocation - 1]
+//        );
 
         PoseStorage.currentPose = robot.getPoseEstimate();
         robot.setTurnClawServo(Constants.turnClawDown);

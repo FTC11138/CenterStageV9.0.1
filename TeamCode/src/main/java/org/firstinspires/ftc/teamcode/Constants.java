@@ -48,7 +48,7 @@ public class Constants {
     public static double pixelDrop = 1;
 
     public static double clawClose = 0.3;
-    public static double clawOpen = 1;
+    public static double clawOpen = 0.97;
 
 
     public static int clawArmLiftDelay = 100;
@@ -89,7 +89,7 @@ public class Constants {
     public static int liftMin = 0;
     public static int liftLow = 100;
     public static int liftClawArmFar = 300;
-    public static int liftDropAuto = 500;
+    public static int liftDropAuto = 600;
     public static int liftArm = 100;
     public static int liftHigh = 550;
     public static int liftMax = 2000;
@@ -148,6 +148,7 @@ public class Constants {
 
     /* --------------------------------------------  APRILTAG CONSTANTS ------------------------------------------ */
     public static double DESIRED_DISTANCE = 7;
+    public static double APRIL_TAG_OFFSET = 1;
     public static double DROP_TOP_FIRST = 1.8;
     public static double CAMERA_TO_CENTER = 8;
     public static double SPEED_GAIN  =  0.02;

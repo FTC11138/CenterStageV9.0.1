@@ -298,6 +298,7 @@ public abstract class AutonomousMethods extends LinearOpMode {
                         })
                         .setTangent(afterPixelStartingTangent)
                         .splineToSplineHeading(new Pose2d(afterPixel, afterPixelAngle), afterPixelEndingTangent)
+//                        .waitSeconds(10)
                         .addDisplacementMarker(() -> {
                             raiseSystem(Constants.liftDropAuto, Constants.clawArmAutoDrop);
                         })
@@ -447,10 +448,28 @@ public abstract class AutonomousMethods extends LinearOpMode {
                                 .back(3)
                                 .build()
                 );
+                if (propLocation == 1 || propLocation == 2) {
+                    robot.followTrajectory(
+                            robot.trajectoryBuilder(robot.getPoseEstimate())
+                                    .strafeLeft(4)
+                                    .build()
+                    );
+                } else {
+                    robot.followTrajectory(
+                            robot.trajectoryBuilder(robot.getPoseEstimate())
+                                    .strafeRight(4)
+                                    .build()
+                    );
+                }
             }
             robot.setClaw2Servo(Constants.clawOpen);
             robot.setClaw1Servo(Constants.clawOpen);
         }
+    }
+
+    public void dropPixelNoAprilTag() {
+            robot.setClaw2Servo(Constants.clawOpen);
+            robot.setClaw1Servo(Constants.clawOpen);
     }
 
     public void resetSystem() {
@@ -464,13 +483,15 @@ public abstract class AutonomousMethods extends LinearOpMode {
 
     public void raiseSystem(int liftPos, double clawArmPos) {
         robot.setClawArmServo(clawArmPos);
-        roadrunnerSleep(500);
+        roadrunnerSleep(300);
 
         double clawArmOffset = Constants.clawArmHigh - Constants.clawArmAutoDrop;
         double clawArmDegrees = clawArmOffset / Constants.clawArmValPerDegree;
         double turnClawOffset = Constants.turnClawValPerDegree * clawArmDegrees;
         double turnClawPosition = Constants.turnClaw180 - turnClawOffset;
 
+        telemetry.addLine(String.valueOf(turnClawPosition));
+        telemetry.update();
         robot.setTurnClawServo(turnClawPosition);
         robot.setLiftMotor(0.5, liftPos);
     }
@@ -550,7 +571,7 @@ public abstract class AutonomousMethods extends LinearOpMode {
             telemetry.addLine("Detected");
 
             double rangeError = (desiredTag.ftcPose.range - DESIRED_DISTANCE) * -1;
-            double xError = desiredTag.ftcPose.x * -1;
+            double xError = (desiredTag.ftcPose.x - Constants.APRIL_TAG_OFFSET) * -1;
 
             relocalize(DESIRED_TAG_ID, desiredTag.ftcPose.range + Constants.CAMERA_TO_CENTER, desiredTag.ftcPose.x);
 

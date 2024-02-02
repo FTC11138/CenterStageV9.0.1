@@ -41,7 +41,7 @@ public class CenterstageTeleOp extends OpMode {
     private boolean useLiftPower = true;
     private boolean liftModeUpdate = false;
     private boolean liftUseEnc = true;
-    private int targetLiftPosition = Constants.liftLow;
+    private int targetLiftPosition = 0;
     private int pixelDropLiftPosition = Constants.liftHigh;
     private int currentLiftPosition = 0;
 
@@ -50,7 +50,7 @@ public class CenterstageTeleOp extends OpMode {
     private boolean useHangPower = true;
     private boolean hangModeUpdate = false;
     private boolean hangUseEnc = true;
-    private int targetHangPosition = Constants.hangLow;
+    private int targetHangPosition = 0;
     private int currentHangPosition1 = 0;
     private int currentHangPosition2 = 0;
 
@@ -90,13 +90,7 @@ public class CenterstageTeleOp extends OpMode {
                 -gamepad1.left_stick_x
         ).rotated(heading + fieldCentricOffset);
 
-        robot.setWeightedDrivePower(
-                new Pose2d(
-                        input.getX(),
-                        input.getY(),
-                        -gamepad1.right_stick_x
-                )
-        );
+
 
 
         double lx = 0;
@@ -132,6 +126,14 @@ public class CenterstageTeleOp extends OpMode {
         // Drive
         if (lx != 0 || ly != 0) {
             robot.drive(theta, speedMultiplier * v_theta, rotationMultiplier * v_rotation);
+        } else {
+            robot.setWeightedDrivePower(
+                    new Pose2d(
+                            input.getX(),
+                            input.getY(),
+                            -gamepad1.right_stick_x
+                    )
+            );
         }
 
 
@@ -494,7 +496,8 @@ public class CenterstageTeleOp extends OpMode {
             robot.runHangMotor1(hangPower1);
             robot.runHangMotor2(hangPower2);
         } else {
-            setHangMotor(targetHangPosition);
+//            setHangMotor(targetHangPosition);
+            robot.setHangMotor(1, targetHangPosition);
         }
 
 
