@@ -65,7 +65,7 @@ public class Constants {
     public static double clawArmFar = 0.24;
     public static double clawArmLow = 0.72; // Arm position where it is safe to lower claw
     public static double clawArmDrive = 0.77;
-    public static double clawArmSpeed = 0.01;
+    public static double clawArmSpeed = 0.006;
     public static double clawArmSlowRatio = 0.5;
 
     public static double clawArm0 = 0.28;
