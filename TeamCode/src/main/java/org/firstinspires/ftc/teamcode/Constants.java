@@ -29,6 +29,8 @@ public class Constants {
     public static boolean continueAutoAfterSpikeMark = true;
     public static int testPropLoc = 1;
 
+    public static double monkey = 1;
+
 
     /* -------------------------------------------- DRIVE CONSTANTS -------------------------------------------- */
 
@@ -55,18 +57,18 @@ public class Constants {
     public static int clawArmDownDelay = 30;
 
 
-    public static double clawArmAutoDrop = 0.35;
-    public static double clawArmTeleDrop = 0.36;
-    public static double clawArmDown = 0.84;
+    public static double clawArmAutoDrop = 0.37;
+    public static double clawArmTeleDrop = 0.38;
+    public static double clawArmDown = 0.86;
     public static double clawArmUp = 0.3;
-    public static double clawArmHigh = 0.46;
-    public static double clawArmFar = 0.22;
-    public static double clawArmLow = 0.7; // Arm position where it is safe to lower claw
-    public static double clawArmDrive = 0.75;
+    public static double clawArmHigh = 0.51;
+    public static double clawArmFar = 0.24;
+    public static double clawArmLow = 0.72; // Arm position where it is safe to lower claw
+    public static double clawArmDrive = 0.77;
     public static double clawArmSpeed = 0.01;
     public static double clawArmSlowRatio = 0.5;
 
-    public static double clawArm0 = 0.26;
+    public static double clawArm0 = 0.28;
     public static double clawArm60 = clawArmHigh;
     public static double clawArmValPerDegree = (clawArm60 - clawArm0)/60;
 

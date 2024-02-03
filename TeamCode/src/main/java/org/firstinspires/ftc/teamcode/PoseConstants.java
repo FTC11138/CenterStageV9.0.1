@@ -135,7 +135,7 @@ public class PoseConstants {
         public Vector2d beforeStack = new Vector2d(-36, -10);
         public Vector2d[] stack2 = {new Vector2d(-61.5, -9.5), new Vector2d(-61.5, -9), new Vector2d(-61.5, -9)};
 
-        public Vector2d beforeBackdrop = new Vector2d(12, -8);
+        public Vector2d beforeBackdrop = new Vector2d(12, -11);
         public double[] beforeBackdropAngle = {Math.toRadians(180), Math.toRadians(180), Math.toRadians(180)};
         public Vector2d[] backdrop = {new Vector2d(36, -34), new Vector2d(36, -36), new Vector2d(36, -42)};
         public double backdropTangent = Math.toRadians(-90);

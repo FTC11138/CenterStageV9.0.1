@@ -73,6 +73,8 @@ public abstract class AutonomousMethods extends LinearOpMode {
             double parkEndingTangent
     ) {
 
+        double monkey = Constants.monkey;
+
         robot.setPoseEstimate(startPose);
         robot.setClaw1Servo(Constants.clawOpen);
         robot.setClawArmServo(Constants.clawArmDown);
@@ -96,7 +98,7 @@ public abstract class AutonomousMethods extends LinearOpMode {
                             sleep(200);
                             robot.setIntakeState(Attachments.intakeState.OUT);
                         })
-                        .back(0.5)
+                        .back(monkey)
                         .lineTo(afterPixel)
                         .setTangent(Math.toRadians(0))
                         .splineToSplineHeading(new Pose2d(beforeBackdrop, beforeBackdropAngle), Math.toRadians(0))

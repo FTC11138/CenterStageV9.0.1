@@ -64,6 +64,8 @@ public class CenterstageTeleOp extends OpMode {
     double heading;
     double fieldCentricOffset;
 
+    private boolean timer = false;
+
 
     @Override
     public void init() {
@@ -145,9 +147,7 @@ public class CenterstageTeleOp extends OpMode {
         if (gamepad2.right_bumper && !previousGamepad2.right_bumper) {
             claw1Toggle = !claw1Toggle;
         }
-        if (gamepad2.left_bumper && !previousGamepad2.left_bumper) {
-            claw2Toggle = !claw2Toggle;
-        }
+
 
         if (claw1Toggle) {
             claw1Position = Constants.clawOpen;
@@ -158,6 +158,11 @@ public class CenterstageTeleOp extends OpMode {
             claw2Position = Constants.clawClose;
             ledPattern = Constants.closePattern;
         }
+
+        if (gamepad2.left_bumper) {
+            claw1Position = Constants.clawOpen;
+        }
+
 
 
         if (gamepad2.b) {
